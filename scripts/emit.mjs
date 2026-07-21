@@ -3,8 +3,9 @@
  * truth — `catalog/models-catalog.json` (the enriched envelope). Validates the
  * source structurally (zero-dep, no ajv), flattens each vendor's entries adding a
  * `vendor` field, and writes the published JSON + a pinned version copy + the
- * JSON Schema into `public/models/` for GitHub Pages to serve at
- * `<pages>/models/*` (see .github/workflows/publish.yml).
+ * JSON Schema into `public/` for GitHub Pages to serve at the site root
+ * (`<pages>/catalog.json`, `catalog-v1.json`, `catalog.schema.json`; see
+ * .github/workflows/publish.yml). The browsable `public/index.html` sits at `<pages>/`.
  *
  *   node scripts/emit.mjs
  */
@@ -16,7 +17,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(here, "..");
 const SRC = resolve(REPO_ROOT, "catalog/models-catalog.json");
 const SCHEMA_SRC = resolve(REPO_ROOT, "catalog/models-catalog.schema.json");
-const OUT_DIR = resolve(REPO_ROOT, "public/models");
+const OUT_DIR = resolve(REPO_ROOT, "public");
 // Public base URL — the GitHub Pages site for this repo. Override-friendly for a
 // future custom domain (e.g. models.viglet.org) via the CATALOG_SOURCE_URL env.
 const SOURCE_URL = process.env.CATALOG_SOURCE_URL || "https://openviglet.github.io/models-catalog";
@@ -62,7 +63,7 @@ for (const [vendor, entries] of Object.entries(root.vendors)) {
 }
 
 const published = {
-  $schema: `${SOURCE_URL}/models/catalog.schema.json`,
+  $schema: `${SOURCE_URL}/catalog.schema.json`,
   version: root.version,
   lastUpdated: root.lastUpdated,
   source: SOURCE_URL,

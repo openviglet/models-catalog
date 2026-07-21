@@ -22,9 +22,9 @@ capability* — **not pricing** (see [STRATEGY.md](../STRATEGY.md) §I).
 
 | URL | Meaning |
 |---|---|
-| `…/models/catalog.json` | Rolling latest — the current schema version. |
-| `…/models/catalog-v1.json` | Pinned to schema **v1** — safe for external consumers to lock. |
-| `…/models/catalog.schema.json` | The JSON Schema (Draft 2020-12) describing the envelope + entry. |
+| `…/catalog.json` | Rolling latest — the current schema version. |
+| `…/catalog-v1.json` | Pinned to schema **v1** — safe for external consumers to lock. |
+| `…/catalog.schema.json` | The JSON Schema (Draft 2020-12) describing the envelope + entry. |
 | `…/` (repo Pages root) | Human-browsable reference page (`public/index.html`). |
 
 **Serving.** Hosted on **GitHub Pages**, which serves every asset with
@@ -38,7 +38,7 @@ are regenerated deterministically from the canonical source
 
 ```jsonc
 {
-  "$schema": "https://openviglet.github.io/models-catalog/models/catalog.schema.json",
+  "$schema": "https://openviglet.github.io/models-catalog/catalog.schema.json",
   "version": 1,                 // schema major version (integer)
   "lastUpdated": "2026-07-21",  // ISO-8601 date the catalog was regenerated
   "source": "https://openviglet.github.io/models-catalog",
@@ -80,14 +80,14 @@ are regenerated deterministically from the canonical source
 
 ```bash
 # every embedding model across all vendors
-curl -s https://openviglet.github.io/models-catalog/models/catalog-v1.json \
+curl -s https://openviglet.github.io/models-catalog/catalog-v1.json \
   | jq '.vendors | to_entries[].value[] | select(.kind=="EMBEDDING") | .id'
 ```
 
 ```js
 // browser / Node — kind lookup for an arbitrary id
 const { vendors } = await (await fetch(
-  "https://openviglet.github.io/models-catalog/models/catalog-v1.json",
+  "https://openviglet.github.io/models-catalog/catalog-v1.json",
 )).json()
 const all = Object.values(vendors).flat()
 const kindOf = (id) => all.find((m) => m.id === id)?.kind ?? "UNKNOWN"

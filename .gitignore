@@ -1,8 +1,11 @@
 # Dependencies (this repo is zero-dependency, but never commit these)
 node_modules/
 
-# Generated public artifacts (produced by `npm run emit`; published by CI)
-public/models/
+# Generated public artifacts (produced by `npm run emit`; published by CI).
+# The browsable public/index.html is committed; only the emitted JSON is ignored.
+public/catalog.json
+public/catalog-v1.json
+public/catalog.schema.json
 
 # Pipeline working dirs are handled by their own .gitignore:
 #   pipeline/sources/  (raw per-source snapshot cache)

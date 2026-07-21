@@ -97,11 +97,11 @@
       <section class="api">
         <h2>Public API</h2>
         <p class="meta">
-          Rolling latest: <a href="./models/catalog.json">/models/catalog.json</a> ·
-          Pinned v1: <a href="./models/catalog-v1.json">/models/catalog-v1.json</a> ·
-          Schema: <a href="./models/catalog.schema.json">/models/catalog.schema.json</a>
+          Rolling latest: <a href="./catalog.json">catalog.json</a> ·
+          Pinned v1: <a href="./catalog-v1.json">catalog-v1.json</a> ·
+          Schema: <a href="./catalog.schema.json">catalog.schema.json</a>
         </p>
-        <pre><code>curl -s ./models/catalog-v1.json | jq '.vendors | to_entries[].value[] | select(.kind=="EMBEDDING") | .id'</code></pre>
+        <pre><code>curl -s ./catalog-v1.json | jq '.vendors | to_entries[].value[] | select(.kind=="EMBEDDING") | .id'</code></pre>
       </section>
 
       <div class="controls">
