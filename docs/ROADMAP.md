@@ -17,17 +17,16 @@
 | ⏳ | Partial — direction is right, more work remains |
 | 🛠 | In progress |
 
-## Block A — Catalog API + regeneration pipeline
-
-> The canonical catalog, schema, multi-source regeneration pipeline, emit step and
-> the browsable public API all shipped (see [CHANGELOG.md](CHANGELOG.md) → Block A;
-> migrated from Viglet Turing ES). The remaining bets extend source coverage and
-> automate the review-gated refresh:
-
-- 💭 **T6** (deps: —) **Branded custom domain for the endpoint** — front the GitHub Pages endpoint with a custom domain (e.g. `models.viglet.org`) via `CNAME` + `CATALOG_SOURCE_URL`, and update consumers (Turing's `turing.models-catalog.url`) + the docs. → §III
-
+> **Block A — Catalog API + regeneration pipeline** shipped in full — the canonical
+> catalog, schema, multi-source regeneration pipeline, emit step and the browsable
+> public API (see [CHANGELOG.md](CHANGELOG.md) → Block A; migrated from Viglet Turing ES).
+>
 > **Block B — Client libraries / SDKs** shipped in full (JS/TS · Python · Java) — see
 > [CHANGELOG.md](CHANGELOG.md) → Block B.
+
+_No active backlog. The endpoint intentionally stays on its public GitHub Pages URL
+(`openviglet.github.io/models-catalog`) — an unbranded, community-owned home signals
+it is a public resource, not a brand asset._
 
 ## Non-goals
 

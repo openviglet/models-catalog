@@ -2,8 +2,10 @@
 
 > The catalog is published as an open, CORS-enabled, versioned JSON artifact via
 > GitHub Pages from this repo (`.github/workflows/publish.yml`). Base URL:
-> `https://openviglet.github.io/models-catalog` (a branded custom domain such as
-> `models.viglet.org` can front it later — set `CATALOG_SOURCE_URL` at emit time).
+> `https://openviglet.github.io/models-catalog` — the endpoint intentionally stays on
+> its public GitHub Pages host, so it reads as a community-owned resource rather than a
+> brand asset. (The emitted URLs are still overridable via `CATALOG_SOURCE_URL` at emit
+> time if a deployment ever needs a different host.)
 
 ## What it is
 

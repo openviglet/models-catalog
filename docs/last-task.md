@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T6 DROPPED** (Block A — branded custom domain: won't do; the endpoint stays on the public `openviglet.github.io` URL so it reads as a community resource, not a brand asset. §III removed from IMPROVEMENTS. T6 not reused.) — 2026-07-21.
 - **T11 SHIPPED** (Block B — Java client: no-runtime-dep Maven `io.github.openviglet:models-catalog-client`, JDK HttpClient + hand-rolled zero-dep JSON reader, records + Kind enum + `.extra()`, Builder, 11 JUnit units) — 2026-07-21.
 - **T10 SHIPPED** (Block B — Python client: stdlib-only `urllib` pip pkg `openviglet-models-catalog-client`, typed dataclass + `.extra`, shared surface, 10 unittest units) — 2026-07-21.
 - **T9 SHIPPED** (Block B — JS/TS client: zero-dep npm `@openviglet/models-catalog-client`, shared surface + faceted-slice loaders, ESM + hand-written .d.ts, 10 node:test units) — 2026-07-21.
