@@ -1,11 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(*)",
-      "Bash(python -c \"import yaml,sys; [yaml.safe_load\\(open\\(f\\)\\) and print\\('OK',f\\) for f in ['jitpack.yml','.github/workflows/release-js-client.yml']]\")",
-      "Bash(git restore *)",
-      "Bash(git checkout *)",
-      "Bash(run-commit.cmd -m \"feat: auth-free GitHub distribution for the client SDKs \\(T12\\)\")"
-    ]
+    "allow": ["Bash(*)", "PowerShell(*)", "WebFetch(*)"]
   }
 }
