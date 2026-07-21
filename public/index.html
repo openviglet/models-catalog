@@ -6,209 +6,594 @@
     <title>Model Catalog — Viglet Turing ES</title>
     <meta
       name="description"
-      content="A vendor-neutral, kind-aware catalog of LLM / embedding / rerank / media models. Free, unauthenticated, versioned JSON."
+      content="A vendor-neutral, kind-aware catalog of LLM / embedding / rerank / media models. Free, unauthenticated, versioned JSON — a public reference for the AI community."
+    />
+    <meta property="og:title" content="Model Catalog — Viglet Turing ES" />
+    <meta
+      property="og:description"
+      content="Which model ids exist per vendor, and for each: its kind, context window and capabilities. Free, unauthenticated, versioned JSON."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://openviglet.github.io/models-catalog/" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23f97316'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3E%E2%97%88%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
-        --border: #e2e8f0; --brand: #4f46e5; --brand2: #2563eb;
+        color-scheme: light;
+        --bg: #fbfaf9;
+        --bg-alt: #f5f2ef;
+        --card: #ffffff;
+        --text: #1a1512;
+        --muted: #7a6f66;
+        --border: #ececec;
+        --border-strong: #e0dcd7;
+        /* Viglet brand — warm orange */
+        --brand: #ea580c;
+        --brand-2: #f97316;
+        --brand-3: #c2410c;
+        --brand-ink: #9a3412;
+        --brand-wash: #fff4ec;
+        --shadow-card: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px -12px rgba(194,65,12,.14);
+        --shadow-hover: 0 4px 12px rgba(0,0,0,.06), 0 18px 40px -18px rgba(194,65,12,.28);
+        --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        --brand-font: "Plus Jakarta Sans", var(--sans);
       }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #0a0a0f; --card: #16161f; --text: #e2e8f0; --muted: #94a3b8;
-          --border: #1e1e2e; --brand: #6366f1; --brand2: #3b82f6;
-        }
+      [data-theme="dark"] {
+        color-scheme: dark;
+        --bg: #100c0a;
+        --bg-alt: #17110d;
+        --card: #1b1512;
+        --text: #f3ece7;
+        --muted: #a8988c;
+        --border: #2a201a;
+        --border-strong: #35291f;
+        --brand: #fb923c;
+        --brand-2: #f97316;
+        --brand-3: #fdba74;
+        --brand-ink: #fdba74;
+        --brand-wash: #26170d;
+        --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.6);
+        --shadow-hover: 0 4px 14px rgba(0,0,0,.5), 0 22px 44px -18px rgba(0,0,0,.7);
       }
+
       * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
       body {
         margin: 0; background: var(--bg); color: var(--text);
-        font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-family: var(--sans); font-size: 15.5px; line-height: 1.6;
+        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+        font-feature-settings: 'rlig' 1, 'calt' 1;
       }
+      a { color: var(--brand-3); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      code, pre { font-family: var(--mono); }
+      h1, h2, h3 { font-family: var(--brand-font); letter-spacing: -.02em; }
+      .wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; }
+
+      /* ── Nav ─────────────────────────────────────────── */
+      nav {
+        position: sticky; top: 0; z-index: 50;
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+        backdrop-filter: saturate(180%) blur(12px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-inner { display: flex; align-items: center; gap: 1.25rem; height: 3.9rem; }
+      .brand {
+        display: flex; align-items: center; gap: .55rem; font-family: var(--brand-font);
+        font-weight: 800; font-size: 1.02rem; color: var(--text); letter-spacing: -.02em;
+      }
+      .brand:hover { text-decoration: none; }
+      .brand .mark {
+        width: 1.65rem; height: 1.65rem; border-radius: .5rem; display: grid; place-items: center;
+        background: linear-gradient(135deg, var(--brand-2), var(--brand-3));
+        color: #fff; font-size: .95rem; box-shadow: 0 2px 8px -1px rgba(194,65,12,.5);
+      }
+      .brand .sub { color: var(--muted); font-weight: 500; font-size: .82rem; font-family: var(--sans); }
+      .nav-links { display: flex; align-items: center; gap: .35rem; margin-left: auto; }
+      .nav-links a {
+        color: var(--muted); font-weight: 500; font-size: .9rem; padding: .4rem .7rem;
+        border-radius: .5rem;
+      }
+      .nav-links a:hover { color: var(--text); background: var(--bg-alt); text-decoration: none; }
+      .icon-btn {
+        display: grid; place-items: center; width: 2.2rem; height: 2.2rem; cursor: pointer;
+        border: 1px solid var(--border-strong); border-radius: .6rem; background: var(--card);
+        color: var(--muted); font-size: 1rem;
+      }
+      .icon-btn:hover { color: var(--text); border-color: var(--brand); }
+      .btn-gh {
+        display: inline-flex; align-items: center; gap: .4rem; font-size: .88rem; font-weight: 600;
+        padding: .45rem .8rem; border-radius: .6rem; border: 1px solid var(--border-strong);
+        background: var(--card); color: var(--text);
+      }
+      .btn-gh:hover { border-color: var(--brand); text-decoration: none; }
+      @media (max-width: 720px) { .nav-hide-sm { display: none; } }
+
+      /* ── Hero ────────────────────────────────────────── */
       header {
-        padding: 3rem 1.25rem 2rem; text-align: center;
-        background: linear-gradient(135deg, var(--brand2), var(--brand));
-        color: #fff;
+        position: relative; overflow: hidden;
+        background:
+          radial-gradient(ellipse 70% 60% at 50% -20%, rgba(249,115,22,.16), transparent 60%),
+          var(--bg);
+        border-bottom: 1px solid var(--border);
       }
-      header h1 { margin: 0 0 .35rem; font-size: 1.9rem; }
-      header p { margin: 0 auto; max-width: 46rem; opacity: .92; }
-      main { max-width: 68rem; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
-      .controls { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.25rem 0 1.75rem; }
+      .fx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+      .fx span {
+        position: absolute; font-family: var(--mono); font-weight: 500;
+        color: var(--brand-3); opacity: .07; user-select: none;
+        animation: drift linear infinite;
+      }
+      [data-theme="dark"] .fx span { opacity: .09; color: var(--brand-2); }
+      @keyframes drift {
+        0%   { transform: translateY(14vh) rotate(0deg); }
+        100% { transform: translateY(-14vh) rotate(8deg); }
+      }
+      @media (prefers-reduced-motion: reduce) { .fx span { animation: none; } }
+      .hero { position: relative; text-align: center; padding: 5.5rem 0 4.5rem; }
+      .eyebrow {
+        display: inline-flex; align-items: center; gap: .5rem; margin-bottom: 1.4rem;
+        padding: .35rem .8rem .35rem .5rem; border-radius: 999px;
+        background: var(--brand-wash); border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent);
+        color: var(--brand-ink); font-size: .8rem; font-weight: 600;
+      }
+      .eyebrow .dot { width: .55rem; height: .55rem; border-radius: 999px; background: var(--brand-2);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent); }
+      .hero h1 {
+        margin: 0 auto .9rem; max-width: 20ch; font-size: clamp(2.3rem, 5.5vw, 3.6rem);
+        font-weight: 800; line-height: 1.05;
+      }
+      .hero h1 .grad {
+        background: linear-gradient(120deg, var(--brand-3), var(--brand-2) 60%, #fb923c);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+      }
+      .hero p.lead {
+        margin: 0 auto; max-width: 44rem; font-size: 1.12rem; color: var(--muted);
+      }
+      .cta { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center; margin: 2rem 0 2.5rem; }
+      .btn {
+        display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; font-size: .95rem;
+        padding: .7rem 1.25rem; border-radius: .7rem; cursor: pointer; border: 1px solid transparent;
+        transition: transform .12s ease, box-shadow .12s ease;
+      }
+      .btn:hover { text-decoration: none; transform: translateY(-1px); }
+      .btn-primary {
+        color: #fff; background: linear-gradient(135deg, var(--brand-2), var(--brand-3));
+        box-shadow: 0 4px 14px 0 rgba(194,65,12,.34);
+      }
+      .btn-primary:hover { box-shadow: 0 10px 26px -6px rgba(194,65,12,.5); }
+      [data-theme="dark"] .btn-primary { color: #1a0e05; }
+      .btn-ghost { background: var(--card); border-color: var(--border-strong); color: var(--text); }
+      .btn-ghost:hover { border-color: var(--brand); }
+
+      /* Stat pills */
+      .stats {
+        display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 2.4rem;
+        margin-top: .5rem;
+      }
+      .stat { text-align: center; }
+      .stat .n {
+        font-family: var(--brand-font); font-weight: 800; font-size: 1.9rem; line-height: 1;
+        background: linear-gradient(135deg, var(--brand-3), var(--brand-2));
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+      }
+      .stat .l { display: block; margin-top: .35rem; color: var(--muted); font-size: .82rem;
+        text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+
+      /* ── Sections ────────────────────────────────────── */
+      section.block { padding: 4.5rem 0; }
+      section.alt { background: var(--bg-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+      .sec-head { text-align: center; max-width: 40rem; margin: 0 auto 2.6rem; }
+      .sec-head .kicker { color: var(--brand-3); font-weight: 700; font-size: .82rem;
+        text-transform: uppercase; letter-spacing: .08em; }
+      .sec-head h2 { margin: .5rem 0 .6rem; font-size: clamp(1.6rem, 3.5vw, 2.1rem); }
+      .sec-head p { margin: 0; color: var(--muted); font-size: 1.03rem; }
+
+      /* Feature cards */
+      .grid { display: grid; gap: 1.1rem; }
+      .grid-4 { grid-template-columns: repeat(4, 1fr); }
+      .grid-3 { grid-template-columns: repeat(3, 1fr); }
+      @media (max-width: 900px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: 1fr; } }
+      @media (max-width: 560px) { .grid-4 { grid-template-columns: 1fr; } }
+      .feat {
+        background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
+        padding: 1.5rem; box-shadow: var(--shadow-card); transition: transform .15s, box-shadow .15s, border-color .15s;
+      }
+      .feat:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: color-mix(in srgb, var(--brand) 40%, var(--border)); }
+      .feat .ic {
+        width: 2.7rem; height: 2.7rem; border-radius: .7rem; display: grid; place-items: center;
+        font-size: 1.3rem; margin-bottom: .9rem;
+        background: var(--brand-wash); color: var(--brand-3);
+        border: 1px solid color-mix(in srgb, var(--brand) 20%, transparent);
+      }
+      .feat h3 { margin: 0 0 .4rem; font-size: 1.08rem; }
+      .feat p { margin: 0; color: var(--muted); font-size: .93rem; }
+
+      /* ── Explorer ────────────────────────────────────── */
+      .controls {
+        display: flex; flex-wrap: wrap; gap: .7rem; align-items: center;
+        margin-bottom: 1.4rem;
+      }
+      .search-wrap { flex: 1 1 18rem; position: relative; min-width: 12rem; }
+      .search-wrap svg { position: absolute; left: .8rem; top: 50%; transform: translateY(-50%);
+        width: 1.05rem; height: 1.05rem; color: var(--muted); pointer-events: none; }
       input[type="search"] {
-        flex: 1 1 16rem; min-width: 12rem; padding: .55rem .8rem; font-size: .95rem;
-        border: 1px solid var(--border); border-radius: .6rem; background: var(--card); color: var(--text);
+        width: 100%; padding: .7rem .9rem .7rem 2.4rem; font-size: .95rem; font-family: var(--sans);
+        border: 1px solid var(--border-strong); border-radius: .7rem; background: var(--card); color: var(--text);
       }
+      input[type="search"]:focus { outline: none; border-color: var(--brand);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent); }
       .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
       .filters button {
-        padding: .4rem .7rem; font-size: .8rem; border: 1px solid var(--border);
-        border-radius: 999px; background: var(--card); color: var(--muted); cursor: pointer;
+        padding: .45rem .8rem; font-size: .82rem; font-weight: 600; font-family: var(--sans);
+        border: 1px solid var(--border-strong); border-radius: 999px; background: var(--card);
+        color: var(--muted); cursor: pointer; transition: all .12s;
       }
-      .filters button[aria-pressed="true"] { background: var(--brand); color: #fff; border-color: var(--brand); }
-      .vendor { margin-bottom: 2rem; }
-      .vendor h2 { font-size: 1.15rem; margin: 0 0 .2rem; }
-      .vendor .count { color: var(--muted); font-size: .82rem; font-weight: 400; }
-      table { width: 100%; border-collapse: collapse; margin-top: .6rem; }
+      .filters button:hover { border-color: var(--brand); color: var(--text); }
+      .filters button[aria-pressed="true"] {
+        background: linear-gradient(135deg, var(--brand-2), var(--brand-3)); color: #fff;
+        border-color: transparent; box-shadow: 0 2px 8px -1px rgba(194,65,12,.4);
+      }
+      [data-theme="dark"] .filters button[aria-pressed="true"] { color: #1a0e05; }
+
+      .vendor { margin-bottom: 1.1rem; background: var(--card); border: 1px solid var(--border);
+        border-radius: 1rem; overflow: hidden; box-shadow: var(--shadow-card); }
+      .vendor-head {
+        display: flex; align-items: center; gap: .7rem; padding: .95rem 1.1rem;
+        border-bottom: 1px solid var(--border); cursor: pointer; user-select: none;
+      }
+      .vendor-head:hover { background: var(--bg-alt); }
+      .avatar {
+        width: 2.1rem; height: 2.1rem; border-radius: .55rem; display: grid; place-items: center;
+        font-weight: 800; font-size: .82rem; color: #fff; font-family: var(--brand-font); flex: none;
+      }
+      .vendor-head h3 { margin: 0; font-size: 1rem; }
+      .vendor-head .count {
+        margin-left: auto; color: var(--muted); font-size: .8rem; font-weight: 600;
+        background: var(--bg-alt); padding: .15rem .6rem; border-radius: 999px; border: 1px solid var(--border);
+      }
+      .vendor-head .chev { color: var(--muted); transition: transform .18s; font-size: .8rem; }
+      .vendor.collapsed .chev { transform: rotate(-90deg); }
+      .vendor.collapsed .table-scroll { display: none; }
+      .table-scroll { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; }
       thead th {
-        text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em;
-        color: var(--muted); padding: .4rem .6rem; border-bottom: 1px solid var(--border);
+        text-align: left; font-size: .68rem; text-transform: uppercase; letter-spacing: .06em;
+        color: var(--muted); padding: .6rem 1.1rem; background: var(--bg-alt); font-weight: 700;
+        border-bottom: 1px solid var(--border);
       }
-      tbody td { padding: .55rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-      tbody tr:hover { background: color-mix(in srgb, var(--brand) 6%, transparent); }
-      code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88em; }
+      tbody td { padding: .7rem 1.1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+      tbody tr:last-child td { border-bottom: none; }
+      tbody tr:hover { background: color-mix(in srgb, var(--brand) 5%, transparent); }
+      td .mid { font-family: var(--mono); font-size: .86rem; font-weight: 500; }
+      td .lbl { color: var(--muted); font-size: .8rem; margin-top: .1rem; }
       .badge {
-        display: inline-block; padding: .12rem .5rem; border-radius: 999px;
-        font-size: .72rem; font-weight: 600; white-space: nowrap;
+        display: inline-flex; align-items: center; gap: .3rem; padding: .18rem .55rem; border-radius: 999px;
+        font-size: .72rem; font-weight: 700; white-space: nowrap;
+        background: color-mix(in srgb, var(--kc) 15%, transparent); color: var(--kc);
+        border: 1px solid color-mix(in srgb, var(--kc) 32%, transparent);
       }
-      .k-CHAT { background: #dbeafe; color: #1d4ed8; }
-      .k-EMBEDDING { background: #d1fae5; color: #047857; }
-      .k-RERANK { background: #fef3c7; color: #b45309; }
-      .k-IMAGE { background: #fae8ff; color: #a21caf; }
-      .k-TRANSCRIPTION { background: #e0f2fe; color: #0369a1; }
-      .k-SPEECH { background: #ede9fe; color: #6d28d9; }
-      .k-VIDEO { background: #ffe4e6; color: #be123c; }
-      .k-MODERATION, .k-UNKNOWN { background: #e2e8f0; color: #334155; }
       .chip {
-        display: inline-block; margin: 0 .25rem .25rem 0; padding: .05rem .4rem;
-        border: 1px solid var(--border); border-radius: .4rem; font-size: .72rem; color: var(--muted);
+        display: inline-block; margin: .12rem .25rem 0 0; padding: .12rem .45rem;
+        border: 1px solid var(--border-strong); border-radius: .45rem; font-size: .72rem;
+        color: var(--muted); background: var(--bg-alt); white-space: nowrap;
       }
-      .api {
-        background: var(--card); border: 1px solid var(--border); border-radius: .8rem;
-        padding: 1rem 1.2rem; margin: 0 0 1.5rem;
+      .chip.num { color: var(--brand-3); border-color: color-mix(in srgb, var(--brand) 25%, transparent);
+        background: var(--brand-wash); font-family: var(--mono); font-weight: 500; }
+
+      /* ── Code / API ──────────────────────────────────── */
+      .card {
+        background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
+        box-shadow: var(--shadow-card); overflow: hidden; margin-bottom: 1.1rem;
       }
-      .api h2 { margin: 0 0 .5rem; font-size: 1rem; }
-      .api pre {
-        overflow-x: auto; background: color-mix(in srgb, var(--text) 5%, transparent);
-        padding: .7rem .8rem; border-radius: .5rem; margin: .5rem 0 0;
+      .card-body { padding: 1.4rem 1.5rem; }
+      .card h3 { margin: 0 0 .3rem; font-size: 1.15rem; }
+      .card .meta { color: var(--muted); font-size: .9rem; }
+      table.endpoints td, table.endpoints th { padding: .6rem .5rem; }
+      table.endpoints td:first-child { white-space: nowrap; }
+      table.endpoints code { font-size: .82rem; }
+      .codeblock { position: relative; }
+      pre {
+        margin: 0; overflow-x: auto; background: #14100c; color: #f3ece7;
+        padding: 1rem 1.1rem; border-radius: .7rem; font-size: .86rem; line-height: 1.65;
+        border: 1px solid var(--border-strong);
       }
-      .api a { color: var(--brand); }
-      .endpoints { margin: .3rem 0 .2rem; }
-      .endpoints td:first-child { white-space: nowrap; }
-      .endpoints th:first-child { width: 14rem; }
-      footer { text-align: center; color: var(--muted); font-size: .82rem; padding: 2rem 1rem; }
-      .meta { color: var(--muted); font-size: .82rem; }
+      [data-theme="dark"] pre { background: #0c0906; }
+      pre .cm { color: #8a7a6a; }
+      pre .tk { color: #fdba74; }
+      .copy {
+        position: absolute; top: .55rem; right: .55rem; padding: .3rem .6rem; font-size: .74rem;
+        font-weight: 600; font-family: var(--sans); cursor: pointer; border-radius: .45rem;
+        background: rgba(255,255,255,.08); color: #f3ece7; border: 1px solid rgba(255,255,255,.16);
+      }
+      .copy:hover { background: rgba(255,255,255,.16); }
+
+      .sdk .ic-lang {
+        width: 2.4rem; height: 2.4rem; border-radius: .6rem; display: grid; place-items: center;
+        font-family: var(--brand-font); font-weight: 800; font-size: .85rem; color: #fff; margin-bottom: .9rem;
+      }
+      .sdk code { font-size: .8rem; background: var(--bg-alt); padding: .1rem .35rem; border-radius: .35rem;
+        border: 1px solid var(--border); }
+      .sdk .install { margin-top: .8rem; }
+
+      /* ── Footer ──────────────────────────────────────── */
+      footer { border-top: 1px solid var(--border); background: var(--bg-alt); }
+      .foot { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;
+        padding: 2.2rem 0; color: var(--muted); font-size: .88rem; }
+      .foot a { color: var(--muted); }
+      .foot a:hover { color: var(--brand-3); }
+      .foot .foot-links { display: flex; flex-wrap: wrap; gap: 1.1rem; }
+
+      .status { text-align: center; color: var(--muted); font-size: .9rem; padding: 1rem; }
+      .skeleton { height: 4.5rem; border-radius: 1rem; background: linear-gradient(90deg, var(--bg-alt), var(--card), var(--bg-alt));
+        background-size: 200% 100%; animation: shimmer 1.3s infinite; margin-bottom: 1.1rem; }
+      @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
   </head>
   <body>
-    <header>
-      <h1>Model Catalog</h1>
-      <p>
-        A vendor-neutral, kind-aware catalog of LLM / embedding / rerank / media models —
-        which ids exist per vendor and, for each, its <em>kind</em>, context window, and capabilities.
-        Free, unauthenticated, versioned JSON. Part of <strong>Viglet Turing ES</strong>.
-      </p>
-    </header>
-    <main>
-      <section class="api">
-        <h2>Public REST API</h2>
-        <p class="meta">
-          Static, CORS-open, versioned JSON — no key, no server. Every path below is a plain <code>GET</code>.
-        </p>
-        <table class="endpoints">
-          <thead>
-            <tr><th>Endpoint</th><th>What you get</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><a href="./catalog.json"><code>catalog.json</code></a></td>
-              <td>Full catalog — every vendor, every field. Rolling latest.</td>
-            </tr>
-            <tr>
-              <td><a href="./catalog-v1.json"><code>catalog-v1.json</code></a></td>
-              <td>Same, pinned to schema <strong>v1</strong> — safe for consumers to lock onto.</td>
-            </tr>
-            <tr>
-              <td><a href="./index.json"><code>index.json</code></a></td>
-              <td>Compact index — each model trimmed to <code>{ vendor, id, label, kind }</code>. ~70% smaller; ideal for model-pickers that lazy-load the full record on selection.</td>
-            </tr>
-            <tr>
-              <td><code>by-kind/&lt;KIND&gt;.json</code></td>
-              <td>Catalog filtered to one kind — e.g. <a href="./by-kind/EMBEDDING.json"><code>by-kind/EMBEDDING.json</code></a>, <a href="./by-kind/CHAT.json"><code>CHAT</code></a>.</td>
-            </tr>
-            <tr>
-              <td><code>by-vendor/&lt;vendor&gt;.json</code></td>
-              <td>Catalog filtered to one vendor — e.g. <a href="./by-vendor/openai.json"><code>by-vendor/openai.json</code></a>.</td>
-            </tr>
-            <tr>
-              <td><a href="./endpoints.json"><code>endpoints.json</code></a></td>
-              <td>Discovery manifest — absolute URLs for every path above, including the available <code>byKind</code> / <code>byVendor</code> slice keys. Read this instead of hard-coding paths.</td>
-            </tr>
-            <tr>
-              <td><a href="./catalog.schema.json"><code>catalog.schema.json</code></a></td>
-              <td>JSON Schema (Draft 2020-12) describing the envelope + entry.</td>
-            </tr>
-          </tbody>
-        </table>
-        <p class="meta">
-          Faceted slices are <strong>pre-computed at publish time</strong>, not a live query API — GitHub Pages serves static assets only. Every response (full, index, or slice) shares the same <code>vendors</code>-map envelope, so one parser reads them all.
-        </p>
-        <pre><code># every embedding model, straight from the pre-filtered slice
-curl -s ./by-kind/EMBEDDING.json | jq '.vendors | to_entries[].value[].id'
-
-# discover the whole surface
-curl -s ./endpoints.json | jq</code></pre>
-      </section>
-
-      <section class="api">
-        <h2>Client SDKs</h2>
-        <p class="meta">
-          Zero-dependency, read-only clients that wrap the endpoints above —
-          URL selection (rolling / pinned / compact), <code>vendors</code>-map flattening,
-          <code>byKind</code>/<code>byVendor</code>/<code>get</code> filters and in-memory caching.
-          All open, Apache-2.0, published to their public registries — every install below is <strong>unauthenticated</strong>, no token, anyone can.
-        </p>
-        <table class="endpoints">
-          <thead>
-            <tr><th>SDK</th><th>Install (public registry, no auth)</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <a href="https://github.com/openviglet/models-catalog/tree/main/clients/java">Java</a>
-                <div class="meta">JDK <code>HttpClient</code> · 17+</div>
-              </td>
-              <td><a href="https://central.sonatype.com/artifact/io.github.openviglet/models-catalog-client">Maven Central</a> — <code>io.github.openviglet:models-catalog-client:1.0.2</code></td>
-            </tr>
-            <tr>
-              <td>
-                <a href="https://github.com/openviglet/models-catalog/tree/main/clients/js">JS / TS</a>
-                <div class="meta">ESM · Node 18+ &amp; browser</div>
-              </td>
-              <td><a href="https://www.npmjs.com/package/@openviglet/models-catalog-client">npm</a> — <code>npm i @openviglet/models-catalog-client</code></td>
-            </tr>
-            <tr>
-              <td>
-                <a href="https://github.com/openviglet/models-catalog/tree/main/clients/python">Python</a>
-                <div class="meta">stdlib <code>urllib</code> only · 3.8+</div>
-              </td>
-              <td><a href="https://pypi.org/project/openviglet-models-catalog-client/">PyPI</a> — <code>pip install openviglet-models-catalog-client</code></td>
-            </tr>
-          </tbody>
-        </table>
-        <p class="meta">
-          Each README covers the full API and options. Published to Maven Central, npm and PyPI; the source lives in <a href="https://github.com/openviglet/models-catalog/tree/main/clients">clients/</a>.
-        </p>
-      </section>
-
-      <div class="controls">
-        <input id="q" type="search" placeholder="Search id, label, or vendor…" autocomplete="off" />
-        <div class="filters" id="filters"></div>
+    <!-- ── Nav ─────────────────────────────────────────── -->
+    <nav>
+      <div class="wrap nav-inner">
+        <a class="brand" href="#top">
+          <span class="mark">◈</span>
+          Model Catalog
+          <span class="sub nav-hide-sm">· Viglet Turing ES</span>
+        </a>
+        <div class="nav-links">
+          <a href="#browse" class="nav-hide-sm">Browse</a>
+          <a href="#api" class="nav-hide-sm">API</a>
+          <a href="#sdks" class="nav-hide-sm">SDKs</a>
+          <button class="icon-btn" id="theme" title="Toggle theme" aria-label="Toggle theme">◐</button>
+          <a class="btn-gh" href="https://github.com/openviglet/models-catalog" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            <span class="nav-hide-sm">Star</span>
+          </a>
+        </div>
       </div>
-      <p id="status" class="meta">Loading…</p>
-      <div id="list"></div>
-    </main>
+    </nav>
+
+    <!-- ── Hero ────────────────────────────────────────── -->
+    <header id="top">
+      <div class="fx" id="fx" aria-hidden="true"></div>
+      <div class="wrap hero">
+        <span class="eyebrow"><span class="dot"></span> Free · unauthenticated · versioned JSON</span>
+        <h1>The open reference for<br /><span class="grad">every AI model, one catalog</span></h1>
+        <p class="lead">
+          A vendor-neutral, kind-aware catalog of LLM, embedding, rerank &amp; media models —
+          which ids exist per vendor and, for each, its <em>kind</em>, context window and
+          capabilities. No key, no server, no pricing. Just clean JSON.
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#browse">Browse the catalog</a>
+          <a class="btn btn-ghost" href="./catalog.json">Get the JSON ↗</a>
+        </div>
+        <div class="stats" id="stats">
+          <div class="stat"><span class="n" data-stat="models">—</span><span class="l">Models</span></div>
+          <div class="stat"><span class="n" data-stat="vendors">—</span><span class="l">Vendors</span></div>
+          <div class="stat"><span class="n" data-stat="kinds">—</span><span class="l">Kinds</span></div>
+          <div class="stat"><span class="n" data-stat="version">—</span><span class="l">Schema</span></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Why ─────────────────────────────────────────── -->
+    <section class="block">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">Why it exists</div>
+          <h2>One place to answer “which models are there?”</h2>
+          <p>Every provider ships its own shape, its own churn and its own docs. This catalog normalizes them into one contract the whole community can build on.</p>
+        </div>
+        <div class="grid grid-4">
+          <div class="feat">
+            <div class="ic">◈</div>
+            <h3>Vendor-neutral</h3>
+            <p>One envelope across OpenAI, Anthropic, Gemini, Bedrock, Mistral, Cohere, Voyage, Ollama and more. One parser reads them all.</p>
+          </div>
+          <div class="feat">
+            <div class="ic">⬡</div>
+            <h3>Kind-aware</h3>
+            <p>Every id tagged by kind — chat, embedding, rerank, image, speech, transcription, video — with context window and capabilities.</p>
+          </div>
+          <div class="feat">
+            <div class="ic">↯</div>
+            <h3>Zero-auth, zero-cost</h3>
+            <p>Static, CORS-open, versioned JSON on GitHub Pages. No key, no rate limit, no server. Pin schema <code>v1</code> and lock on.</p>
+          </div>
+          <div class="feat">
+            <div class="ic">✓</div>
+            <h3>Provenance-first</h3>
+            <p>Regenerated entries carry their <code>sources</code> and <code>lastVerified</code>. No pricing, ever. We omit a field before we guess it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Browse / Explorer ───────────────────────────── -->
+    <section class="block alt" id="browse">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">Explore</div>
+          <h2>Browse the catalog</h2>
+          <p>Search across every vendor and id, or filter by kind. Grouped by vendor — click a header to collapse.</p>
+        </div>
+        <div class="controls">
+          <div class="search-wrap">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4" stroke-linecap="round"/></svg>
+            <input id="q" type="search" placeholder="Search id, label or vendor…" autocomplete="off" />
+          </div>
+          <div class="filters" id="filters"></div>
+        </div>
+        <p id="status" class="status">
+          <span class="skeleton" style="display:block"></span>
+          <span class="skeleton" style="display:block"></span>
+          <span class="skeleton" style="display:block"></span>
+        </p>
+        <div id="list"></div>
+      </div>
+    </section>
+
+    <!-- ── API ─────────────────────────────────────────── -->
+    <section class="block" id="api">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">For developers</div>
+          <h2>A public REST-ish API</h2>
+          <p>Static, CORS-open, versioned JSON — every path is a plain <code>GET</code>. Faceted slices are pre-computed at publish time, all sharing one <code>vendors</code>-map envelope.</p>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <table class="endpoints">
+              <thead><tr><th>Endpoint</th><th>What you get</th></tr></thead>
+              <tbody>
+                <tr><td><a href="./catalog.json"><code>catalog.json</code></a></td><td>Full catalog — every vendor, every field. Rolling latest.</td></tr>
+                <tr><td><a href="./catalog-v1.json"><code>catalog-v1.json</code></a></td><td>Same, pinned to schema <strong>v1</strong> — safe for consumers to lock onto.</td></tr>
+                <tr><td><a href="./index.json"><code>index.json</code></a></td><td>Compact index — each model trimmed to <code>{ vendor, id, label, kind }</code>. ~70% smaller; ideal for model-pickers that lazy-load the full record.</td></tr>
+                <tr><td><code>by-kind/&lt;KIND&gt;.json</code></td><td>Filtered to one kind — e.g. <a href="./by-kind/EMBEDDING.json"><code>EMBEDDING</code></a>, <a href="./by-kind/CHAT.json"><code>CHAT</code></a>.</td></tr>
+                <tr><td><code>by-vendor/&lt;vendor&gt;.json</code></td><td>Filtered to one vendor — e.g. <a href="./by-vendor/openai.json"><code>openai</code></a>.</td></tr>
+                <tr><td><a href="./endpoints.json"><code>endpoints.json</code></a></td><td>Discovery manifest — absolute URLs for every path, plus the available <code>byKind</code>/<code>byVendor</code> keys. Read this instead of hard-coding paths.</td></tr>
+                <tr><td><a href="./catalog.schema.json"><code>catalog.schema.json</code></a></td><td>JSON Schema (Draft 2020-12) describing the envelope + entry.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>Try it</h3>
+            <p class="meta" style="margin-bottom:.9rem">Copy, paste, run. No token required.</p>
+            <div class="codeblock">
+              <button class="copy" data-copy>Copy</button>
+              <pre><code><span class="cm"># every embedding model, from the pre-filtered slice</span>
+curl -s https://openviglet.github.io/models-catalog/<span class="tk">by-kind/EMBEDDING.json</span> \
+  | jq <span class="tk">'.vendors | to_entries[].value[].id'</span>
+
+<span class="cm"># discover the whole surface</span>
+curl -s https://openviglet.github.io/models-catalog/<span class="tk">endpoints.json</span> | jq</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SDKs ────────────────────────────────────────── -->
+    <section class="block alt" id="sdks">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">Client SDKs</div>
+          <h2>Read the catalog in one line</h2>
+          <p>Zero-dependency, read-only clients — URL selection (rolling / pinned / compact), <code>vendors</code>-map flattening, <code>byKind</code>/<code>byVendor</code>/<code>get</code> filters and in-memory caching. All Apache-2.0, all unauthenticated.</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="feat sdk">
+            <div class="ic-lang" style="background:linear-gradient(135deg,#3776ab,#4b8bbe)">Py</div>
+            <h3>Python</h3>
+            <p class="meta">stdlib <code>urllib</code> only · 3.8+</p>
+            <div class="install codeblock">
+              <button class="copy" data-copy>Copy</button>
+              <pre><code>pip install <span class="tk">"git+https://github.com/openviglet/models-catalog.git#subdirectory=clients/python"</span></code></pre>
+            </div>
+            <p class="meta" style="margin-top:.7rem"><a href="https://github.com/openviglet/models-catalog/tree/main/clients/python">Docs &amp; install matrix ↗</a></p>
+          </div>
+          <div class="feat sdk">
+            <div class="ic-lang" style="background:linear-gradient(135deg,#f7df1e,#e0b400);color:#1a1512">JS</div>
+            <h3>JavaScript / TS</h3>
+            <p class="meta">ESM · Node 18+ &amp; browser</p>
+            <div class="install codeblock">
+              <button class="copy" data-copy>Copy</button>
+              <pre><code>npm i <span class="tk">@openviglet/models-catalog-client</span></code></pre>
+            </div>
+            <p class="meta" style="margin-top:.7rem">Or vendor two zero-dep files. <a href="https://github.com/openviglet/models-catalog/tree/main/clients/js">Docs ↗</a></p>
+          </div>
+          <div class="feat sdk">
+            <div class="ic-lang" style="background:linear-gradient(135deg,#f89820,#e76f00)">Jv</div>
+            <h3>Java</h3>
+            <p class="meta">JDK <code>HttpClient</code> · 17+</p>
+            <div class="install codeblock">
+              <button class="copy" data-copy>Copy</button>
+              <pre><code>io.github.openviglet:<span class="tk">models-catalog-client</span></code></pre>
+            </div>
+            <p class="meta" style="margin-top:.7rem">Maven Central or <a href="https://jitpack.io">JitPack</a>. <a href="https://github.com/openviglet/models-catalog/tree/main/clients/java">Docs ↗</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Footer ──────────────────────────────────────── -->
     <footer>
-      <span id="footmeta"></span> · Viglet Turing ES ·
-      <a href="https://github.com/openviglet/models-catalog" style="color: var(--muted)">openviglet/models-catalog</a>
+      <div class="wrap foot">
+        <div>
+          <strong style="font-family:var(--brand-font);color:var(--text)">Model Catalog</strong>
+          <span id="footmeta"></span><br />
+          Part of <a href="https://www.viglet.org">Viglet Turing ES</a> · Apache-2.0
+        </div>
+        <div class="foot-links">
+          <a href="https://github.com/openviglet/models-catalog">GitHub</a>
+          <a href="./catalog.json">catalog.json</a>
+          <a href="./endpoints.json">endpoints.json</a>
+          <a href="./catalog.schema.json">Schema</a>
+          <a href="#top">Back to top ↑</a>
+        </div>
+      </div>
     </footer>
 
     <script>
+      /* ── Theme ─────────────────────────────────────── */
+      (function () {
+        const KEY = "mc-theme";
+        const root = document.documentElement;
+        const saved = localStorage.getItem(KEY);
+        const sysDark = matchMedia("(prefers-color-scheme: dark)").matches;
+        root.setAttribute("data-theme", saved || (sysDark ? "dark" : "light"));
+        document.getElementById("theme").onclick = () => {
+          const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          root.setAttribute("data-theme", next);
+          localStorage.setItem(KEY, next);
+        };
+      })();
+
+      /* ── Floating background ───────────────────────── */
+      (function () {
+        const fx = document.getElementById("fx");
+        const syms = ["∑","∇","λ","{ }","</>","⟨⟩","π","∫","◈","⬡","∂","θ","≈","→","x²","φ","∆","·"];
+        const N = 22;
+        for (let i = 0; i < N; i++) {
+          const s = document.createElement("span");
+          s.textContent = syms[i % syms.length];
+          const size = 0.9 + (i % 5) * 0.55;
+          s.style.fontSize = size + "rem";
+          s.style.left = ((i * 37) % 100) + "%";
+          s.style.top = ((i * 53) % 100) + "%";
+          s.style.animationDuration = (9 + (i % 7) * 2.5) + "s";
+          s.style.animationDelay = "-" + (i % 9) + "s";
+          fx.appendChild(s);
+        }
+      })();
+
+      /* ── Data ──────────────────────────────────────── */
       const KINDS = ["CHAT","EMBEDDING","RERANK","IMAGE","TRANSCRIPTION","SPEECH","VIDEO","MODERATION","UNKNOWN"];
       const KIND_LABEL = { CHAT:"Chat", EMBEDDING:"Embedding", RERANK:"Rerank", IMAGE:"Image", TRANSCRIPTION:"Transcription", SPEECH:"Speech", VIDEO:"Video", MODERATION:"Moderation", UNKNOWN:"Other" };
+      const KIND_COLOR = {
+        CHAT:"#2563eb", EMBEDDING:"#059669", RERANK:"#d97706", IMAGE:"#c026d3",
+        TRANSCRIPTION:"#0284c7", SPEECH:"#7c3aed", VIDEO:"#e11d48", MODERATION:"#64748b", UNKNOWN:"#64748b",
+      };
       const VENDOR_LABEL = {
         openai:"OpenAI", anthropic:"Anthropic", gemini:"Google Gemini", "gemini-openai":"Gemini (OpenAI-compatible)",
         ollama:"Ollama", "openai-compatible":"OpenAI-compatible", bedrock:"Amazon Bedrock", cohere:"Cohere",
         mistral:"Mistral", voyage:"Voyage AI", "vertex-ai":"Google Vertex AI",
       };
+      const VENDOR_COLOR = {
+        openai:"#10a37f", anthropic:"#d97757", gemini:"#4285f4", "gemini-openai":"#4285f4",
+        ollama:"#0f172a", bedrock:"#ff9900", cohere:"#39594d", mistral:"#fa5111",
+        voyage:"#7c3aed", "vertex-ai":"#1a73e8",
+      };
       const vendorLabel = (v) => VENDOR_LABEL[v] || v;
+      const vendorColor = (v) => VENDOR_COLOR[v] || "#ea580c";
+      const initials = (v) => (VENDOR_LABEL[v] || v).replace(/[^A-Za-z ]/g, "").split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
       function fmtTokens(n) {
         if (!n) return "";
         if (n >= 1_000_000) { const m = n / 1_048_576; return (m >= 10 ? Math.round(m) : m.toFixed(m % 1 === 0 ? 0 : 1)) + "M"; }
@@ -216,8 +601,8 @@ curl -s ./endpoints.json | jq</code></pre>
         return n.toLocaleString("en-US");
       }
 
-      let catalog = null;
-      let activeKind = null;
+      let catalog = null, activeKind = null;
+      const collapsed = new Set();
 
       function render() {
         const q = document.getElementById("q").value.trim().toLowerCase();
@@ -232,25 +617,41 @@ curl -s ./endpoints.json | jq</code></pre>
           });
           if (!rows.length) continue;
           shown += rows.length;
+          const isCol = collapsed.has(vendor);
           const sec = document.createElement("section");
-          sec.className = "vendor";
+          sec.className = "vendor" + (isCol ? " collapsed" : "");
           const body = rows.map((m) => {
             const caps = (m.capabilities || []).map((c) => `<span class="chip">${c}</span>`).join("");
             const ctx = m.contextWindow ? `${fmtTokens(m.contextWindow)} ctx` : "";
             const dim = m.embeddingDimensions ? `${m.embeddingDimensions} dim` : "";
             const out = m.maxOutputTokens ? `${fmtTokens(m.maxOutputTokens)} out` : "";
-            const nums = [ctx, out, dim].filter(Boolean).map((x) => `<span class="chip">${x}</span>`).join("");
+            const nums = [ctx, out, dim].filter(Boolean).map((x) => `<span class="chip num">${x}</span>`).join("");
+            const kc = KIND_COLOR[m.kind] || KIND_COLOR.UNKNOWN;
             return `<tr>
-              <td><code>${m.id}</code>${m.label && m.label !== m.id ? `<div class="meta">${m.label}</div>` : ""}</td>
-              <td><span class="badge k-${m.kind}">${KIND_LABEL[m.kind] || m.kind}</span></td>
-              <td>${nums}${caps}</td>
+              <td><div class="mid">${m.id}</div>${m.label && m.label !== m.id ? `<div class="lbl">${m.label}</div>` : ""}</td>
+              <td><span class="badge" style="--kc:${kc}">${KIND_LABEL[m.kind] || m.kind}</span></td>
+              <td>${nums}${caps || (nums ? "" : '<span class="lbl">—</span>')}</td>
             </tr>`;
           }).join("");
-          sec.innerHTML = `<h2>${vendorLabel(vendor)} <span class="count">${rows.length}</span></h2>
-            <table><thead><tr><th>Model</th><th>Kind</th><th>Details</th></tr></thead><tbody>${body}</tbody></table>`;
+          sec.innerHTML =
+            `<div class="vendor-head" data-vendor="${vendor}">
+               <span class="avatar" style="background:${vendorColor(vendor)}">${initials(vendor)}</span>
+               <h3>${vendorLabel(vendor)}</h3>
+               <span class="count">${rows.length} model${rows.length !== 1 ? "s" : ""}</span>
+               <span class="chev">▾</span>
+             </div>
+             <div class="table-scroll">
+               <table><thead><tr><th>Model</th><th>Kind</th><th>Details</th></tr></thead><tbody>${body}</tbody></table>
+             </div>`;
+          sec.querySelector(".vendor-head").onclick = () => {
+            collapsed.has(vendor) ? collapsed.delete(vendor) : collapsed.add(vendor);
+            render();
+          };
           list.appendChild(sec);
         }
-        document.getElementById("status").textContent = shown ? `${shown} model(s)` : "No models match.";
+        document.getElementById("status").innerHTML = shown
+          ? `<span style="color:var(--brand-3);font-weight:600">${shown}</span> model${shown !== 1 ? "s" : ""} shown`
+          : "No models match your search.";
       }
 
       function buildFilters() {
@@ -268,21 +669,49 @@ curl -s ./endpoints.json | jq</code></pre>
         for (const k of KINDS) if (present.has(k)) f.appendChild(mk(k, KIND_LABEL[k]));
       }
 
+      function countUp(el, target) {
+        if (!isFinite(target)) { el.textContent = target; return; }
+        const dur = 900, t0 = performance.now();
+        (function step(t) {
+          const p = Math.min(1, (t - t0) / dur);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(target * eased);
+          if (p < 1) requestAnimationFrame(step);
+        })(t0);
+      }
+
       fetch("./catalog.json")
         .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
         .then((data) => {
           catalog = data;
-          const total = Object.values(data.vendors).flat().length;
+          const all = Object.values(data.vendors).flat();
+          const kinds = new Set(all.map((m) => m.kind));
+          countUp(document.querySelector('[data-stat="models"]'), all.length);
+          countUp(document.querySelector('[data-stat="vendors"]'), Object.keys(data.vendors).length);
+          countUp(document.querySelector('[data-stat="kinds"]'), kinds.size);
+          document.querySelector('[data-stat="version"]').textContent = "v" + data.version;
           document.getElementById("footmeta").textContent =
-            `schema v${data.version} · updated ${data.lastUpdated} · ${total} models`;
+            ` · schema v${data.version} · updated ${data.lastUpdated} · ${all.length} models`;
           buildFilters();
           render();
           document.getElementById("q").addEventListener("input", render);
         })
         .catch((e) => {
-          document.getElementById("status").textContent =
-            "Could not load catalog.json (" + e.message + "). Run `npm run emit` locally, or wait for the published site.";
+          document.getElementById("status").innerHTML =
+            "Could not load catalog.json (" + e.message + "). Run <code>npm run emit</code> locally, or wait for the published site.";
         });
+
+      /* ── Copy buttons ──────────────────────────────── */
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-copy]");
+        if (!btn) return;
+        const code = btn.parentElement.querySelector("code");
+        navigator.clipboard.writeText(code.innerText).then(() => {
+          const old = btn.textContent;
+          btn.textContent = "Copied ✓";
+          setTimeout(() => (btn.textContent = old), 1400);
+        });
+      });
     </script>
   </body>
 </html>
