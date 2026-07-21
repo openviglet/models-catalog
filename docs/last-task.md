@@ -22,6 +22,7 @@
 - **T10 CREATED** (💭, Block B §VI — Python client library: stdlib urllib + dataclass models) — 2026-07-21.
 - **T9 CREATED** (💭, Block B §VI — JavaScript/TypeScript client library: zero-dep npm, typed models + byKind/byVendor) — 2026-07-21.
 - **T7 SHIPPED** (Block A — compact index.json endpoint: same envelope, entries trimmed to vendor/id/label/kind, ~72% smaller) — 2026-07-21.
+- **T8 SHIPPED** (Block A — faceted by-kind/by-vendor static slices + endpoints.json discovery manifest, emitted from emit.mjs) — 2026-07-21.
 - **T8 CREATED** (📋, Block A §V — faceted static slices by-kind/by-vendor + endpoints.json discovery manifest; deps T7) — 2026-07-21.
 - **T7 CREATED** (📋, Block A §IV — compact index.json endpoint: id/label/kind/vendor only) — 2026-07-21.
 - **T5 SHIPPED** (Block A — regen.yml manual-dispatch workflow: pipeline with secret API keys → apply on throwaway branch → open PR with diff report; never writes main, never auto-merges) — 2026-07-21.

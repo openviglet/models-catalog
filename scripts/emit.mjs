@@ -4,13 +4,14 @@
  * source structurally (zero-dep, no ajv), flattens each vendor's entries adding a
  * `vendor` field, and writes the published JSON + a pinned version copy + the
  * JSON Schema into `public/` for GitHub Pages to serve at the site root
- * (`<pages>/catalog.json`, `catalog-v1.json`, `catalog.schema.json`, plus the
- * compact `index.json`; see .github/workflows/publish.yml). The browsable
- * `public/index.html` sits at `<pages>/`.
+ * (`<pages>/catalog.json`, `catalog-v1.json`, `catalog.schema.json`, the compact
+ * `index.json`, faceted `by-kind/<KIND>.json` + `by-vendor/<vendor>.json` slices,
+ * and the `endpoints.json` discovery manifest; see .github/workflows/publish.yml).
+ * The browsable `public/index.html` sits at `<pages>/`.
  *
  *   node scripts/emit.mjs
  */
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -88,14 +89,66 @@ const index = {
   ),
 };
 
+// Faceted static slices (T8): pre-filtered views so a consumer fetches exactly the
+// facet it wants — CDN-cached, no runtime — instead of downloading the whole catalog
+// and filtering client-side. Every slice keeps the same `vendors`-map envelope as
+// catalog.json (with the same optional narrowing key added), so one parser reads them
+// all, and each slice validates against the same schema.
+const slice = (extra, pick) => ({
+  version: root.version,
+  lastUpdated: root.lastUpdated,
+  source: SOURCE_URL,
+  ...extra,
+  vendors: Object.fromEntries(
+    Object.entries(vendors)
+      .map(([vendor, entries]) => [vendor, entries.filter(pick)])
+      .filter(([, entries]) => entries.length),
+  ),
+});
+
+const presentKinds = [...KINDS].filter((k) =>
+  Object.values(vendors).some((entries) => entries.some((e) => e.kind === k)),
+);
+const byKind = Object.fromEntries(
+  presentKinds.map((k) => [k, slice({ kind: k }, (e) => e.kind === k)]),
+);
+const byVendor = Object.fromEntries(
+  Object.keys(vendors).map((v) => [v, slice({ vendor: v }, (e) => e.vendor === v)]),
+);
+
+// Discovery manifest (T8): a machine-readable index of every published path (absolute
+// URLs off SOURCE_URL) so consumers discover the surface instead of hard-coding it.
+const endpoints = {
+  version: root.version,
+  lastUpdated: root.lastUpdated,
+  source: SOURCE_URL,
+  latest: `${SOURCE_URL}/catalog.json`,
+  pinned: { [String(root.version)]: `${SOURCE_URL}/catalog-v${root.version}.json` },
+  index: `${SOURCE_URL}/index.json`,
+  schema: `${SOURCE_URL}/catalog.schema.json`,
+  byKind: Object.fromEntries(presentKinds.map((k) => [k, `${SOURCE_URL}/by-kind/${k}.json`])),
+  byVendor: Object.fromEntries(Object.keys(vendors).map((v) => [v, `${SOURCE_URL}/by-vendor/${v}.json`])),
+};
+
 mkdirSync(OUT_DIR, { recursive: true });
+// Rewrite the slice dirs from scratch so a removed kind/vendor leaves no stale file.
+for (const dir of ["by-kind", "by-vendor"]) {
+  rmSync(resolve(OUT_DIR, dir), { recursive: true, force: true });
+  mkdirSync(resolve(OUT_DIR, dir), { recursive: true });
+}
+const write = (rel, obj) => writeFileSync(resolve(OUT_DIR, rel), JSON.stringify(obj, null, 2) + "\n", "utf8");
+
 const json = JSON.stringify(published, null, 2) + "\n";
 writeFileSync(resolve(OUT_DIR, "catalog.json"), json, "utf8"); // rolling latest
 writeFileSync(resolve(OUT_DIR, `catalog-v${root.version}.json`), json, "utf8"); // pinned
 writeFileSync(resolve(OUT_DIR, "catalog.schema.json"), readFileSync(SCHEMA_SRC, "utf8"), "utf8");
-writeFileSync(resolve(OUT_DIR, "index.json"), JSON.stringify(index, null, 2) + "\n", "utf8"); // compact
+write("index.json", index); // compact
+for (const [k, v] of Object.entries(byKind)) write(`by-kind/${k}.json`, v);
+for (const [k, v] of Object.entries(byVendor)) write(`by-vendor/${k}.json`, v);
+write("endpoints.json", endpoints); // discovery manifest
 
 console.log(
-  `emit-model-catalog: wrote catalog.json + catalog-v${root.version}.json + schema + index.json ` +
+  `emit-model-catalog: wrote catalog.json + catalog-v${root.version}.json + schema + index.json + ` +
+    `${presentKinds.length} by-kind + ${Object.keys(byVendor).length} by-vendor slices + endpoints.json ` +
     `(${Object.keys(vendors).length} vendors, ${count} models) to ${OUT_DIR}`,
 );

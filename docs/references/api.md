@@ -25,8 +25,19 @@ capability* — **not pricing** (see [STRATEGY.md](../STRATEGY.md) §I).
 | `…/catalog.json` | Rolling latest — the current schema version. |
 | `…/catalog-v1.json` | Pinned to schema **v1** — safe for external consumers to lock. |
 | `…/index.json` | **Compact index** — the same envelope, each entry trimmed to `{ vendor, id, label, kind }`. A fraction of the payload for model-pickers that only render a grouped list; lazy-load the full record from `catalog.json` on selection. |
+| `…/by-kind/<KIND>.json` | **Faceted slice** — the full catalog filtered to one `kind` (e.g. `by-kind/EMBEDDING.json`). Same envelope, plus a `kind` field. Fetch one facet instead of downloading everything and filtering client-side. |
+| `…/by-vendor/<vendor>.json` | **Faceted slice** — the full catalog filtered to one vendor (e.g. `by-vendor/openai.json`). Same envelope, plus a `vendor` field. |
+| `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `schema`, and the available `byKind` / `byVendor` slice keys. Read this to discover the surface rather than hard-coding paths. |
 | `…/catalog.schema.json` | The JSON Schema (Draft 2020-12) describing the envelope + entry. |
 | `…/` (repo Pages root) | Human-browsable reference page (`public/index.html`). |
+
+> **Faceted slices are static, not a query API.** They are pre-computed at publish
+> time from the canonical file — `by-kind` / `by-vendor` cover the common facets with
+> zero runtime. Arbitrary/compound queries are intentionally **out of scope**: GitHub
+> Pages serves static assets only (a dynamic query API would need a separate serverless
+> runtime — see the roadmap non-goals). Every slice keeps the same `vendors`-map
+> envelope as `catalog.json`, so one parser reads them all, and each still validates
+> against the schema.
 
 **Serving.** Hosted on **GitHub Pages**, which serves every asset with
 `Access-Control-Allow-Origin: *`, so the endpoint is **CORS-open by default** — no

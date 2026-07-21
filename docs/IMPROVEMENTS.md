@@ -33,20 +33,6 @@ name. Add a `public/CNAME`, set `CATALOG_SOURCE_URL` at emit time so the envelop
 consumers may pin it, keep the old Pages URL resolving (redirect) for a deprecation
 window.
 
-## §V Faceted static slices + discovery manifest (T8)
-
-"New REST methods" without a server = **pre-computed static views**. `emit.mjs`
-writes `by-kind/<KIND>.json` (e.g. `by-kind/EMBEDDING.json`) and
-`by-vendor/<vendor>.json` (e.g. `by-vendor/openai.json`), each a filtered slice of the
-canonical catalog, so a consumer fetches exactly the facet it wants — CDN-cached,
-zero runtime — instead of downloading the whole catalog and filtering client-side.
-An `endpoints.json` manifest enumerates every published path (rolling, pinned, schema,
-index, and the available slice keys) so the surface is machine-discoverable rather
-than hard-coded. All slices derive deterministically from the canonical file on each
-publish; nothing is hand-maintained, and the envelope schema is unchanged. This is the
-static-first answer to "more query methods" — a real dynamic query API (arbitrary
-filters via serverless) stays out of scope for GitHub Pages (see STRATEGY / non-goals).
-
 ## §VI Client libraries / SDKs (T9 JS/TS · T10 Python · T11 Java)
 
 The catalog is "just JSON over HTTPS", so any consumer *can* fetch it directly — but
