@@ -808,8 +808,7 @@
         "label": "babbage-002",
         "kind": "CHAT",
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -818,8 +817,7 @@
         "label": "chat-latest",
         "kind": "CHAT",
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -828,8 +826,7 @@
         "label": "davinci-002",
         "kind": "CHAT",
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -849,8 +846,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -870,8 +866,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -891,8 +886,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -908,8 +902,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -918,8 +911,7 @@
         "label": "gpt-3.5-turbo-instruct",
         "kind": "CHAT",
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -928,8 +920,7 @@
         "label": "gpt-3.5-turbo-instruct-0914",
         "kind": "CHAT",
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -949,8 +940,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -970,8 +960,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -994,8 +983,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1018,8 +1006,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1045,8 +1032,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1072,8 +1058,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1099,8 +1084,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1126,8 +1110,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1153,8 +1136,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1180,8 +1162,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1204,8 +1185,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1228,8 +1208,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1252,8 +1231,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1276,8 +1254,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1300,8 +1277,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1324,8 +1300,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1348,8 +1323,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1372,8 +1346,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1396,8 +1369,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1420,8 +1392,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1448,8 +1419,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1476,8 +1446,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1503,8 +1472,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1531,8 +1499,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1559,8 +1526,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1587,8 +1553,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1615,8 +1580,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1643,8 +1607,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1671,8 +1634,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1699,8 +1661,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1723,8 +1684,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1747,8 +1707,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1776,8 +1735,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1805,8 +1763,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1833,8 +1790,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1861,8 +1817,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1889,8 +1844,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1917,8 +1871,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1946,8 +1899,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -1975,8 +1927,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2003,8 +1954,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2031,8 +1981,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2059,8 +2008,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2087,8 +2035,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2115,8 +2062,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2143,8 +2089,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2171,8 +2116,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2199,8 +2143,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2227,8 +2170,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2255,8 +2197,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2283,8 +2224,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2311,8 +2251,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2339,8 +2278,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2367,8 +2305,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2395,8 +2332,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2423,8 +2359,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2451,8 +2386,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2479,8 +2413,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2507,8 +2440,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2535,8 +2467,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2563,8 +2494,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2589,8 +2519,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2614,8 +2543,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2639,8 +2567,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2667,8 +2594,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2695,8 +2621,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2723,8 +2648,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2751,8 +2675,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2778,8 +2701,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2805,8 +2727,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2827,8 +2748,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2849,8 +2769,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2877,8 +2796,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2905,8 +2823,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2930,8 +2847,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2955,8 +2871,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -2982,8 +2897,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3009,8 +2923,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3030,7 +2943,6 @@
         },
         "sources": [
           "committed",
-          "openai-api",
           "overrides"
         ],
         "lastVerified": "2026-07-21"
@@ -3051,7 +2963,6 @@
         },
         "sources": [
           "committed",
-          "openai-api",
           "overrides"
         ],
         "lastVerified": "2026-07-21"
@@ -3071,8 +2982,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3086,8 +2996,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3101,8 +3010,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3116,8 +3024,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3137,8 +3044,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3158,8 +3064,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3179,8 +3084,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3196,8 +3100,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3213,8 +3116,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3230,8 +3132,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3247,8 +3148,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3264,8 +3164,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3283,8 +3182,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3298,8 +3196,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3317,8 +3214,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3336,8 +3232,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3355,8 +3250,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3381,8 +3275,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3407,8 +3300,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3433,8 +3325,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3459,8 +3350,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3485,8 +3375,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3512,8 +3401,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3539,8 +3427,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3566,8 +3453,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3593,8 +3479,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3620,8 +3505,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3647,8 +3531,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3674,8 +3557,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3701,8 +3583,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3728,8 +3609,7 @@
         },
         "sources": [
           "committed",
-          "litellm",
-          "openai-api"
+          "litellm"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3738,8 +3618,7 @@
         "label": "gpt-realtime-translate",
         "kind": "SPEECH",
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3753,8 +3632,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3768,8 +3646,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3783,8 +3660,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3798,8 +3674,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3817,8 +3692,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3836,8 +3710,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3852,8 +3725,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       },
@@ -3868,8 +3740,7 @@
           ]
         },
         "sources": [
-          "committed",
-          "openai-api"
+          "committed"
         ],
         "lastVerified": "2026-07-21"
       }
