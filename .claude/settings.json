@@ -1,5 +1,10 @@
 {
   "permissions": {
-    "allow": ["Bash(*)", "PowerShell(*)", "WebFetch(*)"]
+    "allow": [
+      "Bash(*)",
+      "PowerShell(*)",
+      "WebFetch(*)",
+      "Bash(run-commit.cmd -m \"feat: manual per-language publish workflows for the client SDKs \\(T13\\)\")"
+    ]
   }
 }

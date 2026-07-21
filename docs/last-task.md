@@ -1,4 +1,4 @@
-# Last task number — `T12` · next block letter — `C`
+# Last task number — `T13` · next block letter — `C`
 
 > **Single source of truth for the next free task number.** The next new task is
 > `T13`; after assigning it, bump the number above and the log line below.
@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T13 SHIPPED** (Block B — manual publish workflows: three `workflow_dispatch` publishers `publish-{java,js,python}-client.yml`, version-gated + test-gated, each creating an auth-free GitHub Release at `java-v*`/`js-v*`/`py-v*`; consolidated the tag-triggered `release-js-client.yml` into the manual sibling) — 2026-07-21.
 - **T12 SHIPPED** (Block B — auth-free GitHub distribution: root `jitpack.yml` for the Java client via JitPack + `release-js-client.yml` attaching the JS `.tgz` to `js-v*` releases; per-ecosystem no-auth install docs + site Client SDKs section) — 2026-07-21.
 - **T6 DROPPED** (Block A — branded custom domain: won't do; the endpoint stays on the public `openviglet.github.io` URL so it reads as a community resource, not a brand asset. §III removed from IMPROVEMENTS. T6 not reused.) — 2026-07-21.
 - **T11 SHIPPED** (Block B — Java client: no-runtime-dep Maven `io.github.openviglet:models-catalog-client`, JDK HttpClient + hand-rolled zero-dep JSON reader, records + Kind enum + `.extra()`, Builder, 11 JUnit units) — 2026-07-21.

@@ -51,7 +51,7 @@ public repos on demand and serves them as Maven artifacts with **no login**:
        it resolves as a module by its own artifactId -->
   <groupId>com.github.openviglet.models-catalog</groupId>
   <artifactId>models-catalog-client</artifactId>
-  <version>v1.0.0</version> <!-- any tag, commit SHA, or main-SNAPSHOT -->
+  <version>java-v1.0.0</version> <!-- any tag, commit SHA, or main-SNAPSHOT -->
 </dependency>
 ```
 

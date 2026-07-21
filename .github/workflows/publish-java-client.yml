@@ -1,0 +1,67 @@
+name: Publish Java client
+
+# Manually publishes the no-runtime-dep Java client as an auth-free GitHub Release —
+# no Maven Central, no token. The unauthenticated install path is JitPack building
+# the tag this job creates (root jitpack.yml pins the clients/java module to it):
+#
+#   com.github.openviglet.models-catalog:models-catalog-client:java-v<version>
+#
+# This job creates that `java-v<version>` tag (via the Release) after `mvn verify`
+# passes, and attaches the built jar for direct download. Bump clients/java/pom.xml
+# to <version> and commit it BEFORE dispatching — the job fails closed if pom.xml and
+# the requested version disagree. Re-dispatching the same version re-uploads the jar
+# (--clobber); JitPack caches a built tag, so re-tagging the same coordinate is a no-op.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (e.g. 1.0.0) — must match clients/java/pom.xml"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-java-client
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Verify version matches pom.xml
+        working-directory: clients/java
+        env:
+          IN_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          POM_VER=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
+          if [ "$POM_VER" != "$IN_VERSION" ]; then
+            echo "::error::clients/java/pom.xml is $POM_VER but you requested $IN_VERSION. Bump pom.xml and commit first."
+            exit 1
+          fi
+
+      - name: Build + test (publish gate)
+        working-directory: clients/java
+        run: mvn -B verify
+
+      - name: Create Release + attach jar
+        working-directory: clients/java
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: java-v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          gh release create "$TAG" ./target/models-catalog-client-*.jar \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Java client ${TAG#java-}" \
+            --notes "No-runtime-dep \`io.github.openviglet:models-catalog-client\`. Public, no auth — depend on \`com.github.openviglet.models-catalog:models-catalog-client:$TAG\` via JitPack, or download the attached jar." \
+          || gh release upload "$TAG" ./target/models-catalog-client-*.jar --repo "$GITHUB_REPOSITORY" --clobber

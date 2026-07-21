@@ -1,0 +1,72 @@
+name: Publish Python client
+
+# Manually publishes the stdlib-only Python client as an auth-free GitHub Release —
+# no PyPI, no token. GitHub hosts no pip index, so the unauthenticated install path
+# is the tag itself:
+#
+#   pip install "git+https://github.com/openviglet/models-catalog.git@py-v<version>#subdirectory=clients/python"
+#
+# This job creates that `py-v<version>` tag (via the Release) after the tests pass,
+# and also attaches a built sdist + wheel for offline/mirror installs. Bump
+# clients/python/pyproject.toml to <version> and commit it BEFORE dispatching — the
+# job fails closed if pyproject.toml and the requested version disagree. Re-dispatching
+# the same version re-uploads the artifacts (--clobber), so it is an idempotent no-op.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (e.g. 1.0.0) — must match clients/python/pyproject.toml"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-python-client
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify version matches pyproject.toml
+        working-directory: clients/python
+        env:
+          IN_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          PY_VER=$(python -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          if [ "$PY_VER" != "$IN_VERSION" ]; then
+            echo "::error::clients/python/pyproject.toml is $PY_VER but you requested $IN_VERSION. Bump pyproject.toml and commit first."
+            exit 1
+          fi
+
+      # Client runtime is stdlib-only; `build` is a CI-only tool, never a client dep.
+      - name: Test (publish gate)
+        working-directory: clients/python
+        run: python -m unittest discover -s tests
+
+      - name: Build sdist + wheel
+        working-directory: clients/python
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+
+      - name: Create Release + attach dist
+        working-directory: clients/python
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: py-v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          gh release create "$TAG" ./dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Python client ${TAG#py-}" \
+            --notes "Stdlib-only \`openviglet-models-catalog-client\`. Public, no auth — \`pip install \"git+https://github.com/openviglet/models-catalog.git@$TAG#subdirectory=clients/python\"\` (or install an attached wheel)." \
+          || gh release upload "$TAG" ./dist/* --repo "$GITHUB_REPOSITORY" --clobber

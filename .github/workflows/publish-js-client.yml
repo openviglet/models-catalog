@@ -1,0 +1,70 @@
+name: Publish JS client
+
+# Manually publishes the zero-dependency JS/TS client as an auth-free GitHub
+# Release asset — no npm registry, no token. `npm pack` tars clients/js into
+# openviglet-models-catalog-client-<version>.tgz and attaches it to a `js-v<version>`
+# Release, so anyone can install it straight from the public repo:
+#
+#   npm install https://github.com/openviglet/models-catalog/releases/download/js-v<version>/openviglet-models-catalog-client-<version>.tgz
+#
+# Bump clients/js/package.json to <version> and commit it BEFORE dispatching — the
+# job fails closed if package.json and the requested version disagree, so the asset
+# URL stays predictable. Re-dispatching the same version re-uploads the tarball
+# (--clobber), so it is a safe idempotent no-op.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (e.g. 1.0.0) — must match clients/js/package.json"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-js-client
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+
+      - name: Verify version matches package.json
+        working-directory: clients/js
+        env:
+          IN_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          PKG=$(node -p "require('./package.json').version")
+          if [ "$PKG" != "$IN_VERSION" ]; then
+            echo "::error::clients/js/package.json is $PKG but you requested $IN_VERSION. Bump package.json and commit first."
+            exit 1
+          fi
+
+      # Zero-dependency: no `npm ci` — tests and `npm pack` need nothing installed.
+      - name: Test (publish gate)
+        working-directory: clients/js
+        run: node --test
+
+      - name: Pack tarball
+        working-directory: clients/js
+        run: npm pack
+
+      - name: Create Release + attach tarball
+        working-directory: clients/js
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: js-v${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          gh release create "$TAG" ./*.tgz \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "JS/TS client ${TAG#js-}" \
+            --notes "Zero-dependency \`@openviglet/models-catalog-client\` tarball. Public, no auth — \`npm install <this asset's URL>\`." \
+          || gh release upload "$TAG" ./*.tgz --repo "$GITHUB_REPOSITORY" --clobber
