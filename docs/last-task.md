@@ -1,7 +1,7 @@
-# Last task number — `T13` · next block letter — `C`
+# Last task number — `T14` · next block letter — `C`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T13`; after assigning it, bump the number above and the log line below.
+> `T15`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T14 SHIPPED** (Block A — new frontier vendor rows DeepSeek/xAI/MiniMax/Z.ai(GLM): mapped the four native litellm_providers + seeded curated overrides ids, 11 CHAT models enriched by LiteLLM; fixed the stale overrides.json anchoring comment; 14 vendors / 194 models) — 2026-07-21.
 - **T13 SHIPPED** (Block B — manual publish workflows: three input-free `workflow_dispatch` publishers `publish-{java,js,python}-client.yml`, each auto-incrementing the manifest patch + committing/tagging the bump, test-gated, then publishing to the public registry — npm / PyPI / Maven Central (Central Portal, GPG-signed `release` profile); token-secret auth; jitpack.yml kept as a Java fallback) — 2026-07-21.
 - **T12 SHIPPED** (Block B — auth-free GitHub distribution: root `jitpack.yml` for the Java client via JitPack + `release-js-client.yml` attaching the JS `.tgz` to `js-v*` releases; per-ecosystem no-auth install docs + site Client SDKs section) — 2026-07-21.
 - **T6 DROPPED** (Block A — branded custom domain: won't do; the endpoint stays on the public `openviglet.github.io` URL so it reads as a community resource, not a brand asset. §III removed from IMPROVEMENTS. T6 not reused.) — 2026-07-21.

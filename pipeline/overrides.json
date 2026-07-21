@@ -1,5 +1,5 @@
 {
-  "_comment": "Curated, human-verified pins for the model-catalog regeneration pipeline (Block BD / T768). Keyed by catalog vendor (lower-case). Each entry MUST carry `id`; any other ModelEntry field it sets is merged with precedence ABOVE LiteLLM and (normally) BELOW the live vendor API. Add `\"__pin\": true` to force a field to win over EVERYTHING — use only for facts you have personally verified and never want a noisy source to clobber. Fields you omit here are still filled by the automated sources. This file only ENRICHES ids that a vendor API / the committed catalog already vouches for (the anchoring rule); it cannot introduce a brand-new id on its own. Keep entries minimal — a pin is a claim you are standing behind.",
+  "_comment": "Curated, human-verified pins for the model-catalog regeneration pipeline (Block BD / T768). Keyed by catalog vendor (lower-case). Each entry MUST carry `id`; any other ModelEntry field it sets is merged with precedence ABOVE LiteLLM and (normally) BELOW the live vendor API. Add `\"__pin\": true` to force a field to win over EVERYTHING — use only for facts you have personally verified and never want a noisy source to clobber. Fields you omit here are still filled by the automated sources. This file is itself an ANCHORING source: a pinned id is admitted even when no live vendor API / committed entry vouches for it (LiteLLM then enriches it) — this is how a brand-new vendor row is seeded. LiteLLM, by contrast, only enriches and can never introduce an id on its own. Keep entries minimal — a pin is a claim you are standing behind.",
   "openai": [
     { "id": "text-embedding-3-small", "label": "text-embedding-3-small", "embeddingDimensions": 1536, "__pin": true },
     { "id": "text-embedding-3-large", "label": "text-embedding-3-large", "embeddingDimensions": 3072, "__pin": true }
@@ -7,5 +7,24 @@
   "anthropic": [],
   "gemini": [],
   "cohere": [],
-  "mistral": []
+  "mistral": [],
+  "deepseek": [
+    { "id": "deepseek-chat", "label": "DeepSeek-V3", "kind": "CHAT" },
+    { "id": "deepseek-reasoner", "label": "DeepSeek-R1", "kind": "CHAT" }
+  ],
+  "xai": [
+    { "id": "grok-4", "label": "Grok 4", "kind": "CHAT" },
+    { "id": "grok-3", "label": "Grok 3", "kind": "CHAT" },
+    { "id": "grok-3-mini", "label": "Grok 3 Mini", "kind": "CHAT" },
+    { "id": "grok-code-fast-1", "label": "Grok Code Fast 1", "kind": "CHAT" }
+  ],
+  "minimax": [
+    { "id": "MiniMax-M2", "label": "MiniMax M2", "kind": "CHAT" },
+    { "id": "MiniMax-M3", "label": "MiniMax M3", "kind": "CHAT" }
+  ],
+  "zai": [
+    { "id": "glm-4.6", "label": "GLM-4.6", "kind": "CHAT" },
+    { "id": "glm-4.5", "label": "GLM-4.5", "kind": "CHAT" },
+    { "id": "glm-4.5-air", "label": "GLM-4.5-Air", "kind": "CHAT" }
+  ]
 }

@@ -31,6 +31,10 @@ const PROVIDER_TO_VENDOR = {
   "vertex_ai-embedding-models": "vertex-ai",
   voyage: "voyage",
   ollama: "ollama",
+  deepseek: "deepseek",
+  xai: "xai",
+  minimax: "minimax",
+  zai: "zai", // Z.ai (formerly Zhipu AI) — the GLM family
 };
 
 const MODE_TO_KIND = {
