@@ -4,7 +4,8 @@
       "Bash(*)",
       "PowerShell(*)",
       "WebFetch(*)",
-      "Bash(run-commit.cmd -m \"feat: manual per-language publish workflows for the client SDKs \\(T13\\)\")"
+      "Bash(run-commit.cmd -m \"feat: manual per-language publish workflows for the client SDKs \\(T13\\)\")",
+      "Bash(run-commit.cmd -m \"feat: auto-increment patch on each client SDK publish \\(T13\\)\")"
     ]
   }
 }

@@ -6,18 +6,13 @@ name: Publish Java client
 #
 #   com.github.openviglet.models-catalog:models-catalog-client:java-v<version>
 #
-# This job creates that `java-v<version>` tag (via the Release) after `mvn verify`
-# passes, and attaches the built jar for direct download. Bump clients/java/pom.xml
-# to <version> and commit it BEFORE dispatching — the job fails closed if pom.xml and
-# the requested version disagree. Re-dispatching the same version re-uploads the jar
-# (--clobber); JitPack caches a built tag, so re-tagging the same coordinate is a no-op.
+# Every run auto-increments the patch in clients/java/pom.xml, commits the bump back,
+# then (after `mvn verify` passes) creates that `java-v<version>` tag via the Release
+# and attaches the built jar for direct download. No inputs — just dispatch it; the
+# version is derived, never typed.
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Version to publish (e.g. 1.0.0) — must match clients/java/pom.xml"
-        required: true
 
 permissions:
   contents: write
@@ -37,31 +32,44 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Verify version matches pom.xml
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Bump the patch in the working tree; commit only after the gate passes below.
+      - name: Bump patch version
         working-directory: clients/java
-        env:
-          IN_VERSION: ${{ inputs.version }}
         run: |
           set -euo pipefail
-          POM_VER=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
-          if [ "$POM_VER" != "$IN_VERSION" ]; then
-            echo "::error::clients/java/pom.xml is $POM_VER but you requested $IN_VERSION. Bump pom.xml and commit first."
-            exit 1
-          fi
+          CUR=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
+          IFS=. read -r MA MI PA <<< "$CUR"
+          NEW="$MA.$MI.$((PA + 1))"
+          mvn -B -q versions:set -DnewVersion="$NEW" -DgenerateBackupPoms=false
+          echo "NEW_VERSION=$NEW" >> "$GITHUB_ENV"
+          echo "Bumped Java client to $NEW"
 
       - name: Build + test (publish gate)
         working-directory: clients/java
         run: mvn -B verify
 
+      - name: Commit version bump
+        run: |
+          set -euo pipefail
+          git add clients/java/pom.xml
+          git commit -m "chore(release): java client v${NEW_VERSION} [skip ci]"
+          git push
+
       - name: Create Release + attach jar
         working-directory: clients/java
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: java-v${{ inputs.version }}
         run: |
           set -euo pipefail
+          TAG="java-v${NEW_VERSION}"
           gh release create "$TAG" ./target/models-catalog-client-*.jar \
             --repo "$GITHUB_REPOSITORY" \
+            --target "$(git rev-parse HEAD)" \
             --title "Java client ${TAG#java-}" \
             --notes "No-runtime-dep \`io.github.openviglet:models-catalog-client\`. Public, no auth — depend on \`com.github.openviglet.models-catalog:models-catalog-client:$TAG\` via JitPack, or download the attached jar." \
           || gh release upload "$TAG" ./target/models-catalog-client-*.jar --repo "$GITHUB_REPOSITORY" --clobber
