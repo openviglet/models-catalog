@@ -1,0 +1,41 @@
+name: Release JS client (tarball)
+
+# Packs the zero-dependency JS/TS client into an npm tarball and attaches it to a
+# GitHub Release, so anyone can install it straight from the public repo without a
+# registry or auth:
+#
+#   npm install https://github.com/openviglet/models-catalog/releases/download/<tag>/openviglet-models-catalog-client-<version>.tgz
+#
+# Trigger by pushing a tag like `js-v1.0.0`. `npm pack` produces
+# openviglet-models-catalog-client-<version>.tgz from clients/js/package.json —
+# keep the package.json version in step with the tag so the asset URL is predictable.
+
+on:
+  push:
+    tags: ["js-v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Zero-dependency: no `npm ci` — `npm pack` just tars the declared files.
+      - name: Pack tarball
+        working-directory: clients/js
+        run: npm pack
+      - name: Attach tarball to the GitHub Release
+        working-directory: clients/js
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" ./*.tgz \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "JS/TS client ${GITHUB_REF_NAME#js-}" \
+            --notes "Zero-dependency \`@openviglet/models-catalog-client\` tarball. Public, no auth — \`npm install <this asset's URL>\`." \
+          || gh release upload "$GITHUB_REF_NAME" ./*.tgz --repo "$GITHUB_REPOSITORY" --clobber

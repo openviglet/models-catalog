@@ -1,7 +1,7 @@
-# Last task number — `T11` · next block letter — `C`
+# Last task number — `T12` · next block letter — `C`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T12`; after assigning it, bump the number above and the log line below.
+> `T13`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T12 SHIPPED** (Block B — auth-free GitHub distribution: root `jitpack.yml` for the Java client via JitPack + `release-js-client.yml` attaching the JS `.tgz` to `js-v*` releases; per-ecosystem no-auth install docs + site Client SDKs section) — 2026-07-21.
 - **T6 DROPPED** (Block A — branded custom domain: won't do; the endpoint stays on the public `openviglet.github.io` URL so it reads as a community resource, not a brand asset. §III removed from IMPROVEMENTS. T6 not reused.) — 2026-07-21.
 - **T11 SHIPPED** (Block B — Java client: no-runtime-dep Maven `io.github.openviglet:models-catalog-client`, JDK HttpClient + hand-rolled zero-dep JSON reader, records + Kind enum + `.extra()`, Builder, 11 JUnit units) — 2026-07-21.
 - **T10 SHIPPED** (Block B — Python client: stdlib-only `urllib` pip pkg `openviglet-models-catalog-client`, typed dataclass + `.extra`, shared surface, 10 unittest units) — 2026-07-21.
