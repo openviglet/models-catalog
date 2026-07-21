@@ -8,7 +8,9 @@
       "Bash(run-commit.cmd -m \"feat: emit compact index.json endpoint \\(T7\\)\")",
       "Bash(run-commit.cmd -m \"feat: emit faceted by-kind/by-vendor slices + endpoints.json manifest \\(T8\\)\")",
       "Bash(run-commit.cmd -m \"feat: add opt-in Ollama/Bedrock/HuggingFace source adapters \\(T4\\)\")",
-      "Bash(run-commit.cmd -m \"docs: document the new REST endpoints \\(index/slices/manifest\\) on the public page\")"
+      "Bash(run-commit.cmd -m \"docs: document the new REST endpoints \\(index/slices/manifest\\) on the public page\")",
+      "Bash(node --test)",
+      "Bash(run-commit.cmd -m \"feat: add zero-dep JavaScript/TypeScript client library \\(T9\\)\")"
     ]
   }
 }
