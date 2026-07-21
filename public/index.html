@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Model Catalog — Viglet Turing ES</title>
+    <meta
+      name="description"
+      content="A vendor-neutral, kind-aware catalog of LLM / embedding / rerank / media models. Free, unauthenticated, versioned JSON."
+    />
+    <style>
+      :root {
+        --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
+        --border: #e2e8f0; --brand: #4f46e5; --brand2: #2563eb;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0f; --card: #16161f; --text: #e2e8f0; --muted: #94a3b8;
+          --border: #1e1e2e; --brand: #6366f1; --brand2: #3b82f6;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: var(--bg); color: var(--text);
+        font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+      header {
+        padding: 3rem 1.25rem 2rem; text-align: center;
+        background: linear-gradient(135deg, var(--brand2), var(--brand));
+        color: #fff;
+      }
+      header h1 { margin: 0 0 .35rem; font-size: 1.9rem; }
+      header p { margin: 0 auto; max-width: 46rem; opacity: .92; }
+      main { max-width: 68rem; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+      .controls { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.25rem 0 1.75rem; }
+      input[type="search"] {
+        flex: 1 1 16rem; min-width: 12rem; padding: .55rem .8rem; font-size: .95rem;
+        border: 1px solid var(--border); border-radius: .6rem; background: var(--card); color: var(--text);
+      }
+      .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
+      .filters button {
+        padding: .4rem .7rem; font-size: .8rem; border: 1px solid var(--border);
+        border-radius: 999px; background: var(--card); color: var(--muted); cursor: pointer;
+      }
+      .filters button[aria-pressed="true"] { background: var(--brand); color: #fff; border-color: var(--brand); }
+      .vendor { margin-bottom: 2rem; }
+      .vendor h2 { font-size: 1.15rem; margin: 0 0 .2rem; }
+      .vendor .count { color: var(--muted); font-size: .82rem; font-weight: 400; }
+      table { width: 100%; border-collapse: collapse; margin-top: .6rem; }
+      thead th {
+        text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em;
+        color: var(--muted); padding: .4rem .6rem; border-bottom: 1px solid var(--border);
+      }
+      tbody td { padding: .55rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+      tbody tr:hover { background: color-mix(in srgb, var(--brand) 6%, transparent); }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88em; }
+      .badge {
+        display: inline-block; padding: .12rem .5rem; border-radius: 999px;
+        font-size: .72rem; font-weight: 600; white-space: nowrap;
+      }
+      .k-CHAT { background: #dbeafe; color: #1d4ed8; }
+      .k-EMBEDDING { background: #d1fae5; color: #047857; }
+      .k-RERANK { background: #fef3c7; color: #b45309; }
+      .k-IMAGE { background: #fae8ff; color: #a21caf; }
+      .k-TRANSCRIPTION { background: #e0f2fe; color: #0369a1; }
+      .k-SPEECH { background: #ede9fe; color: #6d28d9; }
+      .k-VIDEO { background: #ffe4e6; color: #be123c; }
+      .k-MODERATION, .k-UNKNOWN { background: #e2e8f0; color: #334155; }
+      .chip {
+        display: inline-block; margin: 0 .25rem .25rem 0; padding: .05rem .4rem;
+        border: 1px solid var(--border); border-radius: .4rem; font-size: .72rem; color: var(--muted);
+      }
+      .api {
+        background: var(--card); border: 1px solid var(--border); border-radius: .8rem;
+        padding: 1rem 1.2rem; margin: 0 0 1.5rem;
+      }
+      .api h2 { margin: 0 0 .5rem; font-size: 1rem; }
+      .api pre {
+        overflow-x: auto; background: color-mix(in srgb, var(--text) 5%, transparent);
+        padding: .7rem .8rem; border-radius: .5rem; margin: .5rem 0 0;
+      }
+      .api a { color: var(--brand); }
+      footer { text-align: center; color: var(--muted); font-size: .82rem; padding: 2rem 1rem; }
+      .meta { color: var(--muted); font-size: .82rem; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Model Catalog</h1>
+      <p>
+        A vendor-neutral, kind-aware catalog of LLM / embedding / rerank / media models —
+        which ids exist per vendor and, for each, its <em>kind</em>, context window, and capabilities.
+        Free, unauthenticated, versioned JSON. Part of <strong>Viglet Turing ES</strong>.
+      </p>
+    </header>
+    <main>
+      <section class="api">
+        <h2>Public API</h2>
+        <p class="meta">
+          Rolling latest: <a href="./models/catalog.json">/models/catalog.json</a> ·
+          Pinned v1: <a href="./models/catalog-v1.json">/models/catalog-v1.json</a> ·
+          Schema: <a href="./models/catalog.schema.json">/models/catalog.schema.json</a>
+        </p>
+        <pre><code>curl -s ./models/catalog-v1.json | jq '.vendors | to_entries[].value[] | select(.kind=="EMBEDDING") | .id'</code></pre>
+      </section>
+
+      <div class="controls">
+        <input id="q" type="search" placeholder="Search id, label, or vendor…" autocomplete="off" />
+        <div class="filters" id="filters"></div>
+      </div>
+      <p id="status" class="meta">Loading…</p>
+      <div id="list"></div>
+    </main>
+    <footer>
+      <span id="footmeta"></span> · Viglet Turing ES ·
+      <a href="https://github.com/openviglet/models-catalog" style="color: var(--muted)">openviglet/models-catalog</a>
+    </footer>
+
+    <script>
+      const KINDS = ["CHAT","EMBEDDING","RERANK","IMAGE","TRANSCRIPTION","SPEECH","VIDEO","MODERATION","UNKNOWN"];
+      const KIND_LABEL = { CHAT:"Chat", EMBEDDING:"Embedding", RERANK:"Rerank", IMAGE:"Image", TRANSCRIPTION:"Transcription", SPEECH:"Speech", VIDEO:"Video", MODERATION:"Moderation", UNKNOWN:"Other" };
+      const VENDOR_LABEL = {
+        openai:"OpenAI", anthropic:"Anthropic", gemini:"Google Gemini", "gemini-openai":"Gemini (OpenAI-compatible)",
+        ollama:"Ollama", "openai-compatible":"OpenAI-compatible", bedrock:"Amazon Bedrock", cohere:"Cohere",
+        mistral:"Mistral", voyage:"Voyage AI", "vertex-ai":"Google Vertex AI",
+      };
+      const vendorLabel = (v) => VENDOR_LABEL[v] || v;
+      function fmtTokens(n) {
+        if (!n) return "";
+        if (n >= 1_000_000) { const m = n / 1_048_576; return (m >= 10 ? Math.round(m) : m.toFixed(m % 1 === 0 ? 0 : 1)) + "M"; }
+        if (n >= 10_000) return Math.round(n / 1000) + "K";
+        return n.toLocaleString("en-US");
+      }
+
+      let catalog = null;
+      let activeKind = null;
+
+      function render() {
+        const q = document.getElementById("q").value.trim().toLowerCase();
+        const list = document.getElementById("list");
+        list.innerHTML = "";
+        let shown = 0;
+        for (const vendor of Object.keys(catalog.vendors).sort()) {
+          const rows = catalog.vendors[vendor].filter((m) => {
+            if (activeKind && m.kind !== activeKind) return false;
+            if (!q) return true;
+            return (m.id + " " + (m.label || "") + " " + vendor).toLowerCase().includes(q);
+          });
+          if (!rows.length) continue;
+          shown += rows.length;
+          const sec = document.createElement("section");
+          sec.className = "vendor";
+          const body = rows.map((m) => {
+            const caps = (m.capabilities || []).map((c) => `<span class="chip">${c}</span>`).join("");
+            const ctx = m.contextWindow ? `${fmtTokens(m.contextWindow)} ctx` : "";
+            const dim = m.embeddingDimensions ? `${m.embeddingDimensions} dim` : "";
+            const out = m.maxOutputTokens ? `${fmtTokens(m.maxOutputTokens)} out` : "";
+            const nums = [ctx, out, dim].filter(Boolean).map((x) => `<span class="chip">${x}</span>`).join("");
+            return `<tr>
+              <td><code>${m.id}</code>${m.label && m.label !== m.id ? `<div class="meta">${m.label}</div>` : ""}</td>
+              <td><span class="badge k-${m.kind}">${KIND_LABEL[m.kind] || m.kind}</span></td>
+              <td>${nums}${caps}</td>
+            </tr>`;
+          }).join("");
+          sec.innerHTML = `<h2>${vendorLabel(vendor)} <span class="count">${rows.length}</span></h2>
+            <table><thead><tr><th>Model</th><th>Kind</th><th>Details</th></tr></thead><tbody>${body}</tbody></table>`;
+          list.appendChild(sec);
+        }
+        document.getElementById("status").textContent = shown ? `${shown} model(s)` : "No models match.";
+      }
+
+      function buildFilters() {
+        const f = document.getElementById("filters");
+        const present = new Set(Object.values(catalog.vendors).flat().map((m) => m.kind));
+        const mk = (kind, label) => {
+          const b = document.createElement("button");
+          b.textContent = label;
+          b.setAttribute("aria-pressed", String(activeKind === kind));
+          b.onclick = () => { activeKind = activeKind === kind ? null : kind; buildFilters(); render(); };
+          return b;
+        };
+        f.innerHTML = "";
+        f.appendChild(mk(null, "All"));
+        for (const k of KINDS) if (present.has(k)) f.appendChild(mk(k, KIND_LABEL[k]));
+      }
+
+      fetch("./models/catalog.json")
+        .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+        .then((data) => {
+          catalog = data;
+          const total = Object.values(data.vendors).flat().length;
+          document.getElementById("footmeta").textContent =
+            `schema v${data.version} · updated ${data.lastUpdated} · ${total} models`;
+          buildFilters();
+          render();
+          document.getElementById("q").addEventListener("input", render);
+        })
+        .catch((e) => {
+          document.getElementById("status").textContent =
+            "Could not load catalog.json (" + e.message + "). Run `npm run emit` locally, or wait for the published site.";
+        });
+    </script>
+  </body>
+</html>

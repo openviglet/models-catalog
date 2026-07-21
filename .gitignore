@@ -1,0 +1,13 @@
+# Dependencies (this repo is zero-dependency, but never commit these)
+node_modules/
+
+# Generated public artifacts (produced by `npm run emit`; published by CI)
+public/models/
+
+# Pipeline working dirs are handled by their own .gitignore:
+#   pipeline/sources/  (raw per-source snapshot cache)
+#   pipeline/out/      (proposed envelope + diff report)
+
+# OS / editor noise
+.DS_Store
+Thumbs.db

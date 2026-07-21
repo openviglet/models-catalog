@@ -1,0 +1,47 @@
+name: Publish model catalog (GitHub Pages)
+
+# Publishes the public catalog artifacts + browsable page to GitHub Pages.
+# Runs on every push to the default branch and on manual dispatch. The catalog
+# JSON is emitted deterministically from catalog/models-catalog.json — it never
+# regenerates from upstream here (that is the propose-and-review pipeline, run
+# locally with `npm run regen`; a bad upstream must never auto-publish).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "catalog/**"
+      - "public/**"
+      - "scripts/emit.mjs"
+      - ".github/workflows/publish.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Zero-dependency: no `npm ci` needed — just run the emit step.
+      - name: Emit public artifacts
+        run: node scripts/emit.mjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deploy
+        uses: actions/deploy-pages@v4
