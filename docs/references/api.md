@@ -104,7 +104,7 @@ are regenerated deterministically from the canonical source
 | `sources` | string[] | — | Provenance — source ids that contributed fields (`openai-api`, `litellm`, `overrides`). |
 | `lastVerified` | string | — | ISO-8601 date the entry was last confirmed against its sources. |
 | `pricing` | object | — | **Indicative US list price** — `{ inputPer1M, outputPer1M, currency: "USD", unit, indicative: true, note, source, lastVerified }`, per 1,000,000 tokens. **A reference only, not authoritative — verify with the vendor.** Never per-contract/region/negotiated; omitted when no trusted price exists. See below. |
-| `benchmarks` | object | — | **Cited third-party capability index** — `{ intelligenceIndex?, arenaElo?, indicative: true, note?, source, lastVerified }`. A reference to a public leaderboard (Artificial Analysis / LMArena), **not our verdict** — verify at the source. Provenance-gated + never invented; omitted when no cited number exists. See below. |
+| `benchmarks` | object | — | **Cited third-party capability index** — `{ intelligenceIndex?, arenaElo?, scores?, indicative: true, note?, source, lastVerified }`. A reference to a public leaderboard (Artificial Analysis / LMArena), **not our verdict** — verify at the source. `scores` is an optional per-domain map (`reasoning` / `coding` / `math`). Provenance-gated + never invented; omitted when no cited number exists. See below. |
 
 ### `pricing` — indicative US list price ⚠️
 
@@ -132,13 +132,19 @@ leaderboard — an Artificial Analysis Intelligence Index (`intelligenceIndex`) 
 human-preference rating (`arenaElo`) — published next to the model identity so "how capable"
 is a linked third-party number rather than our opinion. Treated exactly like `pricing`:
 flagged `indicative: true`, provenance-gated (`source` + `lastVerified` required), never
-invented — a model with no cited number omits the field. **Verify at the source.** Per-domain
-scores (reasoning / coding / math) are a planned extension.
+invented — a model with no cited number omits the field. **Verify at the source.** The optional
+`scores` map carries **per-domain** cited scores (recommended keys `reasoning` / `coding` / `math`)
+so capability is comparable per use-case rather than one opaque number — each is `{ value,
+source?, lastVerified? }`, inheriting the object's `source`/`lastVerified` unless it carries its own.
 
 ```json
 "benchmarks": {
   "intelligenceIndex": 60,
   "arenaElo": 1300,
+  "scores": {
+    "reasoning": { "value": 71 },
+    "coding": { "value": 68, "source": "SWE-bench", "lastVerified": "2026-07-01" }
+  },
   "indicative": true,
   "note": "Cited from Artificial Analysis — verify at the source.",
   "source": "Artificial Analysis", "lastVerified": "2026-07-22"

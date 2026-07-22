@@ -36,12 +36,6 @@ opinion, decay fast, and erode trust). T38 (shipped) delivered a purely *derived
 transparent market proxy, honestly labelled). The remaining tasks add the *factual inputs*
 that a stronger, still-non-opinionated signal needs.
 
-### §I5 — T42 · Per-domain benchmark scores
-A single "intelligence" number hides that models are uneven — great at code, weak at math, etc.
-Extend `benchmarks` to a few **cited per-domain** scores (general reasoning, coding/SWE-bench,
-math) so a reader compares on the axis that matches their use-case. Same provenance discipline;
-each score keeps its own source. Honest > tidy.
-
 ### §I6 — T43 · Speed & cost-efficiency axis
 Capability isn't only "smart" — it's also "fast/cheap enough". Carry cited **throughput**
 (tokens/s) and **latency** (time-to-first-token) so the catalog exposes a second axis, and pair

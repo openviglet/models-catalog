@@ -1304,12 +1304,11 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         const bits = [];
         if (b && b.intelligenceIndex != null) bits.push([b.intelligenceIndex, "Intelligence index"]);
         if (b && b.arenaElo != null) bits.push([b.arenaElo, "Arena Elo"]);
+        // Per-domain cited scores (T42) — reasoning / coding / math, honest per use-case.
+        for (const [domain, s] of Object.entries((b && b.scores) || {})) {
+          if (s && s.value != null) bits.push([s.value, domain.charAt(0).toUpperCase() + domain.slice(1)]);
+        }
         return bits;
-      }
-      function benchmarkChip(b) {
-        const bits = benchmarkParts(b);
-        if (!bits.length) return "";
-        return `<span class="chip num" title="${BENCH_CAVEAT}">${bits.map(([v]) => v).join(" · ")}</span>`;
       }
       function benchmarkCell(b) {
         const bits = benchmarkParts(b);

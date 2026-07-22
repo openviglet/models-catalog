@@ -24,6 +24,26 @@ import { BENCHMARKS_FILE, compact, readJson } from "../lib/util.mjs";
 
 const num = (v) => (typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : undefined);
 
+// Per-domain scores (T42): accept either a plain number (cites the parent source)
+// or an object { value, source?, lastVerified? } (a domain cited from elsewhere).
+// Returns a normalized { domain: { value, source?, lastVerified? } } map, or
+// undefined when nothing valid is present — a score is never invented.
+function scoresFrom(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const out = {};
+  for (const [domain, s] of Object.entries(raw)) {
+    const value = num(typeof s === "object" && s !== null ? s.value : s);
+    if (value === undefined) continue;
+    const entry = { value };
+    if (s && typeof s === "object") {
+      if (s.source) entry.source = String(s.source);
+      if (s.lastVerified) entry.lastVerified = String(s.lastVerified);
+    }
+    out[domain] = entry;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
 export default {
   id: "benchmarks",
   vendor: null, // multi-vendor enrichment source — never introduces an id
@@ -48,15 +68,17 @@ export default {
       if (!m || typeof m !== "object" || !m.vendor || !m.id) continue;
       const source = m.source || raw.source;
       if (!source) continue; // never emit an un-sourced benchmark
+      const scores = scoresFrom(m.scores);
       const benchmarks = compact({
         intelligenceIndex: num(m.intelligenceIndex),
         arenaElo: num(m.arenaElo),
+        scores,
         indicative: true,
         note: m.note || raw.note || "Cited third-party benchmark — verify at the source.",
         source,
         lastVerified: m.lastVerified || raw.lastVerified,
       });
-      if (benchmarks.intelligenceIndex === undefined && benchmarks.arenaElo === undefined) continue;
+      if (benchmarks.intelligenceIndex === undefined && benchmarks.arenaElo === undefined && scores === undefined) continue;
       drafts.push({ vendor: String(m.vendor), id: String(m.id), benchmarks });
     }
     return drafts;

@@ -469,8 +469,13 @@ const CSV_COLUMNS = [
   "priceInputPer1M", "priceOutputPer1M", "priceCurrency", "priceSource", "priceLastVerified",
   // Cited third-party capability index (Block I / T40) — a reference to a public
   // leaderboard, verify at the source; empty for models with no cited benchmark.
-  "benchmarkIntelligenceIndex", "benchmarkArenaElo", "benchmarkSource", "benchmarkLastVerified",
+  "benchmarkIntelligenceIndex", "benchmarkArenaElo",
+  // Per-domain cited scores (Block I / T42) — recommended domains, empty when absent.
+  "benchmarkReasoning", "benchmarkCoding", "benchmarkMath",
+  "benchmarkSource", "benchmarkLastVerified",
 ];
+// A per-domain cited score value (Block I / T42), or undefined.
+const benchScore = (e, domain) => e.benchmarks && e.benchmarks.scores && e.benchmarks.scores[domain] && e.benchmarks.scores[domain].value;
 const csvCell = (v) => {
   if (v == null) return "";
   const s = Array.isArray(v) ? v.join(";") : String(v);
@@ -486,6 +491,9 @@ const csvRow = (e) => CSV_COLUMNS.map((c) => {
   if (c === "priceLastVerified") return csvCell(e.pricing && e.pricing.lastVerified);
   if (c === "benchmarkIntelligenceIndex") return csvCell(e.benchmarks && e.benchmarks.intelligenceIndex);
   if (c === "benchmarkArenaElo") return csvCell(e.benchmarks && e.benchmarks.arenaElo);
+  if (c === "benchmarkReasoning") return csvCell(benchScore(e, "reasoning"));
+  if (c === "benchmarkCoding") return csvCell(benchScore(e, "coding"));
+  if (c === "benchmarkMath") return csvCell(benchScore(e, "math"));
   if (c === "benchmarkSource") return csvCell(e.benchmarks && e.benchmarks.source);
   if (c === "benchmarkLastVerified") return csvCell(e.benchmarks && e.benchmarks.lastVerified);
   return csvCell(e[c]);
@@ -557,6 +565,10 @@ const benchmarkLine = (b) => {
   const bits = [];
   if (b.intelligenceIndex != null) bits.push(`intelligence index ${b.intelligenceIndex}`);
   if (b.arenaElo != null) bits.push(`Arena Elo ${b.arenaElo}`);
+  // Per-domain cited scores (T42), e.g. "reasoning 60 · coding 55 · math 70".
+  for (const [domain, s] of Object.entries(b.scores || {})) {
+    if (s && s.value != null) bits.push(`${domain} ${s.value}`);
+  }
   if (!bits.length) return null;
   return `${bits.join(" · ")} (cited from ${b.source || "source"} — verify at the source)`;
 };

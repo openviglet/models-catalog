@@ -384,6 +384,32 @@ test("benchmarks normalize: an un-sourced snapshot entry is dropped (never inven
   assert.equal(drafts.length, 0, "no top-level or per-model source → omitted");
 });
 
+test("validateEnvelope: per-domain benchmark scores — valid map passes, bad value flagged (Block I / T42)", () => {
+  assert.deepEqual(
+    validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { openai: [
+      { id: "a", label: "A", kind: "CHAT", benchmarks: { intelligenceIndex: 69, indicative: true, source: "Artificial Analysis", lastVerified: WHEN, scores: { reasoning: { value: 71 }, coding: { value: 68, source: "SWE-bench", lastVerified: WHEN } } } },
+    ] } }),
+    [],
+    "a scores map of { value, source?, lastVerified? } is valid",
+  );
+  const errs = validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { openai: [
+    { id: "a", label: "A", kind: "CHAT", benchmarks: { indicative: true, source: "AA", lastVerified: WHEN, scores: { math: { value: -3 }, coding: 55 } } },
+  ] } });
+  assert.ok(errs.some((e) => /invalid benchmarks.scores.math.value/.test(e)));
+  assert.ok(errs.some((e) => /benchmarks.scores.coding is not an object/.test(e)));
+});
+
+test("benchmarks normalize: per-domain scores accept a number or an object (Block I / T42)", () => {
+  const [d] = benchmarks.normalize({
+    source: "Artificial Analysis", lastVerified: "2026-07-22",
+    models: [{ vendor: "openai", id: "gpt-5", scores: { reasoning: 71, coding: { value: 68, source: "SWE-bench", lastVerified: "2026-07-01" }, bogus: "x" } }],
+  });
+  assert.deepEqual(d.benchmarks.scores.reasoning, { value: 71 }, "plain number → { value } citing the parent source");
+  assert.deepEqual(d.benchmarks.scores.coding, { value: 68, source: "SWE-bench", lastVerified: "2026-07-01" }, "object keeps its own provenance");
+  assert.equal(d.benchmarks.scores.bogus, undefined, "non-numeric score dropped, never invented");
+  assert.equal(d.benchmarks.intelligenceIndex, undefined, "a model with only scores still emits (scores are enough)");
+});
+
 test("merge benchmarks source: enriches an existing id, drops one not in the catalog (fail safe, Block I / T41)", () => {
   const { vendors, skipped, meta } = merge({
     sources: [{ sourceId: "benchmarks", drafts: [

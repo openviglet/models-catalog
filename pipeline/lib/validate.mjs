@@ -44,6 +44,17 @@ function benchmarksErrors(b, at) {
   for (const nf of ["intelligenceIndex", "arenaElo"]) {
     if (b[nf] !== undefined && !(typeof b[nf] === "number" && b[nf] >= 0)) errs.push(`${at} invalid benchmarks.${nf}`);
   }
+  // Per-domain scores (T42): a map of domain → { value, source?, lastVerified? }.
+  if (b.scores !== undefined) {
+    if (typeof b.scores !== "object" || b.scores === null || Array.isArray(b.scores)) {
+      errs.push(`${at} benchmarks.scores is not an object`);
+    } else {
+      for (const [domain, s] of Object.entries(b.scores)) {
+        if (typeof s !== "object" || s === null || Array.isArray(s)) { errs.push(`${at} benchmarks.scores.${domain} is not an object`); continue; }
+        if (!(typeof s.value === "number" && s.value >= 0)) errs.push(`${at} invalid benchmarks.scores.${domain}.value`);
+      }
+    }
+  }
   return errs;
 }
 

@@ -206,6 +206,32 @@
           "minimum": 0,
           "description": "A cited human-preference Elo rating (e.g. LMArena). An alternative capability signal to intelligenceIndex."
         },
+        "scores": {
+          "type": "object",
+          "description": "Optional per-domain cited scores (Block I / T42) — so capability is comparable per use-case, not one opaque number. Recommended keys: 'reasoning' (general reasoning), 'coding' (e.g. SWE-bench), 'math'. Each value is cited from the object's `source` unless it carries its own. A model uneven across domains is shown honestly.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["value"],
+            "properties": {
+              "value": {
+                "type": "number",
+                "minimum": 0,
+                "description": "The cited score for this domain (scale defined by the source)."
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Per-domain provenance override; falls back to the parent benchmarks.source when omitted."
+              },
+              "lastVerified": {
+                "type": "string",
+                "format": "date",
+                "description": "Per-domain verification date; falls back to the parent benchmarks.lastVerified when omitted."
+              }
+            }
+          }
+        },
         "indicative": {
           "type": "boolean",
           "const": true,
