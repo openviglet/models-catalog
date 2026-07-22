@@ -21,12 +21,6 @@ whole block is deliberately *bounded* so it doesn't become the maintenance/legal
 liability the old stance feared — the price is an **indicative US list reference, not an
 authoritative or contract-accurate quote**, and is always optional + sourced.
 
-### §F2 — T31 · Pipeline pricing enrichment
-Reverse the LiteLLM adapter's strip: instead of dropping `*cost*`/`*price*` keys, map
-them into the `pricing` shape, normalized to per-token USD and provenance-stamped, with
-`overrides.json` able to pin/correct a value. The missing-field-beats-wrong rule holds —
-a model with no trusted price omits it rather than carrying a guess.
-
 ### §F3 — T32 · Surface pricing across the public artifacts
 Once the data exists, expose it everywhere the identity already appears: detail drawer,
 comparison view, an optional page column, per-model/per-vendor pages, the CSV/NDJSON

@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T31 SHIPPED** (Block F §F2 — pipeline pricing enrichment: litellm adapter maps `*_cost_per_token`→`pricing` (per-1M USD, indicative, source litellm); merge carries pricing as highest-wins object (enrich-blank-then-stable, overrides pin corrects, stamps lastVerified); validate CMP_FIELDS+pricing; offline --apply populated 161 entries, 0/0/161 diff; 2 new tests) — 2026-07-22.
 - **T30 SHIPPED** (Block F §F1 — pricing field + schema, STRATEGY §I reversal: optional `pricing{inputPer1M,outputPer1M,currency:USD,unit,indicative:const true,note,source,lastVerified}`, required indicative+source+lastVerified; validate.mjs `pricingErrors()` mirror + 2 tests; additive, version 1; no prices seeded [T31 populates]) — 2026-07-22.
 - **T34 CREATED** (📋, Block G §G1 — more static landing pages: per-capability/modality/kind pages + sitemap.xml/robots.txt via emit.mjs; Next.js rejected for zero-dep; deps — [T26 shipped]) — 2026-07-22.
 - **T33 CREATED** (💭, Block F §F4 — provider consumer plans dataset (Claude Pro/Max, ChatGPT, Gemini), US-only, separate from ModelEntry; scope open) — 2026-07-22.

@@ -1,7 +1,7 @@
 {
   "_comment": "Canonical curated model catalog (Block BC / T759) — the single source of truth for the LLM-instance model picker fallback (Block BB / T577) AND the public catalog API published at turing.viglet.org (T760). Keyed by provider plugin type (lower-case, as resolved by TurGenAiLlmProviderFactory). The combobox is editable, so an id not listed here can still be typed. Each entry: id (required) + label (required) + kind (CHAT|EMBEDDING|RERANK|IMAGE|TRANSCRIPTION|SPEECH|VIDEO|MODERATION; the T750 taxonomy) + optional contextWindow / embeddingDimensions / capabilities / deprecated. Omit a field rather than guess — wrong metadata poisons the reference (STRATEGY X.5). Contract: model-catalog.schema.json. Emit the public artifact with scripts/emit-model-catalog.mjs. Keep current on redeploy.",
   "version": 1,
-  "lastUpdated": "2026-07-21",
+  "lastUpdated": "2026-07-22",
   "schema": "https://turing.viglet.org/models/catalog.schema.json",
   "vendors": {
     "anthropic": [
@@ -17,7 +17,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "claude-3-7-sonnet-20250219",
@@ -37,11 +37,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "claude-opus-4-1-20250805",
@@ -61,11 +71,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 15,
+          "outputPer1M": 75,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "claude-opus-4-20250514",
@@ -85,11 +105,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 15,
+          "outputPer1M": 75,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "claude-sonnet-4-20250514",
@@ -109,11 +139,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "claude-sonnet-4-5-20250929",
@@ -133,11 +173,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "bedrock": [
@@ -156,11 +206,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.8,
+          "outputPer1M": 4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "anthropic.claude-3-5-sonnet-20241022-v2:0",
@@ -179,11 +239,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "meta.llama3-1-70b-instruct-v1:0",
@@ -199,11 +269,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.99,
+          "outputPer1M": 0.99,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "mistral.mistral-large-2407-v1:0",
@@ -219,11 +299,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 9,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "amazon.titan-embed-text-v2:0",
@@ -239,10 +329,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.02,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "cohere": [
@@ -260,11 +360,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "command-r",
@@ -280,11 +390,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.15,
+          "outputPer1M": 0.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "command-r-plus",
@@ -300,11 +420,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "embed-multilingual-v3.0",
@@ -320,10 +450,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "embed-v4.0",
@@ -339,10 +479,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.12,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "rerank-v3.5",
@@ -358,7 +508,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "deepseek": [
@@ -376,12 +526,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.28,
+          "outputPer1M": 0.42,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "deepseek-reasoner",
@@ -397,12 +557,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.28,
+          "outputPer1M": 0.42,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "gemini": [
@@ -424,10 +594,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.075,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-1.5-pro",
@@ -441,7 +621,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.0-flash",
@@ -465,11 +645,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "outputPer1M": 0.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.0-flash-lite",
@@ -492,11 +682,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.075,
+          "outputPer1M": 0.3,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.5-flash",
@@ -521,11 +721,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.3,
+          "outputPer1M": 2.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.5-pro",
@@ -550,11 +760,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-embedding-001",
@@ -570,10 +790,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "text-embedding-004",
@@ -583,7 +813,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "gemini-openai": [
@@ -599,7 +829,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-1.5-pro",
@@ -613,7 +843,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.0-flash",
@@ -627,7 +857,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.5-flash",
@@ -641,7 +871,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.5-pro",
@@ -655,7 +885,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "minimax": [
@@ -674,12 +904,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.3,
+          "outputPer1M": 1.2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "MiniMax-M3",
@@ -698,12 +938,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.3,
+          "outputPer1M": 1.2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "mistral": [
@@ -721,10 +971,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1,
+          "outputPer1M": 3,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "mistral-large-latest",
@@ -742,11 +1003,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.5,
+          "outputPer1M": 1.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "mistral-small-latest",
@@ -764,11 +1035,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.06,
+          "outputPer1M": 0.18,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "open-mistral-nemo",
@@ -781,10 +1062,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.3,
+          "outputPer1M": 0.3,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "mistral-embed",
@@ -800,10 +1092,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "ollama": [
@@ -814,7 +1116,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "llama3.1",
@@ -834,7 +1136,7 @@
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "llama3.2",
@@ -843,7 +1145,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "mistral",
@@ -863,7 +1165,7 @@
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "phi3",
@@ -872,7 +1174,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "qwen2.5",
@@ -881,7 +1183,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "nomic-embed-text",
@@ -891,7 +1193,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "openai": [
@@ -903,7 +1205,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "chat-latest",
@@ -913,7 +1215,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "davinci-002",
@@ -923,7 +1225,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-3.5-turbo",
@@ -939,12 +1241,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.5,
+          "outputPer1M": 1.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-3.5-turbo-0125",
@@ -960,12 +1272,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.5,
+          "outputPer1M": 1.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-3.5-turbo-1106",
@@ -981,12 +1303,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1,
+          "outputPer1M": 2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-3.5-turbo-16k",
@@ -999,11 +1331,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-3.5-turbo-instruct",
@@ -1013,7 +1356,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-3.5-turbo-instruct-0914",
@@ -1023,7 +1366,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4",
@@ -1039,12 +1382,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 30,
+          "outputPer1M": 60,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4-0613",
@@ -1060,12 +1413,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 30,
+          "outputPer1M": 60,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4-turbo",
@@ -1084,12 +1447,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 10,
+          "outputPer1M": 30,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4-turbo-2024-04-09",
@@ -1108,12 +1481,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 10,
+          "outputPer1M": 30,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4.1",
@@ -1135,12 +1518,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2,
+          "outputPer1M": 8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4.1-2025-04-14",
@@ -1162,12 +1555,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2,
+          "outputPer1M": 8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4.1-mini",
@@ -1189,12 +1592,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.4,
+          "outputPer1M": 1.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4.1-mini-2025-04-14",
@@ -1216,12 +1629,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.4,
+          "outputPer1M": 1.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4.1-nano",
@@ -1243,12 +1666,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "outputPer1M": 0.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4.1-nano-2025-04-14",
@@ -1270,12 +1703,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "outputPer1M": 0.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o",
@@ -1294,12 +1737,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-2024-05-13",
@@ -1318,12 +1771,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 5,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-2024-08-06",
@@ -1342,12 +1805,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-2024-11-20",
@@ -1366,12 +1839,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini",
@@ -1390,12 +1873,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.15,
+          "outputPer1M": 0.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini-2024-07-18",
@@ -1414,12 +1907,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.15,
+          "outputPer1M": 0.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini-search-preview",
@@ -1438,12 +1941,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.15,
+          "outputPer1M": 0.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini-search-preview-2025-03-11",
@@ -1462,12 +1975,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.15,
+          "outputPer1M": 0.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-search-preview",
@@ -1486,12 +2009,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-search-preview-2025-03-11",
@@ -1510,12 +2043,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5",
@@ -1538,12 +2081,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-2025-08-07",
@@ -1566,12 +2119,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-chat-latest",
@@ -1593,12 +2156,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-codex",
@@ -1621,12 +2194,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-mini",
@@ -1649,12 +2232,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.25,
+          "outputPer1M": 2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-mini-2025-08-07",
@@ -1677,12 +2270,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.25,
+          "outputPer1M": 2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-nano",
@@ -1705,12 +2308,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.05,
+          "outputPer1M": 0.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-nano-2025-08-07",
@@ -1733,12 +2346,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.05,
+          "outputPer1M": 0.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-pro",
@@ -1761,12 +2384,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 15,
+          "outputPer1M": 120,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-pro-2025-10-06",
@@ -1789,12 +2422,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 15,
+          "outputPer1M": 120,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-search-api",
@@ -1813,12 +2456,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5-search-api-2025-10-14",
@@ -1837,12 +2490,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.1",
@@ -1866,12 +2529,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.1-2025-11-13",
@@ -1895,12 +2568,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.1-chat-latest",
@@ -1923,12 +2606,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.1-codex",
@@ -1951,12 +2644,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.1-codex-max",
@@ -1979,12 +2682,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.1-codex-mini",
@@ -2007,12 +2720,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.25,
+          "outputPer1M": 2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.2",
@@ -2036,12 +2759,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.75,
+          "outputPer1M": 14,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.2-2025-12-11",
@@ -2065,12 +2798,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.75,
+          "outputPer1M": 14,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.2-chat-latest",
@@ -2093,12 +2836,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.75,
+          "outputPer1M": 14,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.2-codex",
@@ -2121,12 +2874,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.75,
+          "outputPer1M": 14,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.2-pro",
@@ -2149,12 +2912,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 21,
+          "outputPer1M": 168,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.2-pro-2025-12-11",
@@ -2177,12 +2950,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 21,
+          "outputPer1M": 168,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.3-chat-latest",
@@ -2205,12 +2988,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.75,
+          "outputPer1M": 14,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.3-codex",
@@ -2233,12 +3026,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.75,
+          "outputPer1M": 14,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.4",
@@ -2261,12 +3064,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.4-2026-03-05",
@@ -2289,12 +3102,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.4-mini",
@@ -2317,12 +3140,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.75,
+          "outputPer1M": 4.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.4-mini-2026-03-17",
@@ -2345,12 +3178,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.75,
+          "outputPer1M": 4.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.4-nano",
@@ -2373,12 +3216,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.2,
+          "outputPer1M": 1.25,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.4-nano-2026-03-17",
@@ -2401,12 +3254,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.2,
+          "outputPer1M": 1.25,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.4-pro",
@@ -2429,12 +3292,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 30,
+          "outputPer1M": 180,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.4-pro-2026-03-05",
@@ -2457,12 +3330,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 30,
+          "outputPer1M": 180,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.5",
@@ -2485,12 +3368,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 5,
+          "outputPer1M": 30,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.5-2026-04-23",
@@ -2513,12 +3406,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 5,
+          "outputPer1M": 30,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.5-pro",
@@ -2541,12 +3444,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 30,
+          "outputPer1M": 180,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.5-pro-2026-04-23",
@@ -2569,12 +3482,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 30,
+          "outputPer1M": 180,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.6-luna",
@@ -2597,12 +3520,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1,
+          "outputPer1M": 6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.6-sol",
@@ -2625,12 +3558,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 5,
+          "outputPer1M": 30,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-5.6-terra",
@@ -2653,12 +3596,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-audio",
@@ -2679,12 +3632,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o1",
@@ -2704,12 +3667,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 15,
+          "outputPer1M": 60,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o1-2024-12-17",
@@ -2729,12 +3702,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 15,
+          "outputPer1M": 60,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o1-pro",
@@ -2757,12 +3740,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 150,
+          "outputPer1M": 600,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o1-pro-2025-03-19",
@@ -2785,12 +3778,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 150,
+          "outputPer1M": 600,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o3",
@@ -2813,12 +3816,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2,
+          "outputPer1M": 8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o3-2025-04-16",
@@ -2841,12 +3854,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2,
+          "outputPer1M": 8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o3-deep-research",
@@ -2868,12 +3891,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 10,
+          "outputPer1M": 40,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o3-deep-research-2025-06-26",
@@ -2895,12 +3928,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 10,
+          "outputPer1M": 40,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o3-mini",
@@ -2917,12 +3960,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.1,
+          "outputPer1M": 4.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o3-mini-2025-01-31",
@@ -2939,12 +3992,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.1,
+          "outputPer1M": 4.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o3-pro",
@@ -2967,12 +4030,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 20,
+          "outputPer1M": 80,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o3-pro-2025-06-10",
@@ -2995,12 +4068,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 20,
+          "outputPer1M": 80,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o4-mini",
@@ -3020,12 +4103,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.1,
+          "outputPer1M": 4.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o4-mini-2025-04-16",
@@ -3045,12 +4138,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.1,
+          "outputPer1M": 4.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o4-mini-deep-research",
@@ -3072,12 +4175,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2,
+          "outputPer1M": 8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "o4-mini-deep-research-2025-06-26",
@@ -3099,12 +4212,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2,
+          "outputPer1M": 8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "text-embedding-3-large",
@@ -3120,12 +4243,22 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.13,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "text-embedding-3-small",
@@ -3141,12 +4274,22 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.02,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "text-embedding-ada-002",
@@ -3162,11 +4305,21 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "chatgpt-image-latest",
@@ -3177,11 +4330,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-image-1",
@@ -3192,11 +4355,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-image-1-mini",
@@ -3207,11 +4380,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-image-1.5",
@@ -3227,12 +4410,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-image-2",
@@ -3248,12 +4441,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-image-2-2026-04-21",
@@ -3269,12 +4472,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini-transcribe",
@@ -3287,11 +4500,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini-transcribe-2025-03-20",
@@ -3304,11 +4528,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini-transcribe-2025-12-15",
@@ -3321,11 +4556,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-transcribe",
@@ -3338,11 +4584,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-transcribe-diarize",
@@ -3355,11 +4612,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-whisper",
@@ -3378,7 +4646,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "whisper-1",
@@ -3393,7 +4661,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini-tts",
@@ -3408,11 +4676,22 @@
             "audio"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini-tts-2025-03-20",
@@ -3427,11 +4706,22 @@
             "audio"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-4o-mini-tts-2025-12-15",
@@ -3446,11 +4736,22 @@
             "audio"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
+          "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-audio-1.5",
@@ -3471,12 +4772,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-audio-2025-08-28",
@@ -3497,12 +4808,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-audio-mini",
@@ -3523,12 +4844,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.6,
+          "outputPer1M": 2.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-audio-mini-2025-10-06",
@@ -3549,12 +4880,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.6,
+          "outputPer1M": 2.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-audio-mini-2025-12-15",
@@ -3575,12 +4916,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.6,
+          "outputPer1M": 2.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime",
@@ -3602,12 +4953,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 4,
+          "outputPer1M": 16,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-1.5",
@@ -3629,12 +4990,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 4,
+          "outputPer1M": 16,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-2",
@@ -3656,12 +5027,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 4,
+          "outputPer1M": 16,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-2.1",
@@ -3683,12 +5064,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 4,
+          "outputPer1M": 24,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-2.1-mini",
@@ -3710,12 +5101,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.6,
+          "outputPer1M": 2.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-2025-08-28",
@@ -3737,12 +5138,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 4,
+          "outputPer1M": 16,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-mini",
@@ -3764,12 +5175,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.6,
+          "outputPer1M": 2.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-mini-2025-10-06",
@@ -3791,12 +5212,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.6,
+          "outputPer1M": 2.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-mini-2025-12-15",
@@ -3818,12 +5249,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.6,
+          "outputPer1M": 2.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gpt-realtime-translate",
@@ -3833,7 +5274,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "tts-1",
@@ -3848,7 +5289,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "tts-1-1106",
@@ -3863,7 +5304,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "tts-1-hd",
@@ -3878,7 +5319,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "tts-1-hd-1106",
@@ -3893,7 +5334,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "sora-2",
@@ -3912,7 +5353,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "sora-2-pro",
@@ -3931,7 +5372,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "omni-moderation-2024-09-26",
@@ -3947,7 +5388,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "omni-moderation-latest",
@@ -3963,7 +5404,7 @@
           "committed",
           "openai-api"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "vertex-ai": [
@@ -3979,7 +5420,7 @@
         "sources": [
           "committed"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.0-flash",
@@ -4003,11 +5444,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "outputPer1M": 0.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.5-flash",
@@ -4032,11 +5483,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.3,
+          "outputPer1M": 2.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "gemini-2.5-pro",
@@ -4061,11 +5522,21 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "text-embedding-005",
@@ -4081,10 +5552,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "voyage": [
@@ -4102,10 +5583,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.06,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "voyage-3-large",
@@ -4121,10 +5612,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.18,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "voyage-3-lite",
@@ -4140,10 +5641,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.02,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "voyage-code-3",
@@ -4159,10 +5670,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.18,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "voyage-multimodal-3",
@@ -4181,10 +5702,20 @@
             "embedding"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.12,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "rerank-2",
@@ -4197,10 +5728,20 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.05,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "rerank-2-lite",
@@ -4213,10 +5754,20 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.02,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
-          "committed"
+          "committed",
+          "litellm"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "xai": [
@@ -4234,12 +5785,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "grok-3-mini",
@@ -4256,12 +5817,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.3,
+          "outputPer1M": 0.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "grok-4",
@@ -4277,12 +5848,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "grok-code-fast-1",
@@ -4299,12 +5880,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.2,
+          "outputPer1M": 1.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ],
     "zai": [
@@ -4322,12 +5913,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.6,
+          "outputPer1M": 2.2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "glm-4.5-air",
@@ -4343,12 +5944,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.2,
+          "outputPer1M": 1.1,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       },
       {
         "id": "glm-4.6",
@@ -4365,12 +5976,22 @@
             "text"
           ]
         },
+        "pricing": {
+          "inputPer1M": 0.6,
+          "outputPer1M": 2.2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "committed",
           "litellm",
           "overrides"
         ],
-        "lastVerified": "2026-07-21"
+        "lastVerified": "2026-07-22"
       }
     ]
   }

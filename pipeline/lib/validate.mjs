@@ -59,7 +59,7 @@ export function validateEnvelope(env) {
 const CMP_FIELDS = [
   "label", "kind", "contextWindow", "maxOutputTokens", "embeddingDimensions",
   "capabilities", "modalities", "knowledgeCutoff", "releaseDate", "aliases",
-  "status", "deprecated",
+  "status", "deprecated", "pricing",
 ];
 
 function fmt(v) {

@@ -4,8 +4,11 @@
  * for the numeric/capability fields the live vendor APIs leave blank
  * (contextWindow, maxOutputTokens, modalities, capability hints). No key needed.
  *
- * **Strictly non-pricing** (STRATEGY §X.5): every `*cost*` / `*price*` key is
- * dropped — this catalog is an identity+kind reference, never a price list.
+ * **Pricing** (Block F / T31, reversing the original non-pricing stance): LiteLLM's
+ * per-token USD costs are mapped into the catalog's *indicative US list price* shape
+ * (`pricing`, expressed per 1,000,000 tokens), flagged non-authoritative and
+ * provenance-stamped `source: "litellm"`. Bounded to US list price only, never
+ * invented (omitted when no usable cost is present) — see STRATEGY §I / agents.md.
  *
  * @since 2026.3.4 (T767)
  */
@@ -68,6 +71,30 @@ function capabilitiesFrom(spec) {
   return caps;
 }
 
+/**
+ * Map LiteLLM's per-token USD costs into the catalog's indicative pricing shape
+ * (Block F / T31). LiteLLM reports `*_cost_per_token` in USD *per token*; we
+ * express it per 1,000,000 tokens (rounded to 6 dp to shed float noise). The
+ * figure is flagged `indicative` + non-authoritative and stamped `source:
+ * "litellm"` (merge stamps `lastVerified`). Returns undefined when no usable
+ * cost is present — a price is never invented.
+ */
+function pricingFrom(spec) {
+  const per1M = (v) => (typeof v === "number" && v > 0 ? Math.round(v * 1e12) / 1e6 : undefined);
+  const inputPer1M = per1M(spec.input_cost_per_token);
+  const outputPer1M = per1M(spec.output_cost_per_token);
+  if (inputPer1M === undefined && outputPer1M === undefined) return undefined;
+  return compact({
+    inputPer1M,
+    outputPer1M,
+    currency: "USD",
+    unit: "per_1M_tokens",
+    indicative: true,
+    note: "Indicative US list price — verify with the vendor.",
+    source: "litellm",
+  });
+}
+
 function modalitiesFrom(spec) {
   const input = new Set(["text"]);
   const output = new Set();
@@ -87,7 +114,7 @@ export default {
   id: "litellm",
   vendor: null, // multi-vendor enrichment source
   envKey: null, // public, no auth
-  label: "LiteLLM registry (non-pricing)",
+  label: "LiteLLM registry (metadata + indicative pricing)",
 
   async fetch(_env, ctx) {
     return fetchOrReplay(this.id, URL, { offline: ctx.offline, when: ctx.when });
@@ -114,6 +141,7 @@ export default {
           embeddingDimensions: posInt(spec.output_vector_size),
           capabilities: capabilitiesFrom(spec),
           modalities: modalitiesFrom(spec),
+          pricing: pricingFrom(spec),
         }),
       );
     }

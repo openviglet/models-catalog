@@ -64,7 +64,7 @@ const PROVENANCE_FIELDS = new Set(["sources", "lastVerified", "vendor", "id"]);
 const FIELD_ORDER = [
   "id", "label", "kind", "contextWindow", "maxOutputTokens", "embeddingDimensions",
   "capabilities", "modalities", "knowledgeCutoff", "releaseDate", "aliases",
-  "status", "deprecated", "sources", "lastVerified",
+  "status", "deprecated", "pricing", "sources", "lastVerified",
 ];
 
 function orderEntry(entry) {
@@ -215,6 +215,20 @@ export function merge({ sources, overrides = [], existing, anchoringSources, liv
     if (modalities) {
       entry.modalities = modalities;
       fieldProvenance.modalities = ranked.filter((r) => r.draft.modalities).map((r) => r.sourceId).join("+");
+    }
+
+    // Pricing (Block F / T31): a highest-priority-wins object, so it enriches a
+    // blank price then stays stable (committed beats litellm — same as every other
+    // field) and is corrected only by an override/pin. A freshly-supplied object
+    // gets `lastVerified` stamped; a carried-forward committed price keeps its own.
+    for (const r of ranked) {
+      if (!r.draft.pricing) continue;
+      const p = { ...r.draft.pricing };
+      if (p.lastVerified === undefined) p.lastVerified = when;
+      entry.pricing = p;
+      fieldProvenance.pricing = r.sourceId;
+      contributingSources.add(r.sourceId);
+      break; // ranked is highest-priority-first
     }
 
     if (!entry.label) entry.label = id;

@@ -29,10 +29,10 @@ function baseMerge(over = {}) {
   });
 }
 
-test("litellm normalize: maps mode→kind, strips prefix, drops pricing + wildcards", () => {
+test("litellm normalize: maps mode→kind, strips prefix, maps pricing + drops wildcards", () => {
   const drafts = litellm.normalize({
     sample_spec: { note: "ignore" },
-    "gpt-4.1": { litellm_provider: "openai", mode: "chat", max_input_tokens: 1000, max_output_tokens: 200, supports_vision: true, input_cost_per_token: 0.01 },
+    "gpt-4.1": { litellm_provider: "openai", mode: "chat", max_input_tokens: 1000, max_output_tokens: 200, supports_vision: true, input_cost_per_token: 0.000002, output_cost_per_token: 0.000008 },
     "anthropic/claude-x": { litellm_provider: "anthropic", mode: "chat", max_input_tokens: 200000 },
     "embed-y": { litellm_provider: "cohere", mode: "embedding", output_vector_size: 1024 },
     "omni-moderation": { litellm_provider: "openai", mode: "moderation", max_input_tokens: 32768, max_output_tokens: 0 },
@@ -46,7 +46,13 @@ test("litellm normalize: maps mode→kind, strips prefix, drops pricing + wildca
   assert.equal(byId["openai/gpt-4.1"].kind, "CHAT");
   assert.equal(byId["openai/gpt-4.1"].maxOutputTokens, 200);
   assert.ok(byId["openai/gpt-4.1"].capabilities.includes("vision"));
-  assert.equal(byId["openai/gpt-4.1"].input_cost_per_token, undefined, "pricing dropped");
+  // Pricing: per-token USD → per-1M USD, flagged indicative + provenance-stamped (T31).
+  assert.equal(byId["openai/gpt-4.1"].input_cost_per_token, undefined, "raw cost key not leaked");
+  assert.deepEqual(byId["openai/gpt-4.1"].pricing, {
+    inputPer1M: 2, outputPer1M: 8, currency: "USD", unit: "per_1M_tokens",
+    indicative: true, note: "Indicative US list price — verify with the vendor.", source: "litellm",
+  });
+  assert.equal(byId["cohere/embed-y"].pricing, undefined, "no cost keys → no invented price");
   assert.equal(byId["anthropic/claude-x"].id, "claude-x", "provider/ prefix stripped");
   assert.equal(byId["cohere/embed-y"].kind, "EMBEDDING");
   assert.equal(byId["cohere/embed-y"].embeddingDimensions, 1024);
@@ -146,6 +152,40 @@ test("merge enrichment: litellm fills a field the committed entry lacks", () => 
   assert.equal(e.contextWindow, 1000000);
   assert.equal(e.maxOutputTokens, 32768);
   assert.equal(meta["openai::gpt-4.1"].fieldProvenance.maxOutputTokens, "litellm");
+});
+
+test("merge pricing: litellm fills a blank price, committed then stays stable, pin corrects (T31)", () => {
+  const priced = (over) => ({ currency: "USD", unit: "per_1M_tokens", indicative: true, source: "litellm", ...over });
+
+  // (a) enrich a blank price; merge stamps lastVerified when the source omits it.
+  let m = baseMerge({
+    existing: { version: 1, vendors: { openai: [{ id: "gpt", label: "GPT", kind: "CHAT" }] } },
+    sources: [{ sourceId: "litellm", drafts: [{ vendor: "openai", id: "gpt", kind: "CHAT", pricing: priced({ inputPer1M: 2, outputPer1M: 8 }) }] }],
+  });
+  let e = m.vendors.openai[0];
+  assert.equal(e.pricing.inputPer1M, 2);
+  assert.equal(e.pricing.lastVerified, WHEN, "merge stamps lastVerified when the source omits it");
+  assert.equal(m.meta["openai::gpt"].fieldProvenance.pricing, "litellm");
+
+  // (b) stability: a committed price beats a differing litellm price (no per-run flapping).
+  const committedPrice = priced({ inputPer1M: 2, lastVerified: "2026-01-01" });
+  m = baseMerge({
+    existing: { version: 1, vendors: { openai: [{ id: "gpt", label: "GPT", kind: "CHAT", pricing: committedPrice }] } },
+    sources: [{ sourceId: "litellm", drafts: [{ vendor: "openai", id: "gpt", kind: "CHAT", pricing: priced({ inputPer1M: 99 }) }] }],
+  });
+  e = m.vendors.openai[0];
+  assert.equal(e.pricing.inputPer1M, 2, "committed price wins over litellm (stable, low-churn)");
+  assert.equal(e.pricing.lastVerified, "2026-01-01", "carried-forward price keeps its own lastVerified");
+
+  // (c) a pinned override corrects the price over both committed and litellm.
+  m = baseMerge({
+    existing: { version: 1, vendors: { openai: [{ id: "gpt", label: "GPT", kind: "CHAT", pricing: committedPrice }] } },
+    sources: [{ sourceId: "litellm", drafts: [{ vendor: "openai", id: "gpt", kind: "CHAT", pricing: priced({ inputPer1M: 99 }) }] }],
+    overrides: [{ vendor: "openai", id: "gpt", pricing: priced({ inputPer1M: 12.5, source: "vendor pricing page" }), __pin: true }],
+  });
+  e = m.vendors.openai[0];
+  assert.equal(e.pricing.inputPer1M, 12.5, "pinned override price wins");
+  assert.equal(e.pricing.source, "vendor pricing page");
 });
 
 test("merge precedence: live vendor API beats litellm; conflict is flagged", () => {
