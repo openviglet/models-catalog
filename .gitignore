@@ -10,6 +10,7 @@ public/index.json
 public/endpoints.json
 public/stats.json
 public/coverage.json
+public/leaderboards.json
 public/changes.json
 public/feed.xml
 public/catalog.csv
