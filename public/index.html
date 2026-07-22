@@ -590,6 +590,16 @@
       th.sortable:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
       th[aria-sort="ascending"], th[aria-sort="descending"] { color: var(--brand-3); }
 
+      /* ── Analytics tabbed home (T55) ─────────────────── */
+      .atabs { display: flex; flex-wrap: wrap; gap: .2rem; margin-bottom: 1.8rem; border-bottom: 1px solid var(--border); }
+      .atab {
+        font-family: var(--sans); font-size: .92rem; font-weight: 600; cursor: pointer;
+        padding: .6rem .95rem; color: var(--muted); background: none; border: none;
+        border-bottom: 2px solid transparent; margin-bottom: -1px;
+      }
+      .atab:hover { color: var(--text); }
+      .atab.active { color: var(--brand-3); border-bottom-color: var(--brand); }
+
       /* ── Insights dashboard (T21) ────────────────────── */
       .grid-2 { grid-template-columns: repeat(2, 1fr); }
       @media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
@@ -654,14 +664,10 @@
           Model Catalog
         </a>
         <div class="nav-links">
-          <a href="#insights" class="nav-hide-sm">Insights</a>
-          <a href="#coverage" class="nav-hide-sm">Coverage</a>
-          <a href="#plans" class="nav-hide-sm">Plans</a>
+          <a href="#browse" class="nav-hide-sm">Explore</a>
           <a href="#decide" class="nav-hide-sm">Decide</a>
-          <a href="#browse" class="nav-hide-sm">Browse</a>
+          <a href="#analytics" class="nav-hide-sm">Analytics</a>
           <a href="#api" class="nav-hide-sm">API</a>
-          <a href="#sdks" class="nav-hide-sm">SDKs</a>
-          <a href="#contribute" class="nav-hide-sm">Contribute</a>
           <button type="button" class="icon-btn" id="palbtn" title="Command palette (Ctrl / ⌘ K)" aria-label="Open command palette">⌘K</button>
           <button class="icon-btn" id="theme" title="Toggle theme" aria-label="Toggle theme">◐</button>
           <a class="btn-gh" href="https://github.com/openviglet/model-catalog" target="_blank" rel="noopener">
@@ -684,7 +690,8 @@
           capabilities — plus an optional <em>indicative</em> US list price. No key, no server. Just clean JSON.
         </p>
         <div class="cta">
-          <a class="btn btn-primary" href="#browse">Browse the catalog</a>
+          <a class="btn btn-primary" href="#browse">Explore models</a>
+          <a class="btn btn-ghost" href="#decide">Which model? →</a>
           <a class="btn btn-ghost" href="./catalog.json">Get the JSON ↗</a>
         </div>
         <div class="stats" id="stats">
@@ -726,54 +733,6 @@
             <p>Regenerated entries carry their <code>sources</code> and <code>lastVerified</code>. Any price is an <em>indicative</em> US list reference — verify with the vendor. We omit a field before we guess it.</p>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- ── Insights dashboard (T21) ────────────────────── -->
-    <section class="block" id="insights" hidden>
-      <div class="wrap">
-        <div class="sec-head">
-          <div class="kicker">At a glance</div>
-          <h2>What’s in the catalog</h2>
-          <p>Live aggregates from <a href="./stats.json"><code>stats.json</code></a> — models by vendor and kind, context-window spread, capabilities, modalities and field coverage. Recomputed at every publish, so they never drift.</p>
-        </div>
-        <div class="grid grid-2" id="charts"></div>
-      </div>
-    </section>
-
-    <!-- ── Coverage & gaps (T29) ───────────────────────── -->
-    <section class="block alt" id="coverage" hidden>
-      <div class="wrap">
-        <div class="sec-head">
-          <div class="kicker">Transparency</div>
-          <h2>Coverage &amp; gaps</h2>
-          <p>Per-vendor field fill rate from <a href="./coverage.json"><code>coverage.json</code></a>. We show what's incomplete on purpose — every faint or empty cell is an open invitation to <a href="#contribute">propose a correction</a>. Click one to open a pre-filled proposal for that vendor.</p>
-        </div>
-        <div class="cov-wrap" id="cov-wrap"></div>
-      </div>
-    </section>
-
-    <!-- ── Consumer plans (Block F / T33) ──────────────── -->
-    <section class="block" id="plans" hidden>
-      <div class="wrap">
-        <div class="sec-head">
-          <div class="kicker">Commercial</div>
-          <h2>Consumer plans</h2>
-          <p>Vendor consumer subscription tiers from <a href="./plans.json"><code>plans.json</code></a> — a separate dataset (plans aren't models). Each price is an <strong>indicative US list price</strong>: a reference only, may be stale, excludes tax — <strong>verify with the vendor</strong>.</p>
-        </div>
-        <div id="plans-wrap"></div>
-      </div>
-    </section>
-
-    <!-- ── Pricing sources registry (Block H / T35) ────── -->
-    <section class="block alt" id="sources" hidden>
-      <div class="wrap">
-        <div class="sec-head">
-          <div class="kicker">Verify</div>
-          <h2>Pricing sources</h2>
-          <p>The official vendor pages to <strong>verify</strong> the catalog's indicative prices against, from <a href="./providers.json"><code>providers.json</code></a>. Grouped by provider type; ✓ marks providers whose models are in the catalog.</p>
-        </div>
-        <div id="sources-wrap"></div>
       </div>
     </section>
 
@@ -822,6 +781,42 @@
           <span class="skeleton" style="display:block"></span>
         </p>
         <div id="list"></div>
+      </div>
+    </section>
+
+    <!-- ── Analytics home: tabbed (T55) ────────────────── -->
+    <!-- The former Insights / Coverage / Plans / Sources bands, consolidated off the
+         critical path into one addressable, tabbed analytics home. Each tab reveals
+         itself only when its artifact loads (old deploys degrade cleanly). -->
+    <section class="block alt" id="analytics" hidden>
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">Analytics</div>
+          <h2>Catalog analytics</h2>
+          <p>Aggregates, coverage, consumer plans and the pricing-source registry — kept off the main path, in one place. Recomputed at every publish, so they never drift.</p>
+        </div>
+        <div class="atabs" role="tablist" id="atabs">
+          <button type="button" class="atab" role="tab" data-atab="overview" hidden>Overview</button>
+          <button type="button" class="atab" role="tab" data-atab="coverage" hidden>Coverage &amp; gaps</button>
+          <button type="button" class="atab" role="tab" data-atab="plans" hidden>Consumer plans</button>
+          <button type="button" class="atab" role="tab" data-atab="sources" hidden>Pricing sources</button>
+        </div>
+        <div class="apanel" data-apanel="overview" hidden>
+          <p class="lbl" style="margin:0 0 1.2rem">Live aggregates from <a href="./stats.json"><code>stats.json</code></a> — models by vendor and kind, context-window spread, capabilities, modalities and field coverage.</p>
+          <div class="grid grid-2" id="charts"></div>
+        </div>
+        <div class="apanel" data-apanel="coverage" hidden>
+          <p class="lbl" style="margin:0 0 1.2rem">Per-vendor field fill rate from <a href="./coverage.json"><code>coverage.json</code></a>. Every faint or empty cell is an open invitation to <a href="#contribute">propose a correction</a> — click one for a pre-filled proposal.</p>
+          <div class="cov-wrap" id="cov-wrap"></div>
+        </div>
+        <div class="apanel" data-apanel="plans" hidden>
+          <p class="lbl" style="margin:0 0 1.2rem">Vendor consumer subscription tiers from <a href="./plans.json"><code>plans.json</code></a> — a separate dataset (plans aren't models). Each price is an <strong>indicative US list price</strong>: a reference only, excludes tax — <strong>verify with the vendor</strong>.</p>
+          <div id="plans-wrap"></div>
+        </div>
+        <div class="apanel" data-apanel="sources" hidden>
+          <p class="lbl" style="margin:0 0 1.2rem">The official vendor pages to <strong>verify</strong> the catalog's indicative prices against, from <a href="./providers.json"><code>providers.json</code></a>. Grouped by provider type; ✓ marks providers whose models are in the catalog.</p>
+          <div id="sources-wrap"></div>
+        </div>
       </div>
     </section>
 
@@ -1009,7 +1004,8 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         </div>
         <div class="foot-links">
           <a href="https://github.com/openviglet/model-catalog">GitHub</a>
-          <a href="https://github.com/openviglet/model-catalog/blob/main/CONTRIBUTING.md">Contribute</a>
+          <a href="#sdks">SDKs</a>
+          <a href="#contribute">Contribute</a>
           <a href="./catalog.json">catalog.json</a>
           <a href="./endpoints.json">endpoints.json</a>
           <a href="./catalog.schema.json">Schema</a>
@@ -1752,6 +1748,22 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         if (vh) vh.scrollIntoView({ behavior: "smooth", block: "center" });
       }
 
+      /* ── Analytics tabbed home (T55) ───────────────── */
+      // Each analytics artifact reveals its tab when it loads; the first available
+      // tab auto-activates. Old deploys missing an artifact simply omit its tab.
+      let analyticsActive = null;
+      function selectAnalyticsTab(name) {
+        analyticsActive = name;
+        document.querySelectorAll(".atab").forEach((t) => t.classList.toggle("active", t.dataset.atab === name));
+        document.querySelectorAll(".apanel").forEach((p) => { p.hidden = p.dataset.apanel !== name; });
+      }
+      function enableAnalyticsTab(name) {
+        document.getElementById("analytics").hidden = false;
+        const tab = document.querySelector(`.atab[data-atab="${name}"]`);
+        if (tab) tab.hidden = false;
+        if (!analyticsActive) selectAnalyticsTab(name); // activate the first one that loads
+      }
+
       /* ── Insights dashboard (T21) ──────────────────── */
       // A zero-dep inline-SVG horizontal bar chart. rows: [{label, value, color?}].
       function svgBars(rows, opts = {}) {
@@ -1806,7 +1818,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           card("Input modalities", svgBars(inRows)) +
           card("Field coverage", svgBars(covRows, { max: 1, fmt: (v) => Math.round(v * 100) + "%" }),
             `Share of the ${stats.coverage.total} catalogued models carrying each field — the denominator behind every sparse overlay.`);
-        document.getElementById("insights").hidden = false;
+        enableAnalyticsTab("overview");
       }
 
       /* ── Decide: price × intelligence frontier (T54) ───
@@ -1913,7 +1925,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         }).join("");
         document.getElementById("plans-wrap").innerHTML =
           cards + (data.disclaimer ? `<p class="lbl" style="margin-top:1rem">${data.disclaimer}</p>` : "");
-        document.getElementById("plans").hidden = false;
+        enableAnalyticsTab("plans");
       }
 
       /* ── Pricing sources registry (Block H / T35) ──── */
@@ -1947,7 +1959,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         }).join("");
         document.getElementById("sources-wrap").innerHTML =
           groups + (data.disclaimer ? `<p class="lbl" style="margin-top:1rem">${data.disclaimer}</p>` : "");
-        document.getElementById("sources").hidden = false;
+        enableAnalyticsTab("sources");
       }
 
       /* ── Coverage & gaps (T29) ─────────────────────── */
@@ -2003,7 +2015,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           `<span><span class="sw" style="border:1px dashed var(--border-strong)"></span>none — <a href="#contribute">help fill it in</a></span>` +
           (hiddenCount ? `<span class="lbl">${hiddenCount} field${hiddenCount !== 1 ? "s" : ""} hidden (0% across the catalog)</span>` : "");
         document.getElementById("cov-wrap").after(legend);
-        document.getElementById("coverage").hidden = false;
+        enableAnalyticsTab("coverage");
       }
 
       function buildFilters() {
@@ -2346,6 +2358,12 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           if (e.key === "Escape" && !menu.hidden) { menu.hidden = true; btn.setAttribute("aria-expanded", "false"); }
         });
       })();
+
+      /* ── Analytics tab wiring (T55) ────────────────── */
+      document.getElementById("atabs").addEventListener("click", (e) => {
+        const t = e.target.closest(".atab");
+        if (t) selectAnalyticsTab(t.dataset.atab);
+      });
 
       /* ── Palette wiring (T19) ──────────────────────── */
       document.getElementById("palbtn").onclick = openPalette;

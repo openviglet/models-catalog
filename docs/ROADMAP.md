@@ -89,7 +89,6 @@
 > SDK — gaps found here are fixed in the SDK (feeding Block K), never worked around in the page.
 > Sparse data stays honest (denominators, opt-in overlays, never invented). Design rationale → §L.
 
-- **T55** 📋 **IA re-layout (orient/explore/cite)** — home becomes orient-only (+ prominent Explore entry); move Insights/Coverage/Plans/Sources off the critical path into one tabbed analytics home; trim the nav toward four bands. Pure IA, no new data. deps: — → §L6
 - **T56** 💭 **Facet rail + shareable presets** — grouped/collapsible facet rail with per-chip match counts + "clear all" + labelled AND/OR; "copy link to this view" + curated preset links. deps: T51, T52 → §L7
 - **T57** 💭 **Mobile & render performance** — restore mobile nav (compact menu), card view < 720px, debounce the keystroke re-render. deps: T51 → §L8
 

@@ -77,13 +77,6 @@ Dense facts drive the defaults; sparse facts are opt-in overlays that always pri
 the provenance-first bet. All views keep the existing framing: tier is a *price proxy, not a quality
 verdict*; every benchmark/speed number is *cited — verify at the source*.
 
-### §L6 — T55 · IA re-layout (orient / explore / cite)
-Stop the hyper-page slide: home becomes **orient only** (hero + a tight "what's inside" strip + a
-prominent Explore entry + API / SDKs / Contribute); the analytics bands (Insights charts, Coverage
-heatmap, Plans, Sources) move **off the critical path** into one addressable, tabbed analytics home
-(Overview · Coverage · Plans · Sources), trimming the nav from eight bands toward four. Browse/Explore
-stays the single primary interactive surface. Pure information architecture — no new data.
-
 ### §L7 — T56 · Facet rail + shareable presets
 Replace the tall stacked facet wall with a grouped, collapsible **facet rail** carrying per-chip
 match counts, an "N active · clear all" summary, and labelled AND/OR semantics — so filtering has
