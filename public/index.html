@@ -1296,6 +1296,29 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         return `${figs} <span class="lbl">/ 1M tokens</span>
           <div class="lbl" style="margin-top:.25rem">Indicative US list — verify with vendor${meta ? ` · ${meta}` : ""}</div>`;
       }
+      /* ── Cited benchmarks (Block I / T40) ─────────────
+         A cited third-party capability index (Artificial Analysis / LMArena), NOT
+         our verdict — the "cited, verify at the source" framing travels with it. */
+      const BENCH_CAVEAT = "Cited third-party capability index — a reference to a public leaderboard, not our verdict. Verify at the source.";
+      function benchmarkParts(b) {
+        const bits = [];
+        if (b && b.intelligenceIndex != null) bits.push([b.intelligenceIndex, "Intelligence index"]);
+        if (b && b.arenaElo != null) bits.push([b.arenaElo, "Arena Elo"]);
+        return bits;
+      }
+      function benchmarkChip(b) {
+        const bits = benchmarkParts(b);
+        if (!bits.length) return "";
+        return `<span class="chip num" title="${BENCH_CAVEAT}">${bits.map(([v]) => v).join(" · ")}</span>`;
+      }
+      function benchmarkCell(b) {
+        const bits = benchmarkParts(b);
+        if (!bits.length) return "";
+        const figs = bits.map(([v, lbl]) => `<span class="mono">${v}</span> <span class="lbl">${lbl}</span>`).join(" · ");
+        const meta = [b.source ? `source: ${b.source}` : "", b.lastVerified ? b.lastVerified : ""].filter(Boolean).join(" · ");
+        return `${figs}
+          <div class="lbl" style="margin-top:.25rem">Cited — verify at the source${meta ? ` · ${meta}` : ""}</div>`;
+      }
       function renderDetail(m) {
         const rows = [];
         const add = (dt, dd) => { if (dd || dd === 0) rows.push(`<dt>${dt}</dt><dd>${dd}</dd>`); };
@@ -1312,6 +1335,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         if (m.openWeights != null) add("Weights", `<span class="chip">${weightsLabel(m)}</span>`);
         if (m.parameters != null) add("Parameters", `<span class="mono">${fmtParams(m.parameters)}</span> <span class="lbl">${m.parameters.toLocaleString("en-US")}</span>`);
         if (m.pricing) add('Price <span class="lbl">US list</span>', priceCell(m.pricing));
+        if (m.benchmarks) add('Benchmarks <span class="lbl">cited</span>', benchmarkCell(m.benchmarks));
         if (m.status) add("Status", m.status);
         if (m.knowledgeCutoff) add("Knowledge cutoff", m.knowledgeCutoff);
         if (m.releaseDate) add("Release date", m.releaseDate);
@@ -1406,6 +1430,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           ["Weights", ({ m }) => m.openWeights == null ? "" : `<span class="chip">${weightsLabel(m)}</span>`],
           ["Parameters", ({ m }) => m.parameters != null ? `<span class="mono">${fmtParams(m.parameters)}</span>` : ""],
           ["Price (US list)", ({ m }) => m.pricing ? priceCell(m.pricing) : ""],
+          ["Benchmarks (cited)", ({ m }) => m.benchmarks ? benchmarkCell(m.benchmarks) : ""],
           ["Input", ({ m }) => chips(m.modalities && m.modalities.input)],
           ["Output", ({ m }) => chips(m.modalities && m.modalities.output)],
           ["Capabilities", ({ m }) => chips(m.capabilities)],

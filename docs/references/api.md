@@ -104,6 +104,7 @@ are regenerated deterministically from the canonical source
 | `sources` | string[] | — | Provenance — source ids that contributed fields (`openai-api`, `litellm`, `overrides`). |
 | `lastVerified` | string | — | ISO-8601 date the entry was last confirmed against its sources. |
 | `pricing` | object | — | **Indicative US list price** — `{ inputPer1M, outputPer1M, currency: "USD", unit, indicative: true, note, source, lastVerified }`, per 1,000,000 tokens. **A reference only, not authoritative — verify with the vendor.** Never per-contract/region/negotiated; omitted when no trusted price exists. See below. |
+| `benchmarks` | object | — | **Cited third-party capability index** — `{ intelligenceIndex?, arenaElo?, indicative: true, note?, source, lastVerified }`. A reference to a public leaderboard (Artificial Analysis / LMArena), **not our verdict** — verify at the source. Provenance-gated + never invented; omitted when no cited number exists. See below. |
 
 ### `pricing` — indicative US list price ⚠️
 
@@ -121,6 +122,26 @@ no per-contract, per-region, negotiated or committed-use pricing. Provenance-gat
   "indicative": true,
   "note": "Indicative US list price — verify with the vendor.",
   "source": "litellm", "lastVerified": "2026-07-22"
+}
+```
+
+### `benchmarks` — cited third-party capability index ⚠️
+
+Optional, and **cited, not our verdict**: a reference to a public, citable capability
+leaderboard — an Artificial Analysis Intelligence Index (`intelligenceIndex`) or an LMArena
+human-preference rating (`arenaElo`) — published next to the model identity so "how capable"
+is a linked third-party number rather than our opinion. Treated exactly like `pricing`:
+flagged `indicative: true`, provenance-gated (`source` + `lastVerified` required), never
+invented — a model with no cited number omits the field. **Verify at the source.** Per-domain
+scores (reasoning / coding / math) are a planned extension.
+
+```json
+"benchmarks": {
+  "intelligenceIndex": 60,
+  "arenaElo": 1300,
+  "indicative": true,
+  "note": "Cited from Artificial Analysis — verify at the source.",
+  "source": "Artificial Analysis", "lastVerified": "2026-07-22"
 }
 ```
 

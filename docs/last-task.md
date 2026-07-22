@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T40 SHIPPED** (Block I §I3 — cited intelligence/benchmark index: optional provenance-gated `benchmarks` object {intelligenceIndex?, arenaElo?, indicative, source, lastVerified}, treated like pricing (never our verdict); schema/validate/merge/emit + page drawer/compare; NO data seeded [T41 populates]; 2 tests) — 2026-07-22.
 - **T39 SHIPPED** (Block I §I2 — factual fields `openWeights` (open vs proprietary) + `parameters` (disclosed total, only when public); plumbed through schema/validate/merge/emit + page tags/drawer/compare; seeded 29 verified entries via overrides; 2 tests) — 2026-07-22.
 - **T44 CREATED** (📋, Block I §I7 — filter & sort by tier + use-case on the page: interactive chips/sort reusing T20 filters + T16 hash; page-only; deps — [T38 shipped]) — 2026-07-22.
 - **T43 CREATED** (💭, Block I §I6 — speed & cost-efficiency axis: cited throughput (tok/s) + latency (TTFT) + cost-per-capability; needs a source) — 2026-07-22.

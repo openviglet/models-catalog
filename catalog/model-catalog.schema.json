@@ -137,6 +137,10 @@
         "pricing": {
           "$ref": "#/$defs/pricing",
           "description": "Optional INDICATIVE US list price — a reference only, NOT an authoritative or contract-accurate quote (verify with the vendor). Never per-contract/region/negotiated. Provenance-gated + never invented. Additive (Block F / T30)."
+        },
+        "benchmarks": {
+          "$ref": "#/$defs/benchmarks",
+          "description": "Optional CITED third-party capability index (e.g. an Artificial Analysis Intelligence Index or LMArena Elo) — a reference to someone else's published number, NOT our quality verdict. Provenance-gated + never invented; verify at the source. Additive (Block I / T40)."
         }
       }
     },
@@ -183,6 +187,43 @@
           "type": "string",
           "format": "date",
           "description": "ISO-8601 date this price was last confirmed against its source."
+        }
+      }
+    },
+    "benchmarks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["indicative", "source", "lastVerified"],
+      "description": "Cited third-party capability numbers for a model id (Block I / T40). Treated exactly like `pricing`: a REFERENCE to a public, citable leaderboard — never our own quality verdict, never invented. Provenance-gated (indicative + source + lastVerified). Verify at the source. The per-domain `scores` map is added by T42.",
+      "properties": {
+        "intelligenceIndex": {
+          "type": "number",
+          "minimum": 0,
+          "description": "A cited composite 'intelligence' index (e.g. the Artificial Analysis Intelligence Index). A third-party number, not our verdict."
+        },
+        "arenaElo": {
+          "type": "number",
+          "minimum": 0,
+          "description": "A cited human-preference Elo rating (e.g. LMArena). An alternative capability signal to intelligenceIndex."
+        },
+        "indicative": {
+          "type": "boolean",
+          "const": true,
+          "description": "Always true — signals these are indicative, cited third-party numbers, NOT an authoritative or invented quality verdict. Verify at the source."
+        },
+        "note": {
+          "type": "string",
+          "description": "Free-text disclaimer/qualifier travelling with the numbers (e.g. 'Cited from Artificial Analysis — verify at the source')."
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Provenance — the citable leaderboard the numbers came from (e.g. 'Artificial Analysis', an LMArena URL). Required: benchmarks are never invented."
+        },
+        "lastVerified": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO-8601 date these numbers were last confirmed against their source."
         }
       }
     },

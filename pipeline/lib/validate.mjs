@@ -29,6 +29,24 @@ function pricingErrors(p, at) {
   return errs;
 }
 
+/**
+ * Structural mirror of $defs/benchmarks (Block I / T40). Provenance-gated exactly
+ * like pricing: cited third-party numbers are admitted only with `indicative: true`,
+ * a `source` and a `lastVerified`; the numeric fields, when present, are non-negative.
+ * @returns string[] of errors (empty = valid).
+ */
+function benchmarksErrors(b, at) {
+  if (typeof b !== "object" || b === null || Array.isArray(b)) return [`${at} benchmarks is not an object`];
+  const errs = [];
+  if (b.indicative !== true) errs.push(`${at} benchmarks.indicative must be true`);
+  if (!b.source || typeof b.source !== "string") errs.push(`${at} benchmarks missing string source`);
+  if (typeof b.lastVerified !== "string") errs.push(`${at} benchmarks missing string lastVerified`);
+  for (const nf of ["intelligenceIndex", "arenaElo"]) {
+    if (b[nf] !== undefined && !(typeof b[nf] === "number" && b[nf] >= 0)) errs.push(`${at} invalid benchmarks.${nf}`);
+  }
+  return errs;
+}
+
 /** @returns string[] of validation errors (empty = valid). */
 export function validateEnvelope(env) {
   const errs = [];
@@ -52,6 +70,7 @@ export function validateEnvelope(env) {
       }
       if (e.openWeights !== undefined && typeof e.openWeights !== "boolean") errs.push(`${at} (${e.id}) openWeights must be boolean`);
       if (e.pricing !== undefined) errs.push(...pricingErrors(e.pricing, `${at} (${e.id})`));
+      if (e.benchmarks !== undefined) errs.push(...benchmarksErrors(e.benchmarks, `${at} (${e.id})`));
     }
   }
   return errs;
@@ -60,7 +79,7 @@ export function validateEnvelope(env) {
 const CMP_FIELDS = [
   "label", "kind", "contextWindow", "maxOutputTokens", "embeddingDimensions",
   "capabilities", "openWeights", "parameters", "modalities", "knowledgeCutoff",
-  "releaseDate", "aliases", "status", "deprecated", "pricing",
+  "releaseDate", "aliases", "status", "deprecated", "pricing", "benchmarks",
 ];
 
 function fmt(v) {

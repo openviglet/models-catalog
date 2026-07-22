@@ -64,7 +64,8 @@ const PROVENANCE_FIELDS = new Set(["sources", "lastVerified", "vendor", "id"]);
 const FIELD_ORDER = [
   "id", "label", "kind", "contextWindow", "maxOutputTokens", "embeddingDimensions",
   "capabilities", "openWeights", "parameters", "modalities", "knowledgeCutoff",
-  "releaseDate", "aliases", "status", "deprecated", "pricing", "sources", "lastVerified",
+  "releaseDate", "aliases", "status", "deprecated", "pricing", "benchmarks",
+  "sources", "lastVerified",
 ];
 
 function orderEntry(entry) {
@@ -227,6 +228,21 @@ export function merge({ sources, overrides = [], existing, anchoringSources, liv
       if (p.lastVerified === undefined) p.lastVerified = when;
       entry.pricing = p;
       fieldProvenance.pricing = r.sourceId;
+      contributingSources.add(r.sourceId);
+      break; // ranked is highest-priority-first
+    }
+
+    // Benchmarks (Block I / T40): a cited third-party capability index, handled
+    // exactly like pricing — a highest-priority-wins object that enriches a blank
+    // then stays stable (committed beats a source), corrected only by an override.
+    // A freshly-supplied object gets `lastVerified` stamped; a carried-forward one
+    // keeps its own. Population is T41 (a benchmark SourceAdapter).
+    for (const r of ranked) {
+      if (!r.draft.benchmarks) continue;
+      const b = { ...r.draft.benchmarks };
+      if (b.lastVerified === undefined) b.lastVerified = when;
+      entry.benchmarks = b;
+      fieldProvenance.benchmarks = r.sourceId;
       contributingSources.add(r.sourceId);
       break; // ranked is highest-priority-first
     }

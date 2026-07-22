@@ -290,6 +290,7 @@ const COVERAGE_FIELDS = [
   ["sources", (e) => (e.sources || []).length > 0],
   ["lastVerified", (e) => e.lastVerified != null],
   ["pricing", (e) => e.pricing != null], // indicative US list price (Block F / T32)
+  ["benchmarks", (e) => e.benchmarks != null], // cited third-party capability index (Block I / T40)
 ];
 const round4 = (n, d) => (d ? Math.round((n / d) * 1e4) / 1e4 : 0);
 // Per-field { filled, rate } over an arbitrary set of entries.
@@ -466,6 +467,9 @@ const CSV_COLUMNS = [
   // Indicative US list price (Block F / T32) — a reference only, verify with the
   // vendor; empty for models with no trusted price. Currency is always USD.
   "priceInputPer1M", "priceOutputPer1M", "priceCurrency", "priceSource", "priceLastVerified",
+  // Cited third-party capability index (Block I / T40) — a reference to a public
+  // leaderboard, verify at the source; empty for models with no cited benchmark.
+  "benchmarkIntelligenceIndex", "benchmarkArenaElo", "benchmarkSource", "benchmarkLastVerified",
 ];
 const csvCell = (v) => {
   if (v == null) return "";
@@ -480,6 +484,10 @@ const csvRow = (e) => CSV_COLUMNS.map((c) => {
   if (c === "priceCurrency") return csvCell(e.pricing && e.pricing.currency);
   if (c === "priceSource") return csvCell(e.pricing && e.pricing.source);
   if (c === "priceLastVerified") return csvCell(e.pricing && e.pricing.lastVerified);
+  if (c === "benchmarkIntelligenceIndex") return csvCell(e.benchmarks && e.benchmarks.intelligenceIndex);
+  if (c === "benchmarkArenaElo") return csvCell(e.benchmarks && e.benchmarks.arenaElo);
+  if (c === "benchmarkSource") return csvCell(e.benchmarks && e.benchmarks.source);
+  if (c === "benchmarkLastVerified") return csvCell(e.benchmarks && e.benchmarks.lastVerified);
   return csvCell(e[c]);
 }).join(",");
 const catalogCsv = [CSV_COLUMNS.join(","), ...flat.map(csvRow)].join("\r\n") + "\r\n";
@@ -542,6 +550,16 @@ const priceLine = (p) => {
   if (!bits.length) return null;
   return `${bits.join(" / ")} per 1M tokens (indicative US list — verify with vendor)`;
 };
+// Cited third-party capability index, one human line (Block I / T40). Carries the
+// "cited — verify at the source" framing so it never reads as our own verdict.
+const benchmarkLine = (b) => {
+  if (!b) return null;
+  const bits = [];
+  if (b.intelligenceIndex != null) bits.push(`intelligence index ${b.intelligenceIndex}`);
+  if (b.arenaElo != null) bits.push(`Arena Elo ${b.arenaElo}`);
+  if (!bits.length) return null;
+  return `${bits.join(" · ")} (cited from ${b.source || "source"} — verify at the source)`;
+};
 
 const proseText = (e) => {
   let s = `${e.label} (${e.id}) is a ${e.kind.toLowerCase()} model from ${e.vendor}`;
@@ -564,6 +582,7 @@ const factRows = (e) => [
   ["Max output tokens", e.maxOutputTokens != null ? `${comma(e.maxOutputTokens)} tokens` : null],
   ["Embedding dimensions", e.embeddingDimensions != null ? comma(e.embeddingDimensions) : null],
   ["Indicative price (US list)", priceLine(e.pricing)],
+  ["Cited capability index", benchmarkLine(e.benchmarks)],
   ["Input modalities", inMods(e).join(", ") || null],
   ["Output modalities", outMods(e).join(", ") || null],
   ["Capabilities", (e.capabilities || []).join(", ") || null],

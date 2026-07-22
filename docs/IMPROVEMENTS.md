@@ -36,13 +36,6 @@ opinion, decay fast, and erode trust). T38 (shipped) delivered a purely *derived
 transparent market proxy, honestly labelled). The remaining tasks add the *factual inputs*
 that a stronger, still-non-opinionated signal needs.
 
-### §I3 — T40 · Cited intelligence / benchmark index (field + shape)
-The honest way to signal "how capable" is not our opinion but a **cited third-party number** —
-an Artificial Analysis Intelligence Index, LMArena Elo, or similar — carried like `pricing`:
-`indicative` + `source` + `lastVerified`, never invented, "verify at the source". This task is
-just the *contract* (the `benchmarks` shape); the data comes from T41. Exploratory (💭) because
-the shape depends on which source we can ingest under an acceptable licence.
-
 ### §I4 — T41 · Benchmark source adapter (populate T40)
 T40 is inert without a data path. Add a `SourceAdapter` (same contract as the vendor/LiteLLM
 sources) that reads a public, citable leaderboard from a refreshed snapshot and maps its scores

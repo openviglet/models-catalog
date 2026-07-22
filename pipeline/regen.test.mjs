@@ -313,6 +313,45 @@ test("merge: overrides seed openWeights + parameters, carried onto the entry (Bl
   assert.equal(meta["deepseek::v3"].fieldProvenance.parameters, "overrides");
 });
 
+test("validateEnvelope: a provenance-gated cited benchmark passes; bad ones flagged (Block I / T40)", () => {
+  assert.deepEqual(
+    validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { openai: [
+      { id: "a", label: "A", kind: "CHAT", benchmarks: { intelligenceIndex: 60, arenaElo: 1300, indicative: true, source: "Artificial Analysis", lastVerified: WHEN } },
+    ] } }),
+    [],
+    "cited index with indicative + source + lastVerified is valid",
+  );
+  const errs = validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { openai: [
+    { id: "a", label: "A", kind: "CHAT", benchmarks: { intelligenceIndex: -5, indicative: false } },
+  ] } });
+  assert.ok(errs.some((e) => /benchmarks.indicative must be true/.test(e)));
+  assert.ok(errs.some((e) => /benchmarks missing string source/.test(e)));
+  assert.ok(errs.some((e) => /benchmarks missing string lastVerified/.test(e)));
+  assert.ok(errs.some((e) => /invalid benchmarks.intelligenceIndex/.test(e)));
+});
+
+test("merge benchmarks: highest-wins object, lastVerified stamped, committed then stable (Block I / T40)", () => {
+  const bench = (over) => ({ indicative: true, source: "Artificial Analysis", ...over });
+  // enrich a blank benchmark; merge stamps lastVerified when the source omits it.
+  let m = baseMerge({
+    existing: { version: 1, vendors: { openai: [{ id: "gpt", label: "GPT", kind: "CHAT" }] } },
+    sources: [{ sourceId: "overrides", drafts: [{ vendor: "openai", id: "gpt", kind: "CHAT", benchmarks: bench({ intelligenceIndex: 60 }) }] }],
+    anchoringSources: ANCHORS,
+  });
+  let e = m.vendors.openai[0];
+  assert.equal(e.benchmarks.intelligenceIndex, 60);
+  assert.equal(e.benchmarks.lastVerified, WHEN, "merge stamps lastVerified when the source omits it");
+  assert.equal(m.meta["openai::gpt"].fieldProvenance.benchmarks, "overrides");
+  // committed benchmark beats a differing lower-priority source (stable, low-churn).
+  m = baseMerge({
+    existing: { version: 1, vendors: { openai: [{ id: "gpt", label: "GPT", kind: "CHAT", benchmarks: bench({ intelligenceIndex: 60, lastVerified: "2026-01-01" }) }] } },
+    sources: [{ sourceId: "litellm", drafts: [{ vendor: "openai", id: "gpt", kind: "CHAT", benchmarks: bench({ intelligenceIndex: 99, source: "litellm" }) }] }],
+  });
+  e = m.vendors.openai[0];
+  assert.equal(e.benchmarks.intelligenceIndex, 60, "committed benchmark wins over a lower-priority source");
+  assert.equal(e.benchmarks.lastVerified, "2026-01-01", "carried-forward benchmark keeps its own lastVerified");
+});
+
 test("diffReport: counts add/remove/change", () => {
   const existing = { vendors: { openai: [{ id: "old", label: "Old", kind: "CHAT" }, { id: "chg", label: "Chg", kind: "CHAT" }] } };
   const proposed = { vendors: { openai: [{ id: "chg", label: "Chg", kind: "CHAT", contextWindow: 100, sources: ["litellm"] }, { id: "new", label: "New", kind: "CHAT", sources: ["openai-api"] }] } };
