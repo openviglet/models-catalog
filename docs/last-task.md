@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T45 SHIPPED** (Block J §J1 — live Artificial Analysis benchmark source auto-refreshing T41: new artificial-analysis adapter fetches the AA leaderboard API → same benchmarks+performance shape via exported benchmarkDraft(); envKey ARTIFICIAL_ANALYSIS_API_KEY (opt-in) + offline-replayable snapshot; non-anchoring, curated slug→id table artificial-analysis-map.json (unmapped dropped, never mis-attributed); merge priority 26 (above snapshot 25, below overrides); map ships empty so catalog unchanged; 3 tests. **Block J shipped in full.**) — 2026-07-22.
 - **T49 CREATED** (💭, Block K §K4 — shared use-case-tag + price-tier classifier: port the page's T38 classify() into each SDK as an optional derived helper; derived-only, no schema change; deps T46) — 2026-07-22.
 - **T48 CREATED** (📋, Block K §K3 — faceted-slice + change-feed accessors across all three SDKs: fetchByCapability/fetchByModality (T25) + changes.json (T22) + extend EndpointsManifest with every new discovery key; deps —) — 2026-07-22.
 - **T47 CREATED** (📋, Block K §K2 — aggregate & registry endpoint accessors across all three SDKs: typed loaders for stats/coverage/providers/plans/aliases json; deps —) — 2026-07-22.

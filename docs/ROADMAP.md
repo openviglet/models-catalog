@@ -53,6 +53,11 @@
 > its curated-snapshot source adapter, the cited `performance` (speed) axis + derived
 > cost-efficiency view, and page filter/sort by use-case tag + price tier (see
 > [CHANGELOG.md](CHANGELOG.md) → Block I).
+>
+> **Block J — Live benchmark & performance ingestion** shipped in full — the live
+> Artificial Analysis source that auto-refreshes the T41 `benchmarks` + `performance`
+> fields over the network (curated slug→id matching table, offline-replayable,
+> provenance-stamped, propose-and-review) (see [CHANGELOG.md](CHANGELOG.md) → Block J).
 
 ## Block G — Static-site expansion & indexing
 
@@ -62,15 +67,6 @@
 > problem `emit.mjs` already solves. Design rationale → §G.
 
 - **T34** 📋 **More static landing pages + sitemap** — extend `scripts/emit.mjs` (the T26 page generator) with per-capability / per-modality / per-kind static landing pages and a `sitemap.xml` (+ `robots.txt`) so segmented content is individually indexable by search engines and assistants. Zero-dep, derived-at-emit, no framework. deps: — (T26 shipped) → §G1
-
-## Block J — Live benchmark & performance ingestion
-
-> T41 populates the cited `benchmarks`/`performance` fields from a hand-curated snapshot
-> (`pipeline/benchmarks.json`). This block **automates that refresh** — fetch a public,
-> citable leaderboard directly so the numbers stay current without manual editing,
-> subject to a workable source + licence. Design rationale → §J.
-
-- **T45** 💭 **Live benchmark/performance source (auto-refresh T41)** — extend the T41 benchmark adapter to fetch a public, citable capability/speed leaderboard (e.g. Artificial Analysis / LMArena) over the network into the `benchmarks` + `performance` fields, matched to catalog ids, cached as an offline-replayable snapshot and provenance-stamped — replacing manual snapshot edits with a dynamic refresh. Gated on a source with an acceptable licence + stable shape; fail-safe matching (omit, never mis-attribute) + propose-and-review like every source. deps: T41 → §J1
 
 ## Block K — Client SDK modernization
 

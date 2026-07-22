@@ -26,20 +26,6 @@ Extend `emit.mjs` with per-capability / per-modality / per-kind landing pages an
 easier for search engines and assistants to index and cite. Derived-at-emit like every
 other artifact, so it can't drift; zero-dep, no framework.
 
-## §J — Live benchmark & performance ingestion
-
-### §J1 — T45 · Live benchmark/performance source (auto-refresh T41)
-T41 proved the data path but leaves population **manual** — a maintainer hand-edits
-`pipeline/benchmarks.json`. The next step is to fetch the numbers directly from a public,
-citable leaderboard (Artificial Analysis, LMArena, or similar) so `benchmarks` + `performance`
-refresh without manual editing, reusing T41's fail-safe matching (leaderboard name → catalog
-vendor/id; omit rather than mis-attribute) and its exact output shape. Exploratory (💭) because
-it hinges on a source with **(a)** an acceptable licence to republish cited numbers and **(b)** a
-stable, fetchable shape (an open API/export beats a scrape). Cached as an offline-replayable
-snapshot + propose-and-review like every other source, so a bad or stale fetch never silently
-publishes — and, since the numbers are still *cited*, the "verify at the source" framing is
-unchanged; this only automates how the snapshot is filled.
-
 ## §K — Client SDK modernization
 
 The three SDKs were built early (Block B, T9–T11) and froze at that surface: a `ModelEntry`
