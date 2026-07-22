@@ -190,6 +190,216 @@
         "lastVerified": "2026-07-22"
       }
     ],
+    "azure": [
+      {
+        "id": "gpt-4.1",
+        "label": "GPT-4.1 (Azure)",
+        "kind": "CHAT",
+        "contextWindow": 1047576,
+        "maxOutputTokens": 32768,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 2,
+          "outputPer1M": 8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "gpt-4o",
+        "label": "GPT-4o (Azure)",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 16384,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "gpt-4o-mini",
+        "label": "GPT-4o mini (Azure)",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 16384,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.165,
+          "outputPer1M": 0.66,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "gpt-5",
+        "label": "GPT-5 (Azure)",
+        "kind": "CHAT",
+        "contextWindow": 272000,
+        "maxOutputTokens": 128000,
+        "capabilities": [
+          "tools",
+          "vision",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "pdf",
+            "text"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "o3",
+        "label": "o3 (Azure)",
+        "kind": "CHAT",
+        "contextWindow": 200000,
+        "maxOutputTokens": 100000,
+        "capabilities": [
+          "tools",
+          "vision",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 2,
+          "outputPer1M": 8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "o4-mini",
+        "label": "o4-mini (Azure)",
+        "kind": "CHAT",
+        "contextWindow": 200000,
+        "maxOutputTokens": 100000,
+        "capabilities": [
+          "tools",
+          "vision",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 1.1,
+          "outputPer1M": 4.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      }
+    ],
     "bedrock": [
       {
         "id": "anthropic.claude-3-5-haiku-20241022-v1:0",
@@ -339,8 +549,162 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
+        ],
+        "lastVerified": "2026-07-22"
+      }
+    ],
+    "cerebras": [
+      {
+        "id": "gpt-oss-120b",
+        "label": "GPT-OSS 120B",
+        "kind": "CHAT",
+        "contextWindow": 131072,
+        "maxOutputTokens": 32768,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.35,
+          "outputPer1M": 0.75,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "llama-3.3-70b",
+        "label": "Llama 3.3 70B",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 128000,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.85,
+          "outputPer1M": 1.2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "llama3.1-8b",
+        "label": "Llama 3.1 8B",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 128000,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "outputPer1M": 0.1,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "qwen-3-32b",
+        "label": "Qwen3 32B",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 128000,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.4,
+          "outputPer1M": 0.8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "zai-glm-4.6",
+        "label": "GLM-4.6",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 128000,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 2.25,
+          "outputPer1M": 2.75,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
         ],
         "lastVerified": "2026-07-22"
       }
@@ -460,8 +824,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -489,8 +852,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -575,6 +937,124 @@
         "lastVerified": "2026-07-22"
       }
     ],
+    "fireworks": [
+      {
+        "id": "accounts/fireworks/models/deepseek-r1",
+        "label": "DeepSeek-R1",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 20480,
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 8,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "accounts/fireworks/models/deepseek-v3",
+        "label": "DeepSeek-V3",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 8192,
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.9,
+          "outputPer1M": 0.9,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "accounts/fireworks/models/glm-4p5-air",
+        "label": "GLM-4.5 Air",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 96000,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.22,
+          "outputPer1M": 0.88,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "accounts/fireworks/models/glm-4p6",
+        "label": "GLM-4.6",
+        "kind": "CHAT",
+        "contextWindow": 202800,
+        "maxOutputTokens": 202800,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.55,
+          "outputPer1M": 2.19,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      }
+    ],
     "gemini": [
       {
         "id": "gemini-1.5-flash",
@@ -604,8 +1084,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -800,8 +1279,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -884,6 +1362,255 @@
         ],
         "sources": [
           "committed"
+        ],
+        "lastVerified": "2026-07-22"
+      }
+    ],
+    "groq": [
+      {
+        "id": "llama-3.1-8b-instant",
+        "label": "Llama 3.1 8B Instant",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 8192,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.05,
+          "outputPer1M": 0.08,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "llama-3.3-70b-versatile",
+        "label": "Llama 3.3 70B Versatile",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 32768,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.59,
+          "outputPer1M": 0.79,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "meta-llama/llama-4-maverick-17b-128e-instruct",
+        "label": "Llama 4 Maverick 17B",
+        "kind": "CHAT",
+        "contextWindow": 131072,
+        "maxOutputTokens": 8192,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.2,
+          "outputPer1M": 0.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "label": "Llama 4 Scout 17B",
+        "kind": "CHAT",
+        "contextWindow": 131072,
+        "maxOutputTokens": 8192,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.11,
+          "outputPer1M": 0.34,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "moonshotai/kimi-k2-instruct-0905",
+        "label": "Kimi K2 Instruct",
+        "kind": "CHAT",
+        "contextWindow": 262144,
+        "maxOutputTokens": 16384,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 1,
+          "outputPer1M": 3,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "openai/gpt-oss-120b",
+        "label": "GPT-OSS 120B",
+        "kind": "CHAT",
+        "contextWindow": 131072,
+        "maxOutputTokens": 32766,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.15,
+          "outputPer1M": 0.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "openai/gpt-oss-20b",
+        "label": "GPT-OSS 20B",
+        "kind": "CHAT",
+        "contextWindow": 131072,
+        "maxOutputTokens": 32768,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.075,
+          "outputPer1M": 0.3,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "qwen/qwen3-32b",
+        "label": "Qwen3 32B",
+        "kind": "CHAT",
+        "contextWindow": 131000,
+        "maxOutputTokens": 131000,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.29,
+          "outputPer1M": 0.59,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
         ],
         "lastVerified": "2026-07-22"
       }
@@ -982,8 +1709,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -1073,8 +1799,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -1102,8 +1827,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       }
@@ -1343,7 +2067,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4254,7 +4977,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api",
           "overrides"
         ],
@@ -4285,7 +5007,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api",
           "overrides"
         ],
@@ -4316,7 +5037,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4341,7 +5061,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4366,7 +5085,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4391,7 +5109,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4512,7 +5229,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4540,7 +5256,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4568,7 +5283,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4596,7 +5310,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4624,7 +5337,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4688,7 +5400,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4718,7 +5429,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -4748,7 +5458,6 @@
         },
         "sources": [
           "committed",
-          "litellm",
           "openai-api"
         ],
         "lastVerified": "2026-07-22"
@@ -5407,6 +6116,329 @@
         "lastVerified": "2026-07-22"
       }
     ],
+    "qwen": [
+      {
+        "id": "qwen-coder",
+        "label": "Qwen-Coder",
+        "kind": "CHAT",
+        "contextWindow": 1000000,
+        "maxOutputTokens": 16384,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.3,
+          "outputPer1M": 1.5,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "qwen-flash",
+        "label": "Qwen-Flash",
+        "kind": "CHAT",
+        "contextWindow": 997952,
+        "maxOutputTokens": 32768,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "qwen-max",
+        "label": "Qwen-Max",
+        "kind": "CHAT",
+        "contextWindow": 30720,
+        "maxOutputTokens": 8192,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 1.6,
+          "outputPer1M": 6.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "qwen-plus",
+        "label": "Qwen-Plus",
+        "kind": "CHAT",
+        "contextWindow": 129024,
+        "maxOutputTokens": 16384,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.4,
+          "outputPer1M": 1.2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "qwen-turbo",
+        "label": "Qwen-Turbo",
+        "kind": "CHAT",
+        "contextWindow": 129024,
+        "maxOutputTokens": 16384,
+        "capabilities": [
+          "tools",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.05,
+          "outputPer1M": 0.2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      }
+    ],
+    "together": [
+      {
+        "id": "deepseek-ai/DeepSeek-R1",
+        "label": "DeepSeek-R1",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 20480,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 7,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "deepseek-ai/DeepSeek-V3",
+        "label": "DeepSeek-V3",
+        "kind": "CHAT",
+        "contextWindow": 65536,
+        "maxOutputTokens": 8192,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 1.25,
+          "outputPer1M": 1.25,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+        "label": "Llama 3.3 70B Instruct Turbo",
+        "kind": "CHAT",
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.88,
+          "outputPer1M": 0.88,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+        "label": "Llama 4 Maverick 17B",
+        "kind": "CHAT",
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.27,
+          "outputPer1M": 0.85,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "Qwen/Qwen3-235B-A22B-Instruct-2507-tput",
+        "label": "Qwen3 235B A22B Instruct",
+        "kind": "CHAT",
+        "contextWindow": 262000,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.2,
+          "outputPer1M": 6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
+        "label": "Qwen3 Coder 480B",
+        "kind": "CHAT",
+        "contextWindow": 256000,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 2,
+          "outputPer1M": 2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      }
+    ],
     "vertex-ai": [
       {
         "id": "gemini-1.5-pro",
@@ -5562,8 +6594,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       }
@@ -5593,8 +6624,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -5622,8 +6652,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -5651,8 +6680,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -5680,8 +6708,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -5712,8 +6739,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -5738,8 +6764,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       },
@@ -5764,8 +6789,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "committed",
-          "litellm"
+          "committed"
         ],
         "lastVerified": "2026-07-22"
       }

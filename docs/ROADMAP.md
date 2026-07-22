@@ -60,7 +60,6 @@
 > (LiteLLM adapter map + curated anchoring ids, so LiteLLM fills models **and** prices).
 > Design rationale → §H.
 
-- **T36** 📋 **Onboard inference providers + Qwen + Azure** — add Groq, Together AI, Fireworks AI, Cerebras, Alibaba Qwen (Model Studio) and Azure AI Foundry as catalog vendors: map their `litellm_provider` keys in the LiteLLM adapter and seed curated anchoring ids in `overrides.json` (real ids taken from the cached LiteLLM snapshot), so LiteLLM enriches each with metadata + indicative per-token pricing. Register each in `providers.json` (`catalogVendor` no longer null). deps: T35 → §H2
 - **T37** 📋 **Onboard aggregators (OpenRouter + Vercel)** — represent the two gateways, with a **curated cap** so re-served models don't balloon the catalog (a small, explicit id set rather than their full pass-through lists); document the "gateway, not creator" caveat on each. deps: T35 → §H3
 
 > The endpoint intentionally stays on its public GitHub Pages URL

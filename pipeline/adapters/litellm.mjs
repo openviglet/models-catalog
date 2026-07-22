@@ -38,6 +38,18 @@ const PROVIDER_TO_VENDOR = {
   xai: "xai",
   minimax: "minimax",
   zai: "zai", // Z.ai (formerly Zhipu AI) — the GLM family
+  // Provider coverage expansion (Block H / T36): fast-inference hosts, Alibaba Qwen
+  // (DashScope) and Azure. Their models/prices ride in via LiteLLM once a curated set
+  // of ids is anchored in overrides.json (the anchoring rule still bars litellm-only ids).
+  groq: "groq",
+  together_ai: "together",
+  fireworks_ai: "fireworks",
+  "fireworks_ai-embedding-models": "fireworks",
+  cerebras: "cerebras",
+  dashscope: "qwen", // Alibaba Cloud Qwen via Model Studio / DashScope
+  azure: "azure",
+  azure_ai: "azure",
+  azure_text: "azure",
 };
 
 const MODE_TO_KIND = {

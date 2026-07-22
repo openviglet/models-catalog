@@ -26,5 +26,51 @@
     { "id": "glm-4.6", "label": "GLM-4.6", "kind": "CHAT" },
     { "id": "glm-4.5", "label": "GLM-4.5", "kind": "CHAT" },
     { "id": "glm-4.5-air", "label": "GLM-4.5-Air", "kind": "CHAT" }
+  ],
+  "groq": [
+    { "id": "llama-3.3-70b-versatile", "label": "Llama 3.3 70B Versatile", "kind": "CHAT" },
+    { "id": "llama-3.1-8b-instant", "label": "Llama 3.1 8B Instant", "kind": "CHAT" },
+    { "id": "openai/gpt-oss-120b", "label": "GPT-OSS 120B", "kind": "CHAT" },
+    { "id": "openai/gpt-oss-20b", "label": "GPT-OSS 20B", "kind": "CHAT" },
+    { "id": "moonshotai/kimi-k2-instruct-0905", "label": "Kimi K2 Instruct", "kind": "CHAT" },
+    { "id": "qwen/qwen3-32b", "label": "Qwen3 32B", "kind": "CHAT" },
+    { "id": "meta-llama/llama-4-maverick-17b-128e-instruct", "label": "Llama 4 Maverick 17B", "kind": "CHAT" },
+    { "id": "meta-llama/llama-4-scout-17b-16e-instruct", "label": "Llama 4 Scout 17B", "kind": "CHAT" }
+  ],
+  "together": [
+    { "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo", "label": "Llama 3.3 70B Instruct Turbo", "kind": "CHAT" },
+    { "id": "Qwen/Qwen3-235B-A22B-Instruct-2507-tput", "label": "Qwen3 235B A22B Instruct", "kind": "CHAT" },
+    { "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8", "label": "Qwen3 Coder 480B", "kind": "CHAT" },
+    { "id": "deepseek-ai/DeepSeek-V3", "label": "DeepSeek-V3", "kind": "CHAT" },
+    { "id": "deepseek-ai/DeepSeek-R1", "label": "DeepSeek-R1", "kind": "CHAT" },
+    { "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", "label": "Llama 4 Maverick 17B", "kind": "CHAT" }
+  ],
+  "fireworks": [
+    { "id": "accounts/fireworks/models/deepseek-v3", "label": "DeepSeek-V3", "kind": "CHAT" },
+    { "id": "accounts/fireworks/models/deepseek-r1", "label": "DeepSeek-R1", "kind": "CHAT" },
+    { "id": "accounts/fireworks/models/glm-4p6", "label": "GLM-4.6", "kind": "CHAT" },
+    { "id": "accounts/fireworks/models/glm-4p5-air", "label": "GLM-4.5 Air", "kind": "CHAT" }
+  ],
+  "cerebras": [
+    { "id": "llama-3.3-70b", "label": "Llama 3.3 70B", "kind": "CHAT" },
+    { "id": "llama3.1-8b", "label": "Llama 3.1 8B", "kind": "CHAT" },
+    { "id": "gpt-oss-120b", "label": "GPT-OSS 120B", "kind": "CHAT" },
+    { "id": "qwen-3-32b", "label": "Qwen3 32B", "kind": "CHAT" },
+    { "id": "zai-glm-4.6", "label": "GLM-4.6", "kind": "CHAT" }
+  ],
+  "qwen": [
+    { "id": "qwen-max", "label": "Qwen-Max", "kind": "CHAT" },
+    { "id": "qwen-plus", "label": "Qwen-Plus", "kind": "CHAT" },
+    { "id": "qwen-turbo", "label": "Qwen-Turbo", "kind": "CHAT" },
+    { "id": "qwen-coder", "label": "Qwen-Coder", "kind": "CHAT" },
+    { "id": "qwen-flash", "label": "Qwen-Flash", "kind": "CHAT" }
+  ],
+  "azure": [
+    { "id": "gpt-4o", "label": "GPT-4o (Azure)", "kind": "CHAT" },
+    { "id": "gpt-4o-mini", "label": "GPT-4o mini (Azure)", "kind": "CHAT" },
+    { "id": "gpt-4.1", "label": "GPT-4.1 (Azure)", "kind": "CHAT" },
+    { "id": "o3", "label": "o3 (Azure)", "kind": "CHAT" },
+    { "id": "o4-mini", "label": "o4-mini (Azure)", "kind": "CHAT" },
+    { "id": "gpt-5", "label": "GPT-5 (Azure)", "kind": "CHAT" }
   ]
 }

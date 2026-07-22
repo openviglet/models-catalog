@@ -31,13 +31,6 @@ DeepSeek/xAI/etc.: map the `litellm_provider` in the adapter + seed curated anch
 (pulled from the cached LiteLLM snapshot, so they're real) — LiteLLM then enriches metadata
 **and** indicative per-token prices automatically. No prices are hand-typed.
 
-### §H2 — T36 · Onboard inference providers + Qwen + Azure
-Groq, Together AI, Fireworks AI, Cerebras, Alibaba Qwen and Azure AI Foundry are all covered
-by LiteLLM but dropped today because the adapter's `PROVIDER_TO_VENDOR` map doesn't list them.
-Add the mappings + a curated set of anchoring ids per provider (flagship/common models) so the
-anchoring rule admits them; LiteLLM fills the rest. Flip each provider's `catalogVendor` in
-`providers.json` from null to the new vendor key.
-
 ### §H3 — T37 · Onboard aggregators (OpenRouter + Vercel)
 Aggregators re-serve *other* vendors' models, so admitting their full pass-through lists would
 duplicate and balloon the catalog. Onboard them with a **curated cap** — a small, explicit id

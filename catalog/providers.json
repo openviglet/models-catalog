@@ -14,18 +14,18 @@
     { "id": "xai", "name": "xAI (Grok)", "category": "model-creator", "catalogVendor": "xai", "apiPricingUrl": "https://x.ai/api" },
     { "id": "cohere", "name": "Cohere", "category": "model-creator", "catalogVendor": "cohere", "apiPricingUrl": "https://cohere.com/pricing" },
     { "id": "zai", "name": "Z.ai / Zhipu AI", "category": "model-creator", "catalogVendor": "zai", "apiPricingUrl": "https://open.bigmodel.cn/pricing", "consumerPlansUrl": "https://z.ai/subscribe", "note": "Open-platform (bigmodel.cn) developer pricing; GLM Coding Plan is the consumer subscription." },
-    { "id": "alibaba-qwen", "name": "Alibaba Cloud (Qwen via Model Studio)", "category": "model-creator", "catalogVendor": null, "apiPricingUrl": "https://www.alibabacloud.com/help/en/model-studio/developer-reference/billing-for-model-studio", "note": "Not yet a catalog vendor (Block H / T36)." },
+    { "id": "alibaba-qwen", "name": "Alibaba Cloud (Qwen via Model Studio)", "category": "model-creator", "catalogVendor": "qwen", "apiPricingUrl": "https://www.alibabacloud.com/help/en/model-studio/developer-reference/billing-for-model-studio", "note": "Qwen models via Model Studio / DashScope." },
 
     { "id": "aws-bedrock", "name": "AWS Bedrock", "category": "hyperscaler", "catalogVendor": "bedrock", "apiPricingUrl": "https://aws.amazon.com/bedrock/pricing/" },
-    { "id": "azure-ai-foundry", "name": "Azure AI Foundry", "category": "hyperscaler", "catalogVendor": null, "apiPricingUrl": "https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/", "note": "Re-serves OpenAI + other models. Not yet a catalog vendor (Block H / T36)." },
+    { "id": "azure-ai-foundry", "name": "Azure AI Foundry", "category": "hyperscaler", "catalogVendor": "azure", "apiPricingUrl": "https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/", "note": "Re-serves OpenAI and other models; a curated set is in the catalog." },
     { "id": "google-vertex-ai", "name": "Google Cloud Vertex AI", "category": "hyperscaler", "catalogVendor": "vertex-ai", "apiPricingUrl": "https://cloud.google.com/vertex-ai/generative-ai/pricing" },
 
-    { "id": "groq", "name": "Groq", "category": "inference-provider", "catalogVendor": null, "apiPricingUrl": "https://groq.com/pricing/", "note": "Fast serverless inference of open models. Not yet a catalog vendor (Block H / T36)." },
-    { "id": "together-ai", "name": "Together AI", "category": "inference-provider", "catalogVendor": null, "apiPricingUrl": "https://www.together.ai/pricing", "note": "Not yet a catalog vendor (Block H / T36)." },
-    { "id": "fireworks-ai", "name": "Fireworks AI", "category": "inference-provider", "catalogVendor": null, "apiPricingUrl": "https://fireworks.ai/pricing", "note": "Not yet a catalog vendor (Block H / T36)." },
-    { "id": "cerebras", "name": "Cerebras", "category": "inference-provider", "catalogVendor": null, "apiPricingUrl": "https://cerebras.ai/inference-pricing/", "note": "Not yet a catalog vendor (Block H / T36)." },
+    { "id": "groq", "name": "Groq", "category": "inference-provider", "catalogVendor": "groq", "apiPricingUrl": "https://groq.com/pricing/", "note": "Fast serverless inference of open models." },
+    { "id": "together-ai", "name": "Together AI", "category": "inference-provider", "catalogVendor": "together", "apiPricingUrl": "https://www.together.ai/pricing" },
+    { "id": "fireworks-ai", "name": "Fireworks AI", "category": "inference-provider", "catalogVendor": "fireworks", "apiPricingUrl": "https://fireworks.ai/pricing" },
+    { "id": "cerebras", "name": "Cerebras", "category": "inference-provider", "catalogVendor": "cerebras", "apiPricingUrl": "https://cerebras.ai/inference-pricing/" },
 
-    { "id": "openrouter", "name": "OpenRouter", "category": "aggregator", "catalogVendor": null, "apiPricingUrl": "https://openrouter.ai/models", "note": "Gateway re-serving many vendors' models; price is tabled per-model in its catalog. Onboarding is capped/curated (Block H / T37)." },
-    { "id": "vercel-ai-gateway", "name": "Vercel AI SDK / Gateway", "category": "aggregator", "catalogVendor": null, "apiPricingUrl": "https://vercel.com/pricing", "note": "Cloud/edge usage gateway over many models. Onboarding is capped/curated (Block H / T37)." }
+    { "id": "openrouter", "name": "OpenRouter", "category": "aggregator", "catalogVendor": null, "apiPricingUrl": "https://openrouter.ai/models", "note": "Gateway re-serving many vendors' models; price is tabled per-model in its own catalog." },
+    { "id": "vercel-ai-gateway", "name": "Vercel AI SDK / Gateway", "category": "aggregator", "catalogVendor": null, "apiPricingUrl": "https://vercel.com/pricing", "note": "Cloud/edge usage gateway over many models." }
   ]
 }

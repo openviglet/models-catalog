@@ -58,6 +58,25 @@ test("litellm normalize: maps mode→kind, strips prefix, maps pricing + drops w
   assert.equal(byId["cohere/embed-y"].embeddingDimensions, 1024);
 });
 
+test("litellm normalize: onboarded providers (Block H / T36) map to their catalog vendors", () => {
+  const drafts = litellm.normalize({
+    "groq/llama-3.3-70b-versatile": { litellm_provider: "groq", mode: "chat", input_cost_per_token: 0.00000059 },
+    "together_ai/deepseek-ai/DeepSeek-V3": { litellm_provider: "together_ai", mode: "chat" },
+    "fireworks_ai/accounts/fireworks/models/glm-4p6": { litellm_provider: "fireworks_ai", mode: "chat" },
+    "cerebras/llama-3.3-70b": { litellm_provider: "cerebras", mode: "chat" },
+    "dashscope/qwen-max": { litellm_provider: "dashscope", mode: "chat" },
+    "azure/gpt-4o": { litellm_provider: "azure", mode: "chat" },
+  });
+  const byId = Object.fromEntries(drafts.map((d) => [d.id, d]));
+  assert.equal(byId["llama-3.3-70b-versatile"].vendor, "groq");
+  assert.equal(byId["deepseek-ai/DeepSeek-V3"].vendor, "together", "together_ai → together, org-prefixed id preserved");
+  assert.equal(byId["accounts/fireworks/models/glm-4p6"].vendor, "fireworks", "fireworks_ai → fireworks, full account path preserved");
+  assert.equal(byId["llama-3.3-70b"].vendor, "cerebras");
+  assert.equal(byId["qwen-max"].vendor, "qwen", "dashscope → qwen");
+  assert.equal(byId["gpt-4o"].vendor, "azure");
+  assert.ok(byId["llama-3.3-70b-versatile"].pricing.inputPer1M > 0, "pricing mapped for an onboarded provider");
+});
+
 test("ollama normalize: uses ref as id, heuristic kind, is a partial anchor", () => {
   assert.equal(ollama.vendor, "ollama");
   assert.equal(ollama.partial, true, "local pulls are not removal evidence");
