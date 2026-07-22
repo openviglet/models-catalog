@@ -31,7 +31,7 @@ From Maven Central — public, no auth:
 <dependency>
   <groupId>io.github.openviglet</groupId>
   <artifactId>model-catalog-client</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 

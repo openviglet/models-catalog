@@ -1,7 +1,7 @@
-# Last task number — `T15` · next block letter — `C`
+# Last task number — `T29` · next block letter — `F`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T16`; after assigning it, bump the number above and the log line below.
+> `T30`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,20 @@
 
 ## Log (most recent first)
 
+- **T29 CREATED** (💭, Block E §E2 — coverage & gaps transparency: coverage.json + site section; deps T24) — 2026-07-22.
+- **T28 CREATED** (📋, Block E §E1 — "propose a model" flow: GH issue-form + CONTRIBUTING + prefilled deep link) — 2026-07-22.
+- **T27 CREATED** (💭, Block D §D6 — embeddable shields.io badge.json; deps T24) — 2026-07-22.
+- **T26 CREATED** (📋, Block D §D5 — GEO/citability: llms.txt + per-vendor/per-model static pages; deps T24) — 2026-07-22.
+- **T25 CREATED** (📋, Block D §D4 — extended faceting by-capability/by-modality + aliases.json map) — 2026-07-22.
+- **T24 CREATED** (📋, Block D §D3 — stats.json aggregate metrics; unblocks T21/T27/T29) — 2026-07-22.
+- **T23 CREATED** (💭, Block D §D2 — alternate exports catalog.csv + catalog.ndjson) — 2026-07-22.
+- **T22 CREATED** (📋, Block D §D1 — catalog change feed: changes.json + Atom feed.xml, diff-at-emit) — 2026-07-22.
+- **T21 CREATED** (📋, Block C §C6 — insights dashboard, inline-SVG charts fed by stats.json; deps T24) — 2026-07-22.
+- **T20 CREATED** (📋, Block C §C5 — capability/modality filters + sortable columns) — 2026-07-22.
+- **T19 CREATED** (💭, Block C §C4 — command palette ⌘K quick-jump; deps T16) — 2026-07-22.
+- **T18 CREATED** (📋, Block C §C3 — model comparison view 2–4 side-by-side; deps T17) — 2026-07-22.
+- **T17 CREATED** (📋, Block C §C2 — model detail drawer: full record + provenance + copy-as-JSON) — 2026-07-22.
+- **T16 CREATED** (📋, Block C §C1 — URL-addressable state + model permalinks) — 2026-07-22.
 - **T15 SHIPPED** (Block A — renamed slug plural→singular everywhere `models-catalog`→`model-catalog`: git-mv'd data/schema files, Python `model_catalog_client/` + Java `modelcatalog/` package dirs; npm/PyPI/Maven package ids + endpoint URL; Turing consumer `turing.models-catalog.url` still to be repointed; no tags published; all tests green) — 2026-07-21.
 - **T14 SHIPPED** (Block A — new frontier vendor rows DeepSeek/xAI/MiniMax/Z.ai(GLM): mapped the four native litellm_providers + seeded curated overrides ids, 11 CHAT models enriched by LiteLLM; fixed the stale overrides.json anchoring comment; 14 vendors / 194 models) — 2026-07-21.
 - **T13 SHIPPED** (Block B — manual publish workflows: three input-free `workflow_dispatch` publishers `publish-{java,js,python}-client.yml`, each auto-incrementing the manifest patch + committing/tagging the bump, test-gated, then publishing to the public registry — npm / PyPI / Maven Central (Central Portal, GPG-signed `release` profile); token-secret auth; jitpack.yml kept as a Java fallback) — 2026-07-21.
