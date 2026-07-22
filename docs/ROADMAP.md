@@ -23,14 +23,10 @@
 >
 > **Block B — Client libraries / SDKs** shipped in full (JS/TS · Python · Java) — see
 > [CHANGELOG.md](CHANGELOG.md) → Block B.
-
-## Block C — Web experience & discoverability (the browsable page)
-
-> Turn `public/index.html` from a read-only table into a tool developers reach for and
-> link to. Every item is inline, zero-dep, static-hosting-safe (no build step, no runtime).
-> Design rationale → [IMPROVEMENTS.md](IMPROVEMENTS.md) §C.
-
-- **T21** 📋 **Insights dashboard** — a small, dependency-free charts section (inline SVG): models per vendor, context-window distribution, kind & modality coverage — fed by `stats.json`. Makes the catalog *interesting* to explore, not just queryable. deps: T24 → §C6
+>
+> **Block C — Web experience & discoverability** shipped in full — permalinks + URL
+> state, detail drawer, comparison view, command palette, capability/modality filters +
+> sortable columns, and the insights dashboard (see [CHANGELOG.md](CHANGELOG.md) → Block C).
 
 ## Block D — API surface expansion (new static artifacts)
 

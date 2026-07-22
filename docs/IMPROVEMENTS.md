@@ -10,20 +10,6 @@
 > artifacts are *derived* from the canonical file at emit time, exactly like today's
 > `index.json` / faceted slices, so they can never drift from the source of truth.
 
-## §C — Web experience & discoverability
-
-The page proves the data exists but under-sells it: a three-column table (id · kind ·
-details) that can't be linked to, hides the richest fields, and offers only kind
-filtering. For a *reference*, shareability and depth are the whole point — you cite a
-reference by linking to it. This block makes the page linkable, deep, and pleasant to
-explore, without adding a single dependency.
-
-### §C6 — T21 · Insights dashboard
-An at-a-glance, inline-SVG (zero-dep) panel — models per vendor, context-window
-distribution, kind & modality coverage — reading from the emitted `stats.json` (T24) so
-the browser does no heavy aggregation. This is the "make it *interesting*" piece: a
-reason to visit and share the page beyond a one-off lookup.
-
 ## §D — API surface expansion
 
 The canonical file is the single source of truth; the published surface is whatever we

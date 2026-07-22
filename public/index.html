@@ -549,6 +549,19 @@
       th.sortable:hover { color: var(--brand-3); }
       th.sortable:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
       th[aria-sort="ascending"], th[aria-sort="descending"] { color: var(--brand-3); }
+
+      /* ── Insights dashboard (T21) ────────────────────── */
+      .grid-2 { grid-template-columns: repeat(2, 1fr); }
+      @media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
+      .chart-card { display: flex; flex-direction: column; }
+      .chart-card h3 { margin: 0 0 .7rem; font-size: 1rem; }
+      .chart { overflow-x: auto; }
+      .chart svg { display: block; }
+      .chart svg text { font-family: var(--sans); dominant-baseline: central; }
+      .c-l { fill: var(--muted); font-size: 11px; }
+      .c-v { fill: var(--text); font-size: 11px; font-weight: 600; font-family: var(--mono); }
+      .c-t { fill: var(--bg-alt); stroke: var(--border); stroke-width: .5; }
+      .chart-note { margin: .6rem 0 0; color: var(--muted); font-size: .78rem; }
     </style>
   </head>
   <body>
@@ -560,6 +573,7 @@
           Model Catalog
         </a>
         <div class="nav-links">
+          <a href="#insights" class="nav-hide-sm">Insights</a>
           <a href="#browse" class="nav-hide-sm">Browse</a>
           <a href="#api" class="nav-hide-sm">API</a>
           <a href="#sdks" class="nav-hide-sm">SDKs</a>
@@ -627,6 +641,18 @@
             <p>Regenerated entries carry their <code>sources</code> and <code>lastVerified</code>. No pricing, ever. We omit a field before we guess it.</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ── Insights dashboard (T21) ────────────────────── -->
+    <section class="block" id="insights" hidden>
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">At a glance</div>
+          <h2>What’s in the catalog</h2>
+          <p>Live aggregates from <a href="./stats.json"><code>stats.json</code></a> — models by vendor and kind, context-window spread, capabilities, modalities and field coverage. Recomputed at every publish, so they never drift.</p>
+        </div>
+        <div class="grid grid-2" id="charts"></div>
       </div>
     </section>
 
@@ -1264,6 +1290,62 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         if (vh) vh.scrollIntoView({ behavior: "smooth", block: "center" });
       }
 
+      /* ── Insights dashboard (T21) ──────────────────── */
+      // A zero-dep inline-SVG horizontal bar chart. rows: [{label, value, color?}].
+      function svgBars(rows, opts = {}) {
+        const fmt = opts.fmt || String;
+        const mx = opts.max || Math.max(1, ...rows.map((r) => r.value));
+        const RH = 24, TOP = 8, LABEL = 104, BAR0 = 112, BARW = 188, VALX = BAR0 + BARW + 8, W = 344;
+        const H = TOP * 2 + rows.length * RH;
+        const body = rows.map((r, i) => {
+          const cy = TOP + i * RH + RH / 2;
+          const bh = 12, by = cy - bh / 2;
+          const w = r.value > 0 ? Math.max(3, Math.round(BARW * r.value / mx)) : 0;
+          const fill = r.color || "var(--brand)";
+          // fill via inline style, not the presentation attribute, so CSS var() colors resolve.
+          return `<text class="c-l" x="${LABEL}" y="${cy}" text-anchor="end">${r.label}</text>`
+            + `<rect class="c-t" x="${BAR0}" y="${by}" width="${BARW}" height="${bh}" rx="3"/>`
+            + (w ? `<rect x="${BAR0}" y="${by}" width="${w}" height="${bh}" rx="3" style="fill:${fill}"/>` : "")
+            + `<text class="c-v" x="${VALX}" y="${cy}">${fmt(r.value)}</text>`;
+        }).join("");
+        return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" preserveAspectRatio="xMinYMin meet">${body}</svg>`;
+      }
+      // Context-window spread — bucketed from the loaded catalog (not in stats.json).
+      function contextHistogram() {
+        const edges = [8192, 32768, 131072, 1048576];
+        const labels = ["≤ 8K", "8–32K", "32–128K", "128K–1M", "≥ 1M"];
+        const counts = [0, 0, 0, 0, 0];
+        for (const m of Object.values(catalog.vendors).flat()) {
+          if (!m.contextWindow) continue;
+          let b = edges.findIndex((e) => m.contextWindow <= e);
+          if (b < 0) b = edges.length;
+          counts[b]++;
+        }
+        return labels.map((label, i) => ({ label, value: counts[i], color: "var(--brand)" }));
+      }
+      function renderDashboard(stats) {
+        const card = (title, svg, note) =>
+          `<div class="feat chart-card"><h3>${title}</h3><div class="chart">${svg}</div>${note ? `<p class="chart-note">${note}</p>` : ""}</div>`;
+        const rowsOf = (obj, mapLabel, colorOf) =>
+          Object.entries(obj).map(([k, v]) => ({ label: mapLabel ? mapLabel(k) : k, value: v, color: colorOf ? colorOf(k) : undefined }));
+        const vendorRows = rowsOf(stats.byVendor, (v) => vendorLabel(v), (v) => vendorColor(v));
+        const kindRows = Object.entries(stats.byKind).sort((a, b) => b[1] - a[1])
+          .map(([k, v]) => ({ label: KIND_LABEL[k] || k, value: v, color: KIND_COLOR[k] || KIND_COLOR.UNKNOWN }));
+        const capRows = rowsOf(stats.byCapability, null, () => "var(--brand-2)");
+        const inRows = rowsOf(stats.byInputModality, null, () => "var(--brand-3)");
+        const covRows = Object.entries(stats.coverage.fields)
+          .map(([k, v]) => ({ label: k, value: v.rate, color: "var(--brand-2)" }))
+          .sort((a, b) => b.value - a.value);
+        document.getElementById("charts").innerHTML =
+          card("Models per vendor", svgBars(vendorRows)) +
+          card("Models per kind", svgBars(kindRows)) +
+          card("Context window", svgBars(contextHistogram()), "Models by max context window") +
+          card("Top capabilities", svgBars(capRows)) +
+          card("Input modalities", svgBars(inRows)) +
+          card("Field coverage", svgBars(covRows, { max: 1, fmt: (v) => Math.round(v * 100) + "%" }));
+        document.getElementById("insights").hidden = false;
+      }
+
       function buildFilters() {
         const f = document.getElementById("filters");
         const present = new Set(Object.values(catalog.vendors).flat().map((m) => m.kind));
@@ -1395,6 +1477,12 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
             if (th && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); headerClick(th.dataset.col); }
           });
           applyHash(); // build filters + render, honoring any deep-linked state/permalink
+          // Insights dashboard (T21): counts from stats.json, context histogram from the
+          // catalog just loaded. Missing/old stats.json → the section stays hidden.
+          fetch("./stats.json")
+            .then((r) => (r.ok ? r.json() : null))
+            .then((s) => { if (s) renderDashboard(s); })
+            .catch(() => {});
         })
         .catch((e) => {
           document.getElementById("status").innerHTML =
