@@ -9,7 +9,10 @@ The catalog is just JSON over HTTPS, so you *can* `fetch` it directly. This clie
 removes the boilerplate: URL selection (rolling vs pinned `catalog-vN.json`, or the
 compact `index.json`), flattening the `vendors` map into entries that carry their
 `vendor`, `byKind`/`byVendor`/`get` filtering, and in-memory caching with an optional
-TTL. It carries **no pricing** — identity, kind and capability only.
+TTL. Alongside identity, kind and capability, each entry may carry an optional
+**indicative US list price** (`pricing`) — a reference only, **not authoritative**;
+always verify with the vendor before billing on it. Unknown/optional fields
+(including `pricing`) are tolerated and passed through for additive-schema safety.
 
 The catalog is open and grows with the community — [contributions welcome](https://github.com/openviglet/model-catalog).
 

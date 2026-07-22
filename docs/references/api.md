@@ -17,8 +17,10 @@ Published as an open, CORS-enabled, versioned JSON artifact so any tool can cons
 it as a market reference (the role LiteLLM's `model_prices_and_context_window.json`
 plays for pricing, but identity/kind-first and browsable).
 
-It is **free, unauthenticated, and read-only.** First cut is *identity + kind +
-capability* — **not pricing** (see [STRATEGY.md](../STRATEGY.md) §I).
+It is **free, unauthenticated, and read-only.** The core is *identity + kind +
+capability*; it also carries an **optional, indicative US list price** per model
+(`pricing`) — a reference only, **not authoritative**, verify with the vendor (see
+[STRATEGY.md](../STRATEGY.md) §I and the [`pricing`](#pricing--indicative-us-list-price-️) field below).
 
 ## Endpoints
 
@@ -97,6 +99,26 @@ are regenerated deterministically from the canonical source
 | `status` | enum | — | `PREVIEW` · `GA` · `DEPRECATED` · `RETIRED` — lifecycle stage; prefer over `deprecated`. |
 | `sources` | string[] | — | Provenance — source ids that contributed fields (`openai-api`, `litellm`, `overrides`). |
 | `lastVerified` | string | — | ISO-8601 date the entry was last confirmed against its sources. |
+| `pricing` | object | — | **Indicative US list price** — `{ inputPer1M, outputPer1M, currency: "USD", unit, indicative: true, note, source, lastVerified }`, per 1,000,000 tokens. **A reference only, not authoritative — verify with the vendor.** Never per-contract/region/negotiated; omitted when no trusted price exists. See below. |
+
+### `pricing` — indicative US list price ⚠️
+
+Optional, and **indicative, not authoritative**: a US **list** price published next to the
+model identity as a convenience (so a consumer needn't join to a second source), flagged
+`indicative: true` and always carrying a verify-with-vendor `note`. **Always confirm the
+live price with the vendor before billing on it** — it is not a billing engine and carries
+no per-contract, per-region, negotiated or committed-use pricing. Provenance-gated (`source`
++ `lastVerified` required) and never invented — a model with no trusted price omits the field.
+
+```json
+"pricing": {
+  "inputPer1M": 3, "outputPer1M": 15,
+  "currency": "USD", "unit": "per_1M_tokens",
+  "indicative": true,
+  "note": "Indicative US list price — verify with the vendor.",
+  "source": "litellm", "lastVerified": "2026-07-22"
+}
+```
 
 > **Envelope stays `version: 1`.** All fields below `deprecated` are **optional and
 > additive** — existing consumers ignore unknown keys. They are populated by the
@@ -195,7 +217,8 @@ each id's effective status (`status`, falling back to `deprecated → DEPRECATED
 
 Both are emitted from the same flattened entries as `catalog.json`, in the same order, so
 they never drift. **`catalog.csv`** is one row per model with a fixed, stable column set —
-`vendor,id,label,kind,contextWindow,maxOutputTokens,embeddingDimensions,capabilities,inputModalities,outputModalities,knowledgeCutoff,releaseDate,status,deprecated,aliases,sources,lastVerified`
+`vendor,id,label,kind,contextWindow,maxOutputTokens,embeddingDimensions,capabilities,inputModalities,outputModalities,knowledgeCutoff,releaseDate,status,deprecated,aliases,sources,lastVerified,priceInputPer1M,priceOutputPer1M,priceCurrency,priceSource,priceLastVerified`
+(the five `price*` columns are the indicative US list price — a reference only, verify with the vendor; empty when unpriced)
 — array fields `;`-joined, RFC-4180 quoted. **`catalog.ndjson`** is one JSON object per
 line (the flattened `ModelEntry`, including `vendor`), newline-delimited.
 

@@ -21,13 +21,6 @@ whole block is deliberately *bounded* so it doesn't become the maintenance/legal
 liability the old stance feared — the price is an **indicative US list reference, not an
 authoritative or contract-accurate quote**, and is always optional + sourced.
 
-### §F3 — T32 · Surface pricing across the public artifacts
-Once the data exists, expose it everywhere the identity already appears: detail drawer,
-comparison view, an optional page column, per-model/per-vendor pages, the CSV/NDJSON
-exports and `stats.json`/coverage — plus `api.md` and the client SDK READMEs. Every
-surface repeats the *indicative, verify-with-vendor* caveat so the reference framing
-travels with the number.
-
 ### §F4 — T33 · Provider consumer plans dataset
 Beyond per-API-model pricing, vendors sell **consumer subscription plans** (Claude Pro,
 Claude Pro Max 5×/20×, ChatGPT Plus/Pro, Gemini Advanced, …). Exploratory (💭): these are

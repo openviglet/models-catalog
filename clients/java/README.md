@@ -9,7 +9,10 @@ The catalog is just JSON over HTTPS, so you *can* fetch it directly. This client
 removes the boilerplate: URL selection (rolling vs pinned `catalog-vN.json`, or the
 compact `index.json`), flattening the `vendors` map into typed `record` entries that
 carry their `vendor`, `byKind`/`byVendor`/`get` filtering, and in-memory caching with
-an optional TTL. It carries **no pricing** — identity, kind and capability only.
+an optional TTL. Alongside identity, kind and capability, each entry may carry an
+optional **indicative US list price** (`pricing`) — a reference only, **not
+authoritative**; always verify with the vendor before billing on it. Unknown/optional
+fields (including `pricing`) are preserved via `ModelEntry.extra()`.
 
 - **No runtime dependencies.** Uses only the JDK `java.net.http.HttpClient` plus a
   tiny built-in JSON reader — no HTTP or JSON framework. JUnit is test-scoped and never

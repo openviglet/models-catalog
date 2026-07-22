@@ -46,7 +46,6 @@
 > to US list price, optional, provenance-gated, and flagged **indicative — not
 > authoritative** (verify with the vendor). Design rationale → §F.
 
-- **T32** 📋 **Surface pricing across the public artifacts** — render `pricing` in the detail drawer + comparison view + an optional page column, per-model/per-vendor pages, CSV/NDJSON columns and `stats.json`/coverage; document it in `api.md` + the client SDK READMEs, each carrying the "indicative, verify with vendor" caveat. deps: T31 → §F3
 - **T33** 💭 **Provider consumer plans dataset** — beyond per-API-model pricing, publish the vendors' **consumer subscription plans** (e.g. Claude Pro, Claude Pro Max 5×/20×, ChatGPT Plus/Pro, Gemini Advanced), US-only, as a **separate dataset** (not `ModelEntry` — plans aren't models). Exploratory: needs a data shape, a source/verification story and a scope decision (does a model-identity catalog own subscription tiers at all?). deps: — → §F4
 
 ## Block G — Static-site expansion & indexing

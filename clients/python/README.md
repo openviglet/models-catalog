@@ -9,7 +9,10 @@ The catalog is just JSON over HTTPS, so you *can* fetch it directly. This client
 removes the boilerplate: URL selection (rolling vs pinned `catalog-vN.json`, or the
 compact `index.json`), flattening the `vendors` map into typed entries that carry
 their `vendor`, `by_kind`/`by_vendor`/`get` filtering, and in-memory caching with an
-optional TTL. It carries **no pricing** — identity, kind and capability only.
+optional TTL. Alongside identity, kind and capability, each entry may carry an
+optional **indicative US list price** (`pricing`) — a reference only, **not
+authoritative**; always verify with the vendor before billing on it. Unknown/optional
+fields (including `pricing`) are preserved on `.extra`.
 
 - **Stdlib only.** Uses `urllib` — no `requests`, nothing to install alongside it.
 - **Typed.** `ModelEntry` is a `dataclass`; unknown JSON fields are kept in `.extra`

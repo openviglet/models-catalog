@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T32 SHIPPED** (Block F §F3 — surface pricing across artifacts: page row chip + drawer + compare + coverage heatmap col + marketing text; emit CSV price* cols + per-model page price row + COVERAGE_FIELDS pricing (stats+coverage) + vendor/llms.txt blurbs; api.md pricing field+subsection; JS/Python/Java READMEs; NDJSON/catalog automatic; indicative-verify caveat on every surface) — 2026-07-22.
 - **T31 SHIPPED** (Block F §F2 — pipeline pricing enrichment: litellm adapter maps `*_cost_per_token`→`pricing` (per-1M USD, indicative, source litellm); merge carries pricing as highest-wins object (enrich-blank-then-stable, overrides pin corrects, stamps lastVerified); validate CMP_FIELDS+pricing; offline --apply populated 161 entries, 0/0/161 diff; 2 new tests) — 2026-07-22.
 - **T30 SHIPPED** (Block F §F1 — pricing field + schema, STRATEGY §I reversal: optional `pricing{inputPer1M,outputPer1M,currency:USD,unit,indicative:const true,note,source,lastVerified}`, required indicative+source+lastVerified; validate.mjs `pricingErrors()` mirror + 2 tests; additive, version 1; no prices seeded [T31 populates]) — 2026-07-22.
 - **T34 CREATED** (📋, Block G §G1 — more static landing pages: per-capability/modality/kind pages + sitemap.xml/robots.txt via emit.mjs; Next.js rejected for zero-dep; deps — [T26 shipped]) — 2026-07-22.

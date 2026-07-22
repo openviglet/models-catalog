@@ -620,7 +620,7 @@
         <p class="lead">
           A vendor-neutral, kind-aware catalog of LLM, embedding, rerank &amp; media models —
           which ids exist per vendor and, for each, its <em>kind</em>, context window and
-          capabilities. No key, no server, no pricing. Just clean JSON.
+          capabilities — plus an optional <em>indicative</em> US list price. No key, no server. Just clean JSON.
         </p>
         <div class="cta">
           <a class="btn btn-primary" href="#browse">Browse the catalog</a>
@@ -662,7 +662,7 @@
           <div class="feat">
             <div class="ic">✓</div>
             <h3>Provenance-first</h3>
-            <p>Regenerated entries carry their <code>sources</code> and <code>lastVerified</code>. No pricing, ever. We omit a field before we guess it.</p>
+            <p>Regenerated entries carry their <code>sources</code> and <code>lastVerified</code>. Any price is an <em>indicative</em> US list reference — verify with the vendor. We omit a field before we guess it.</p>
           </div>
         </div>
       </div>
@@ -882,7 +882,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           <div class="feat">
             <div class="ic">↥</div>
             <h3>3 · Publish</h3>
-            <p><code>regen --apply</code> writes the canonical file and a PR opens for review. Identity + kind + capability only — never pricing.</p>
+            <p><code>regen --apply</code> writes the canonical file and a PR opens for review. Identity, kind, capability — plus an indicative US list price (a reference, verify with the vendor).</p>
           </div>
         </div>
       </div>
@@ -1048,7 +1048,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
             const ctx = m.contextWindow ? `${fmtTokens(m.contextWindow)} ctx` : "";
             const dim = m.embeddingDimensions ? `${m.embeddingDimensions} dim` : "";
             const out = m.maxOutputTokens ? `${fmtTokens(m.maxOutputTokens)} out` : "";
-            const nums = [ctx, out, dim].filter(Boolean).map((x) => `<span class="chip num">${x}</span>`).join("");
+            const nums = [ctx, out, dim].filter(Boolean).map((x) => `<span class="chip num">${x}</span>`).join("") + priceChip(m.pricing);
             const kc = KIND_COLOR[m.kind] || KIND_COLOR.UNKNOWN;
             const key = vendor + "/" + m.id;
             return `<tr data-key="${key}">
@@ -1185,6 +1185,35 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         });
         return `${ISSUE_NEW}?${p.toString()}`;
       }
+      /* ── Indicative pricing (Block F / T32) ─────────────
+         An optional US *list* price, flagged indicative (not authoritative — verify
+         with the vendor). Formatted per 1M tokens; the caveat travels with every
+         surface it appears on. */
+      const PRICE_CAVEAT = "Indicative US list price per 1M tokens — a reference only, verify with the vendor.";
+      function priceMoney(v) {
+        return "$" + Number(v.toFixed(6)).toLocaleString("en-US", { maximumFractionDigits: 6 });
+      }
+      function priceParts(p) {
+        const bits = [];
+        if (p && p.inputPer1M != null) bits.push([priceMoney(p.inputPer1M), "in"]);
+        if (p && p.outputPer1M != null) bits.push([priceMoney(p.outputPer1M), "out"]);
+        return bits;
+      }
+      // Compact chip for the model list — "$3 · $15 /1M".
+      function priceChip(p) {
+        const bits = priceParts(p);
+        if (!bits.length) return "";
+        return `<span class="chip num" title="${PRICE_CAVEAT}">${bits.map(([v]) => v).join(" · ")}/1M</span>`;
+      }
+      // Fuller cell for the drawer / comparison, with the indicative caveat inline.
+      function priceCell(p) {
+        const bits = priceParts(p);
+        if (!bits.length) return "";
+        const figs = bits.map(([v, side]) => `<span class="mono">${v}</span> <span class="lbl">${side}</span>`).join(" · ");
+        const meta = [p.source ? `source: ${p.source}` : "", p.lastVerified ? p.lastVerified : ""].filter(Boolean).join(" · ");
+        return `${figs} <span class="lbl">/ 1M tokens</span>
+          <div class="lbl" style="margin-top:.25rem">Indicative US list — verify with vendor${meta ? ` · ${meta}` : ""}</div>`;
+      }
       function renderDetail(m) {
         const rows = [];
         const add = (dt, dd) => { if (dd || dd === 0) rows.push(`<dt>${dt}</dt><dd>${dd}</dd>`); };
@@ -1195,6 +1224,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         if (m.contextWindow) add("Context window", `<span class="mono">${m.contextWindow.toLocaleString("en-US")}</span> tokens <span class="lbl">(${fmtTokens(m.contextWindow)})</span>`);
         if (m.maxOutputTokens) add("Max output", `<span class="mono">${m.maxOutputTokens.toLocaleString("en-US")}</span> tokens <span class="lbl">(${fmtTokens(m.maxOutputTokens)})</span>`);
         if (m.embeddingDimensions) add("Embedding dims", `<span class="mono">${m.embeddingDimensions}</span>`);
+        if (m.pricing) add('Price <span class="lbl">US list</span>', priceCell(m.pricing));
         if (m.status) add("Status", m.status);
         if (m.knowledgeCutoff) add("Knowledge cutoff", m.knowledgeCutoff);
         if (m.releaseDate) add("Release date", m.releaseDate);
@@ -1284,6 +1314,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           ["Context window", ({ m }) => tokens(m.contextWindow)],
           ["Max output", ({ m }) => tokens(m.maxOutputTokens)],
           ["Embedding dims", ({ m }) => m.embeddingDimensions ? `<span class="mono">${m.embeddingDimensions}</span>` : ""],
+          ["Price (US list)", ({ m }) => m.pricing ? priceCell(m.pricing) : ""],
           ["Input", ({ m }) => chips(m.modalities && m.modalities.input)],
           ["Output", ({ m }) => chips(m.modalities && m.modalities.output)],
           ["Capabilities", ({ m }) => chips(m.capabilities)],
@@ -1454,6 +1485,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         contextWindow: "Context", maxOutputTokens: "Max out", embeddingDimensions: "Embed dims",
         capabilities: "Capabilities", modalities: "Modalities", knowledgeCutoff: "Cutoff",
         releaseDate: "Released", aliases: "Aliases", status: "Status", sources: "Sources", lastVerified: "Verified",
+        pricing: "Price",
       };
       // A gap → a pre-filled proposal for that vendor (change-type = correction). T28 tie-in.
       function coverageGapUrl(vendor) {

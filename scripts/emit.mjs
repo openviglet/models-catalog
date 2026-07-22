@@ -206,6 +206,7 @@ const COVERAGE_FIELDS = [
   ["status", (e) => e.status != null],
   ["sources", (e) => (e.sources || []).length > 0],
   ["lastVerified", (e) => e.lastVerified != null],
+  ["pricing", (e) => e.pricing != null], // indicative US list price (Block F / T32)
 ];
 const round4 = (n, d) => (d ? Math.round((n / d) * 1e4) / 1e4 : 0);
 // Per-field { filled, rate } over an arbitrary set of entries.
@@ -378,6 +379,9 @@ const CSV_COLUMNS = [
   "embeddingDimensions", "capabilities", "inputModalities", "outputModalities",
   "knowledgeCutoff", "releaseDate", "status", "deprecated", "aliases",
   "sources", "lastVerified",
+  // Indicative US list price (Block F / T32) — a reference only, verify with the
+  // vendor; empty for models with no trusted price. Currency is always USD.
+  "priceInputPer1M", "priceOutputPer1M", "priceCurrency", "priceSource", "priceLastVerified",
 ];
 const csvCell = (v) => {
   if (v == null) return "";
@@ -387,6 +391,11 @@ const csvCell = (v) => {
 const csvRow = (e) => CSV_COLUMNS.map((c) => {
   if (c === "inputModalities") return csvCell((e.modalities && e.modalities.input) || []);
   if (c === "outputModalities") return csvCell((e.modalities && e.modalities.output) || []);
+  if (c === "priceInputPer1M") return csvCell(e.pricing && e.pricing.inputPer1M);
+  if (c === "priceOutputPer1M") return csvCell(e.pricing && e.pricing.outputPer1M);
+  if (c === "priceCurrency") return csvCell(e.pricing && e.pricing.currency);
+  if (c === "priceSource") return csvCell(e.pricing && e.pricing.source);
+  if (c === "priceLastVerified") return csvCell(e.pricing && e.pricing.lastVerified);
   return csvCell(e[c]);
 }).join(",");
 const catalogCsv = [CSV_COLUMNS.join(","), ...flat.map(csvRow)].join("\r\n") + "\r\n";
@@ -426,6 +435,17 @@ const modelHtmlUrl = (e) => `${SOURCE_URL}/models/${e.vendor}/${slugFor(e)}.html
 const modelMdUrl = (e) => `${SOURCE_URL}/models/${e.vendor}/${slugFor(e)}.md`;
 const inMods = (e) => (e.modalities && e.modalities.input) || [];
 const outMods = (e) => (e.modalities && e.modalities.output) || [];
+// Indicative US list price, one human line (Block F / T32). Always carries the
+// "indicative — verify with vendor" caveat so the reference framing travels.
+const money = (v) => "$" + Number(v.toFixed(6)).toString();
+const priceLine = (p) => {
+  if (!p) return null;
+  const bits = [];
+  if (p.inputPer1M != null) bits.push(`${money(p.inputPer1M)} in`);
+  if (p.outputPer1M != null) bits.push(`${money(p.outputPer1M)} out`);
+  if (!bits.length) return null;
+  return `${bits.join(" / ")} per 1M tokens (indicative US list — verify with vendor)`;
+};
 
 const proseText = (e) => {
   let s = `${e.label} (${e.id}) is a ${e.kind.toLowerCase()} model from ${e.vendor}`;
@@ -444,6 +464,7 @@ const factRows = (e) => [
   ["Context window", e.contextWindow != null ? `${comma(e.contextWindow)} tokens` : null],
   ["Max output tokens", e.maxOutputTokens != null ? `${comma(e.maxOutputTokens)} tokens` : null],
   ["Embedding dimensions", e.embeddingDimensions != null ? comma(e.embeddingDimensions) : null],
+  ["Indicative price (US list)", priceLine(e.pricing)],
   ["Input modalities", inMods(e).join(", ") || null],
   ["Output modalities", outMods(e).join(", ") || null],
   ["Capabilities", (e.capabilities || []).join(", ") || null],
@@ -502,7 +523,7 @@ const vendorMd = (v, es) => {
   const rows = es.map((e) => `| [${e.label}](${slugFor(e)}.md) | \`${e.id}\` | ${e.kind} | ${e.contextWindow != null ? comma(e.contextWindow) : "—"} |`);
   return `# ${v} models
 
-> ${es.length} model${es.length === 1 ? "" : "s"} from ${v} in the Model Catalog — a vendor-neutral, kind-aware reference. Free, unauthenticated JSON; no pricing.
+> ${es.length} model${es.length === 1 ? "" : "s"} from ${v} in the Model Catalog — a vendor-neutral, kind-aware reference. Free, unauthenticated JSON, with optional indicative US list pricing (verify with the vendor).
 
 | Model | id | Kind | Context |
 | --- | --- | --- | --- |
@@ -531,7 +552,7 @@ const modelsIndexHtml = () => {
 
 const llmsTxt = `# Model Catalog
 
-> A vendor-neutral, kind-aware catalog of ${flat.length} LLM / embedding / rerank / media models across ${vendorNames.length} vendors. Free, unauthenticated, versioned JSON — which model ids exist per vendor and, for each, its kind, context window, modalities and capabilities. No pricing.
+> A vendor-neutral, kind-aware catalog of ${flat.length} LLM / embedding / rerank / media models across ${vendorNames.length} vendors. Free, unauthenticated, versioned JSON — which model ids exist per vendor and, for each, its kind, context window, modalities, capabilities and an optional indicative US list price (a reference only — verify with the vendor).
 
 ## Catalog data
 - [Full catalog (JSON)](${SOURCE_URL}/catalog.json): every vendor, every field
