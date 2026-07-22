@@ -20,23 +20,6 @@ and rejected because it would break the foundational zero-dependency bet to solv
 problem the emit path already solves (generating static files from a JSON is a loop, not a
 framework need).
 
-## §H — Provider coverage & pricing sources
-
-The per-model `pricing` field (Block F) only carries prices for providers the catalog
-actually lists. Two gaps follow: (1) fast-inference hosts, hyperscalers and aggregators the
-market uses aren't represented, so their indicative prices are absent; (2) an indicative
-price needs a *canonical place to be verified*. T35 (shipped) added the provider
-pricing-source registry (`providers.json`) for (2). T36/T37 close (1) the same way T14 added
-DeepSeek/xAI/etc.: map the `litellm_provider` in the adapter + seed curated anchoring ids
-(pulled from the cached LiteLLM snapshot, so they're real) — LiteLLM then enriches metadata
-**and** indicative per-token prices automatically. No prices are hand-typed.
-
-### §H3 — T37 · Onboard aggregators (OpenRouter + Vercel)
-Aggregators re-serve *other* vendors' models, so admitting their full pass-through lists would
-duplicate and balloon the catalog. Onboard them with a **curated cap** — a small, explicit id
-set — and a clear "gateway, not creator" note, so they're represented without distorting the
-per-creator identity model. Revisit the cap if there's demand.
-
 ### §G1 — T34 · More static landing pages + sitemap
 Extend `emit.mjs` with per-capability / per-modality / per-kind landing pages and a
 `sitemap.xml` (+ `robots.txt`), so faceted slices become crawlable URLs and the catalog is

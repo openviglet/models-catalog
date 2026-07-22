@@ -50,6 +50,11 @@ const PROVIDER_TO_VENDOR = {
   azure: "azure",
   azure_ai: "azure",
   azure_text: "azure",
+  // Aggregators / gateways (Block H / T37): they re-serve many vendors' models, so
+  // only a small CURATED cap of ids is anchored (overrides.json) — never their full
+  // pass-through lists, which would balloon and duplicate the per-creator catalog.
+  openrouter: "openrouter",
+  vercel_ai_gateway: "vercel",
 };
 
 const MODE_TO_KIND = {

@@ -42,6 +42,11 @@
 > US-list `pricing` field + schema, LiteLLM pricing enrichment (161 models), pricing
 > surfaced across every artifact, and the separate consumer-plans dataset (plans.json)
 > (see [CHANGELOG.md](CHANGELOG.md) → Block F).
+>
+> **Block H — Provider coverage & pricing sources** shipped in full — the provider
+> pricing-source registry (providers.json) and onboarding 8 new provider vendors
+> (Groq, Together, Fireworks, Cerebras, Qwen, Azure + the OpenRouter/Vercel gateways
+> with a curated cap) → 22 vendors / 240 models (see [CHANGELOG.md](CHANGELOG.md) → Block H).
 
 ## Block G — Static-site expansion & indexing
 
@@ -51,16 +56,6 @@
 > problem `emit.mjs` already solves. Design rationale → §G.
 
 - **T34** 📋 **More static landing pages + sitemap** — extend `scripts/emit.mjs` (the T26 page generator) with per-capability / per-modality / per-kind static landing pages and a `sitemap.xml` (+ `robots.txt`) so segmented content is individually indexable by search engines and assistants. Zero-dep, derived-at-emit, no framework. deps: — (T26 shipped) → §G1
-
-## Block H — Provider coverage & pricing sources
-
-> Broaden which providers the catalog represents (so per-token indicative prices exist
-> for more of the market) and give every indicative price a canonical verification link.
-> The registry (T35) shipped; the remaining tasks onboard new provider vendors T14-style
-> (LiteLLM adapter map + curated anchoring ids, so LiteLLM fills models **and** prices).
-> Design rationale → §H.
-
-- **T37** 📋 **Onboard aggregators (OpenRouter + Vercel)** — represent the two gateways, with a **curated cap** so re-served models don't balloon the catalog (a small, explicit id set rather than their full pass-through lists); document the "gateway, not creator" caveat on each. deps: T35 → §H3
 
 > The endpoint intentionally stays on its public GitHub Pages URL
 > (`openviglet.github.io/model-catalog`) — an unbranded, community-owned home signals

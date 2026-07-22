@@ -72,5 +72,22 @@
     { "id": "o3", "label": "o3 (Azure)", "kind": "CHAT" },
     { "id": "o4-mini", "label": "o4-mini (Azure)", "kind": "CHAT" },
     { "id": "gpt-5", "label": "GPT-5 (Azure)", "kind": "CHAT" }
+  ],
+  "_comment_aggregators": "OpenRouter and Vercel AI Gateway (T37) re-serve OTHER vendors' models. Only a small CURATED cap of representative ids is anchored here — deliberately NOT their full pass-through lists (96 / 101 in LiteLLM) — so the gateway is represented without ballooning/duplicating the per-creator catalog. Ids are the gateway's own model slugs (org/model).",
+  "openrouter": [
+    { "id": "anthropic/claude-sonnet-4.5", "label": "Claude Sonnet 4.5 (via OpenRouter)", "kind": "CHAT" },
+    { "id": "anthropic/claude-3-haiku", "label": "Claude 3 Haiku (via OpenRouter)", "kind": "CHAT" },
+    { "id": "openai/gpt-4o", "label": "GPT-4o (via OpenRouter)", "kind": "CHAT" },
+    { "id": "google/gemini-2.0-flash-001", "label": "Gemini 2.0 Flash (via OpenRouter)", "kind": "CHAT" },
+    { "id": "deepseek/deepseek-chat", "label": "DeepSeek Chat (via OpenRouter)", "kind": "CHAT" },
+    { "id": "meta-llama/llama-3-70b-instruct", "label": "Llama 3 70B Instruct (via OpenRouter)", "kind": "CHAT" }
+  ],
+  "vercel": [
+    { "id": "anthropic/claude-3.5-haiku", "label": "Claude 3.5 Haiku (via Vercel)", "kind": "CHAT" },
+    { "id": "alibaba/qwen-3-235b", "label": "Qwen3 235B (via Vercel)", "kind": "CHAT" },
+    { "id": "amazon/nova-pro", "label": "Amazon Nova Pro (via Vercel)", "kind": "CHAT" },
+    { "id": "cohere/command-a", "label": "Command A (via Vercel)", "kind": "CHAT" },
+    { "id": "deepseek/deepseek-r1", "label": "DeepSeek-R1 (via Vercel)", "kind": "CHAT" },
+    { "id": "google/gemini-2.0-flash", "label": "Gemini 2.0 Flash (via Vercel)", "kind": "CHAT" }
   ]
 }

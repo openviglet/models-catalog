@@ -221,6 +221,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -253,6 +254,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -285,6 +287,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -322,6 +325,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -358,6 +362,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -394,6 +399,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -581,6 +587,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -611,6 +618,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -641,6 +649,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -672,6 +681,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -703,6 +713,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -960,7 +971,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "litellm",
+          "committed",
           "overrides"
         ],
         "lastVerified": "2026-07-22"
@@ -987,7 +998,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
-          "litellm",
+          "committed",
           "overrides"
         ],
         "lastVerified": "2026-07-22"
@@ -1018,6 +1029,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -1049,6 +1061,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -1392,6 +1405,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -1422,6 +1436,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -1454,6 +1469,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -1486,6 +1502,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -1516,6 +1533,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -1547,6 +1565,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -1578,6 +1597,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -1609,6 +1629,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6116,6 +6137,191 @@
         "lastVerified": "2026-07-22"
       }
     ],
+    "openrouter": [
+      {
+        "id": "anthropic/claude-3-haiku",
+        "label": "Claude 3 Haiku (via OpenRouter)",
+        "kind": "CHAT",
+        "contextWindow": 200000,
+        "maxOutputTokens": 4096,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.25,
+          "outputPer1M": 1.25,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "anthropic/claude-sonnet-4.5",
+        "label": "Claude Sonnet 4.5 (via OpenRouter)",
+        "kind": "CHAT",
+        "contextWindow": 1000000,
+        "maxOutputTokens": 1000000,
+        "capabilities": [
+          "tools",
+          "vision",
+          "reasoning"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 3,
+          "outputPer1M": 15,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "deepseek/deepseek-chat",
+        "label": "DeepSeek Chat (via OpenRouter)",
+        "kind": "CHAT",
+        "contextWindow": 65536,
+        "maxOutputTokens": 8192,
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.14,
+          "outputPer1M": 0.28,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "google/gemini-2.0-flash-001",
+        "label": "Gemini 2.0 Flash (via OpenRouter)",
+        "kind": "CHAT",
+        "contextWindow": 1048576,
+        "maxOutputTokens": 8192,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.1,
+          "outputPer1M": 0.4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "meta-llama/llama-3-70b-instruct",
+        "label": "Llama 3 70B Instruct (via OpenRouter)",
+        "kind": "CHAT",
+        "contextWindow": 8192,
+        "maxOutputTokens": 8000,
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.59,
+          "outputPer1M": 0.79,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "openai/gpt-4o",
+        "label": "GPT-4o (via OpenRouter)",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 4096,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      }
+    ],
     "qwen": [
       {
         "id": "qwen-coder",
@@ -6143,6 +6349,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6164,6 +6371,7 @@
           ]
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6195,6 +6403,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6226,6 +6435,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6257,6 +6467,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6289,6 +6500,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6319,6 +6531,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6347,6 +6560,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6375,6 +6589,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6404,6 +6619,7 @@
           "lastVerified": "2026-07-22"
         },
         "sources": [
+          "committed",
           "litellm",
           "overrides"
         ],
@@ -6425,6 +6641,189 @@
         "pricing": {
           "inputPer1M": 2,
           "outputPer1M": 2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "committed",
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      }
+    ],
+    "vercel": [
+      {
+        "id": "alibaba/qwen-3-235b",
+        "label": "Qwen3 235B (via Vercel)",
+        "kind": "CHAT",
+        "contextWindow": 40960,
+        "maxOutputTokens": 16384,
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.2,
+          "outputPer1M": 0.6,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "amazon/nova-pro",
+        "label": "Amazon Nova Pro (via Vercel)",
+        "kind": "CHAT",
+        "contextWindow": 300000,
+        "maxOutputTokens": 8192,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.8,
+          "outputPer1M": 3.2,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "anthropic/claude-3.5-haiku",
+        "label": "Claude 3.5 Haiku (via Vercel)",
+        "kind": "CHAT",
+        "contextWindow": 200000,
+        "maxOutputTokens": 8192,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.8,
+          "outputPer1M": 4,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "cohere/command-a",
+        "label": "Command A (via Vercel)",
+        "kind": "CHAT",
+        "contextWindow": 256000,
+        "maxOutputTokens": 8000,
+        "capabilities": [
+          "tools"
+        ],
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 2.5,
+          "outputPer1M": 10,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "deepseek/deepseek-r1",
+        "label": "DeepSeek-R1 (via Vercel)",
+        "kind": "CHAT",
+        "contextWindow": 128000,
+        "maxOutputTokens": 8192,
+        "modalities": {
+          "input": [
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.55,
+          "outputPer1M": 2.19,
+          "currency": "USD",
+          "unit": "per_1M_tokens",
+          "indicative": true,
+          "note": "Indicative US list price — verify with the vendor.",
+          "source": "litellm",
+          "lastVerified": "2026-07-22"
+        },
+        "sources": [
+          "litellm",
+          "overrides"
+        ],
+        "lastVerified": "2026-07-22"
+      },
+      {
+        "id": "google/gemini-2.0-flash",
+        "label": "Gemini 2.0 Flash (via Vercel)",
+        "kind": "CHAT",
+        "contextWindow": 1048576,
+        "maxOutputTokens": 8192,
+        "capabilities": [
+          "tools",
+          "vision"
+        ],
+        "modalities": {
+          "input": [
+            "image",
+            "text"
+          ]
+        },
+        "pricing": {
+          "inputPer1M": 0.15,
+          "outputPer1M": 0.6,
           "currency": "USD",
           "unit": "per_1M_tokens",
           "indicative": true,

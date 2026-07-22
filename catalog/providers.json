@@ -25,7 +25,7 @@
     { "id": "fireworks-ai", "name": "Fireworks AI", "category": "inference-provider", "catalogVendor": "fireworks", "apiPricingUrl": "https://fireworks.ai/pricing" },
     { "id": "cerebras", "name": "Cerebras", "category": "inference-provider", "catalogVendor": "cerebras", "apiPricingUrl": "https://cerebras.ai/inference-pricing/" },
 
-    { "id": "openrouter", "name": "OpenRouter", "category": "aggregator", "catalogVendor": null, "apiPricingUrl": "https://openrouter.ai/models", "note": "Gateway re-serving many vendors' models; price is tabled per-model in its own catalog." },
-    { "id": "vercel-ai-gateway", "name": "Vercel AI SDK / Gateway", "category": "aggregator", "catalogVendor": null, "apiPricingUrl": "https://vercel.com/pricing", "note": "Cloud/edge usage gateway over many models." }
+    { "id": "openrouter", "name": "OpenRouter", "category": "aggregator", "catalogVendor": "openrouter", "apiPricingUrl": "https://openrouter.ai/models", "note": "Gateway re-serving many vendors' models; only a small curated sample is in the catalog. Price is tabled per-model in its own catalog." },
+    { "id": "vercel-ai-gateway", "name": "Vercel AI SDK / Gateway", "category": "aggregator", "catalogVendor": "vercel", "apiPricingUrl": "https://vercel.com/pricing", "note": "Cloud/edge usage gateway over many models; only a small curated sample is in the catalog." }
   ]
 }
