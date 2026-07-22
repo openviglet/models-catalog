@@ -10,6 +10,25 @@ import { KINDS } from "./util.mjs";
 
 const STATUSES = new Set(["PREVIEW", "GA", "DEPRECATED", "RETIRED"]);
 
+/**
+ * Structural mirror of $defs/pricing (Block F / T30). Provenance-gated: an
+ * indicative US list price is admitted only with `indicative: true`, a `source`
+ * and a `lastVerified`; the per-* figures, when present, are non-negative USD.
+ * @returns string[] of errors (empty = valid).
+ */
+function pricingErrors(p, at) {
+  if (typeof p !== "object" || p === null || Array.isArray(p)) return [`${at} pricing is not an object`];
+  const errs = [];
+  if (p.indicative !== true) errs.push(`${at} pricing.indicative must be true`);
+  if (!p.source || typeof p.source !== "string") errs.push(`${at} pricing missing string source`);
+  if (typeof p.lastVerified !== "string") errs.push(`${at} pricing missing string lastVerified`);
+  for (const nf of ["inputPer1M", "outputPer1M"]) {
+    if (p[nf] !== undefined && !(typeof p[nf] === "number" && p[nf] >= 0)) errs.push(`${at} invalid pricing.${nf}`);
+  }
+  if (p.currency !== undefined && p.currency !== "USD") errs.push(`${at} pricing.currency must be USD`);
+  return errs;
+}
+
 /** @returns string[] of validation errors (empty = valid). */
 export function validateEnvelope(env) {
   const errs = [];
@@ -31,6 +50,7 @@ export function validateEnvelope(env) {
       for (const nf of ["contextWindow", "maxOutputTokens", "embeddingDimensions"]) {
         if (e[nf] !== undefined && !(Number.isInteger(e[nf]) && e[nf] >= 1)) errs.push(`${at} (${e.id}) invalid ${nf}`);
       }
+      if (e.pricing !== undefined) errs.push(...pricingErrors(e.pricing, `${at} (${e.id})`));
     }
   }
   return errs;

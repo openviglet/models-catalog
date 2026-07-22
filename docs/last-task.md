@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T30 SHIPPED** (Block F §F1 — pricing field + schema, STRATEGY §I reversal: optional `pricing{inputPer1M,outputPer1M,currency:USD,unit,indicative:const true,note,source,lastVerified}`, required indicative+source+lastVerified; validate.mjs `pricingErrors()` mirror + 2 tests; additive, version 1; no prices seeded [T31 populates]) — 2026-07-22.
 - **T34 CREATED** (📋, Block G §G1 — more static landing pages: per-capability/modality/kind pages + sitemap.xml/robots.txt via emit.mjs; Next.js rejected for zero-dep; deps — [T26 shipped]) — 2026-07-22.
 - **T33 CREATED** (💭, Block F §F4 — provider consumer plans dataset (Claude Pro/Max, ChatGPT, Gemini), US-only, separate from ModelEntry; scope open) — 2026-07-22.
 - **T32 CREATED** (📋, Block F §F3 — surface pricing across artifacts: drawer/compare/column, per-model pages, CSV/NDJSON, stats/coverage, api.md + SDK docs; deps T31) — 2026-07-22.

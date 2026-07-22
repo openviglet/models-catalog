@@ -208,6 +208,24 @@ test("validateEnvelope: a clean envelope passes", () => {
   assert.deepEqual(errs, []);
 });
 
+test("validateEnvelope: a provenance-gated indicative price passes (Block F / T30)", () => {
+  const errs = validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { openai: [
+    { id: "a", label: "A", kind: "CHAT", pricing: { inputPer1M: 2.5, outputPer1M: 10, currency: "USD", unit: "per_1M_tokens", indicative: true, source: "litellm", lastVerified: WHEN } },
+  ] } });
+  assert.deepEqual(errs, []);
+});
+
+test("validateEnvelope: flags pricing without provenance / non-indicative / bad figures", () => {
+  const errs = validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { openai: [
+    { id: "a", label: "A", kind: "CHAT", pricing: { inputPer1M: -1, indicative: false, currency: "EUR" } },
+  ] } });
+  assert.ok(errs.some((e) => /pricing.indicative must be true/.test(e)));
+  assert.ok(errs.some((e) => /pricing missing string source/.test(e)));
+  assert.ok(errs.some((e) => /pricing missing string lastVerified/.test(e)));
+  assert.ok(errs.some((e) => /invalid pricing.inputPer1M/.test(e)));
+  assert.ok(errs.some((e) => /pricing.currency must be USD/.test(e)));
+});
+
 test("diffReport: counts add/remove/change", () => {
   const existing = { vendors: { openai: [{ id: "old", label: "Old", kind: "CHAT" }, { id: "chg", label: "Chg", kind: "CHAT" }] } };
   const proposed = { vendors: { openai: [{ id: "chg", label: "Chg", kind: "CHAT", contextWindow: 100, sources: ["litellm"] }, { id: "new", label: "New", kind: "CHAT", sources: ["openai-api"] }] } };

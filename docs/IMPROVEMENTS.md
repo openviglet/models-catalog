@@ -21,13 +21,6 @@ whole block is deliberately *bounded* so it doesn't become the maintenance/legal
 liability the old stance feared — the price is an **indicative US list reference, not an
 authoritative or contract-accurate quote**, and is always optional + sourced.
 
-### §F1 — T30 · Pricing field + schema (strategy reversal)
-Add an optional `pricing` object to `ModelEntry` — per-token `inputPer1M` / `outputPer1M`
-in `USD`, a `unit`, provenance (`source` + `lastVerified`), and an explicit
-`indicative: true` / disclaimer note so no consumer mistakes it for an authoritative
-quote. Additive to the Draft-2020-12 schema, `version` stays `1`. This is the contract
-every other F task builds on, so it lands first.
-
 ### §F2 — T31 · Pipeline pricing enrichment
 Reverse the LiteLLM adapter's strip: instead of dropping `*cost*`/`*price*` keys, map
 them into the `pricing` shape, normalized to per-token USD and provenance-stamped, with

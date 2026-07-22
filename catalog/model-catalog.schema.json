@@ -124,6 +124,56 @@
           "type": "string",
           "format": "date",
           "description": "ISO-8601 date this entry was last confirmed against its sources by the regeneration pipeline. Additive (Block BD / T764)."
+        },
+        "pricing": {
+          "$ref": "#/$defs/pricing",
+          "description": "Optional INDICATIVE US list price — a reference only, NOT an authoritative or contract-accurate quote (verify with the vendor). Never per-contract/region/negotiated. Provenance-gated + never invented. Additive (Block F / T30)."
+        }
+      }
+    },
+    "pricing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["indicative", "source", "lastVerified"],
+      "description": "Indicative US list price for a model id. Bounded by STRATEGY §I (reversed, Block F): US list price only, optional, provenance-gated, never invented, flagged non-authoritative. NOT a billing engine — no per-contract/region/negotiated/committed-use pricing.",
+      "properties": {
+        "inputPer1M": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Indicative US list price in USD per 1,000,000 input (prompt) tokens."
+        },
+        "outputPer1M": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Indicative US list price in USD per 1,000,000 output (completion) tokens."
+        },
+        "currency": {
+          "type": "string",
+          "enum": ["USD"],
+          "description": "Always USD — the catalog carries only an indicative US list price."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit the per-* figures are expressed in (e.g. 'per_1M_tokens')."
+        },
+        "indicative": {
+          "type": "boolean",
+          "const": true,
+          "description": "Always true — signals this is an indicative US list reference, NOT an authoritative or contract-accurate quote. Verify with the vendor."
+        },
+        "note": {
+          "type": "string",
+          "description": "Free-text disclaimer/qualifier travelling with the number (e.g. 'Indicative US list price — verify with vendor')."
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Provenance — where the price came from (e.g. litellm, overrides, a vendor pricing-page URL). Required: pricing is never invented."
+        },
+        "lastVerified": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO-8601 date this price was last confirmed against its source."
         }
       }
     },
