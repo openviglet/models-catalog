@@ -680,8 +680,25 @@
       .chart-note { margin: .6rem 0 0; color: var(--muted); font-size: .78rem; }
 
       /* ── Decide: frontier scatter + leaderboards (T54) ── */
+      /* Marker edge — keeps a shape legible against either chart surface (T64). */
+      :root { --mark-edge: rgba(0,0,0,.42); }
+      [data-theme="dark"] { --mark-edge: rgba(255,255,255,.5); }
       .dot { cursor: pointer; transition: opacity .12s; }
-      .dot:hover { stroke: var(--text); stroke-width: 1.5; opacity: 1 !important; }
+      .dot:hover { stroke: var(--text) !important; stroke-width: 1.6 !important; opacity: 1 !important; }
+      .mark.front { stroke: var(--brand); stroke-width: 1.8; }
+      svg.dim-others .mark:not(.on) { opacity: .1 !important; }
+      /* Inline vendor shape glyph, reused site-wide (T64). */
+      .vglyph { flex: none; vertical-align: -2px; }
+      /* Scatter legend (T64). */
+      .chart-legend { list-style: none; margin: .75rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem .55rem; }
+      .lg-item { display: inline-flex; align-items: center; gap: .32rem; font-size: .74rem; color: var(--muted);
+        padding: .12rem .4rem; border-radius: .5rem; cursor: default; transition: background .12s, opacity .12s; }
+      .lg-item:hover { background: var(--bg-alt); color: var(--text); }
+      .lg-item b { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+      .chart-legend.has-hover .lg-item:not(.active) { opacity: .4; }
+      .lg-front { color: var(--muted); }
+      .lg-front .lg-ring { display: inline-block; width: 11px; height: 11px; border-radius: 999px;
+        border: 1.8px solid var(--brand); box-sizing: border-box; }
       table.lb { width: 100%; border-collapse: collapse; }
       table.lb td { padding: .4rem .55rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
       table.lb tr:last-child td { border-bottom: none; }
@@ -1166,6 +1183,9 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
           root.setAttribute("data-theme", next);
           localStorage.setItem(KEY, next);
+          // Scatter marks bake per-theme fills (near-black lifts on the dark
+          // surface), so redraw it when the theme flips (T64).
+          if (catalog && !document.getElementById("decide").hidden) renderFrontier();
         };
       })();
 
@@ -1198,15 +1218,61 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         openai:"OpenAI", anthropic:"Anthropic", gemini:"Google Gemini", "gemini-openai":"Gemini (OpenAI-compatible)",
         ollama:"Ollama", "openai-compatible":"OpenAI-compatible", bedrock:"Amazon Bedrock", cohere:"Cohere",
         mistral:"Mistral", voyage:"Voyage AI", "vertex-ai":"Google Vertex AI",
+        azure:"Azure OpenAI", cerebras:"Cerebras", deepseek:"DeepSeek", fireworks:"Fireworks AI",
+        groq:"Groq", minimax:"MiniMax", openrouter:"OpenRouter", qwen:"Qwen", together:"Together AI",
+        vercel:"Vercel", xai:"xAI", zai:"Z.ai",
       };
-      const VENDOR_COLOR = {
-        openai:"#10a37f", anthropic:"#d97757", gemini:"#4285f4", "gemini-openai":"#4285f4",
-        ollama:"#0f172a", bedrock:"#ff9900", cohere:"#39594d", mistral:"#fa5111",
-        voyage:"#7c3aed", "vertex-ai":"#1a73e8",
+      // Per-vendor visual identity: a colour AND a shape (T64). Colour alone can't
+      // separate 22 vendors — several share a hue family (four Google/Azure blues,
+      // two Anthropic-warm oranges, several darks) — so identity is the composite
+      // colour×shape. Colours were solved (pipeline/../scratch, OKLab ΔE) so any two
+      // vendors sharing a shape are ≥19.8 ΔE apart; shape separates same-hue vendors.
+      // Brand colours kept where recognised; azure/vercel nod to brand.
+      const VENDOR_STYLE = {
+        openai:{c:"#10a37f",s:"circle"}, gemini:{c:"#4285f4",s:"circle"},
+        "gemini-openai":{c:"#4285f4",s:"square"}, "vertex-ai":{c:"#1a73e8",s:"triangle"},
+        bedrock:{c:"#ff9900",s:"square"}, mistral:{c:"#fa5111",s:"triangle"},
+        voyage:{c:"#7c3aed",s:"diamond"}, ollama:{c:"#0f172a",s:"circle"},
+        cohere:{c:"#39594d",s:"circle"}, anthropic:{c:"#d97757",s:"circle"},
+        azure:{c:"#0284c7",s:"diamond"}, vercel:{c:"#1e293b",s:"square"},
+        cerebras:{c:"#eab308",s:"triangle"}, zai:{c:"#dc2626",s:"square"},
+        fireworks:{c:"#78716c",s:"square"}, groq:{c:"#c026d3",s:"circle"},
+        minimax:{c:"#7c2d12",s:"triangle"}, xai:{c:"#db2777",s:"diamond"},
+        together:{c:"#84cc16",s:"square"}, qwen:{c:"#f59e0b",s:"diamond"},
+        deepseek:{c:"#a16207",s:"diamond"}, openrouter:{c:"#059669",s:"triangle"},
       };
+      const VENDOR_FALLBACK = { c:"#64748b", s:"circle" };
       const vendorLabel = (v) => VENDOR_LABEL[v] || v;
-      const vendorColor = (v) => VENDOR_COLOR[v] || "#ea580c";
+      const vendorColor = (v) => (VENDOR_STYLE[v] || VENDOR_FALLBACK).c;
+      const vendorShape = (v) => (VENDOR_STYLE[v] || VENDOR_FALLBACK).s;
       const initials = (v) => (VENDOR_LABEL[v] || v).replace(/[^A-Za-z ]/g, "").split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
+
+      /* ── Vendor marks: one shape primitive, reused by the scatter and the inline
+         glyphs (T64). shapeEl draws a shape centred at (cx,cy) sized so all four read
+         at a similar visual weight; vendorGlyph wraps one in a tiny standalone SVG. */
+      const _n = (x) => x.toFixed(1);
+      function shapeEl(shape, cx, cy, r, attrs = "", inner = "") {
+        let tag, geom;
+        if (shape === "square") { const s = r * 0.9; tag = "rect"; geom = `x="${_n(cx - s)}" y="${_n(cy - s)}" width="${_n(2 * s)}" height="${_n(2 * s)}" rx="1"`; }
+        else if (shape === "diamond") { const d = r * 1.28; tag = "polygon"; geom = `points="${_n(cx)},${_n(cy - d)} ${_n(cx + d)},${_n(cy)} ${_n(cx)},${_n(cy + d)} ${_n(cx - d)},${_n(cy)}"`; }
+        else if (shape === "triangle") { const R = r * 1.45, dx = 0.866 * R; tag = "polygon"; geom = `points="${_n(cx)},${_n(cy - R)} ${_n(cx + dx)},${_n(cy + R / 2)} ${_n(cx - dx)},${_n(cy + R / 2)}"`; }
+        else { tag = "circle"; geom = `cx="${_n(cx)}" cy="${_n(cy)}" r="${_n(r)}"`; }
+        return inner ? `<${tag} ${geom} ${attrs}>${inner}</${tag}>` : `<${tag} ${geom} ${attrs}/>`;
+      }
+      function vendorGlyph(v, px = 12) {
+        const st = VENDOR_STYLE[v] || VENDOR_FALLBACK;
+        return `<svg class="vglyph" width="${px}" height="${px}" viewBox="${-px / 2} ${-px / 2} ${px} ${px}" aria-hidden="true">`
+          + shapeEl(st.s, 0, 0, px * 0.4, `fill="${st.c}" stroke="var(--mark-edge)" stroke-width="1"`) + `</svg>`;
+      }
+      // Relative luminance + sRGB mix, used to keep a mark visible against the chart
+      // surface: lift near-black fills on the dark surface, darken near-white on light.
+      function _relLum(hex) { const [r, g, b] = [0, 2, 4].map((i) => { let c = parseInt(hex.slice(1 + i, 3 + i), 16) / 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; }
+      function _mix(hex, to, a) { const p = (i) => parseInt(hex.slice(1 + i, 3 + i), 16), q = (i) => parseInt(to.slice(1 + i, 3 + i), 16); return "#" + [0, 2, 4].map((i) => Math.round(p(i) * (1 - a) + q(i) * a).toString(16).padStart(2, "0")).join(""); }
+      function markFill(hex, dark) {
+        const L = _relLum(hex);
+        if (dark) return L >= 0.16 ? hex : _mix(hex, "#e6e6e6", Math.min(0.62, (0.16 - L) / 0.16 * 0.72));
+        return L <= 0.62 ? hex : _mix(hex, "#1a1a1a", Math.min(0.4, (L - 0.62) / 0.38 * 0.5));
+      }
       function fmtTokens(n) {
         if (!n) return "";
         if (n >= 1_000_000) { const m = n / 1_048_576; return (m >= 10 ? Math.round(m) : m.toFixed(m % 1 === 0 ? 0 : 1)) + "M"; }
@@ -1286,9 +1352,10 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         if (type === "kind") { bg = KIND_COLOR[value] || KIND_COLOR.UNKNOWN; label = KIND_LABEL[value] || value; ini = label.slice(0, 2); }
         else if (type === "tier") { bg = value === "Unpriced" ? "#64748b" : (TIER_BG[value] || "#64748b"); label = value; ini = value.slice(0, 1); }
         else { bg = vendorColor(value); ini = initials(value); label = vendorLabel(value); }
+        const glyph = type === "vendor" ? vendorGlyph(value, 13) : "";
         return `<div class="vendor-head" data-group="${value}">
           <span class="avatar" style="background:${bg}">${ini}</span>
-          <h3>${label}</h3>
+          <h3>${glyph ? glyph + " " : ""}${label}</h3>
           <span class="count">${count} model${count !== 1 ? "s" : ""}</span>
           <span class="chev">▾</span>
         </div>`;
@@ -1627,7 +1694,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         const chips = (xs) => xs.map((x) => `<span class="chip">${x}</span>`).join(" ");
         const kc = KIND_COLOR[m.kind] || KIND_COLOR.UNKNOWN;
         const cl = classify(m);
-        add("Vendor", `${vendorLabel(m.vendor)} <span class="lbl">${m.vendor}</span>`);
+        add("Vendor", `${vendorGlyph(m.vendor, 12)} ${vendorLabel(m.vendor)} <span class="lbl">${m.vendor}</span>`);
         add("Kind", `<span class="badge" style="--kc:${kc}">${KIND_LABEL[m.kind] || m.kind}</span>`);
         add("Use case", useCaseChips(cl.tags));
         if (cl.tier) add('Tier <span class="lbl">by list price</span>', `${tierBadge(cl.tier)} <span class="lbl">${TIER_HINT}</span>`);
@@ -1804,7 +1871,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         ul.innerHTML = palResults.map((e, i) => {
           let ic, cls, title, sub, bg = "";
           if (e.type === "model") { ic = "◈"; cls = "model"; title = e.label && e.label !== e.id ? e.label : e.id; sub = `<code>${e.id}</code> · ${vendorLabel(e.vendor)}`; }
-          else if (e.type === "vendor") { ic = initials(e.vendor); cls = "vendor"; title = vendorLabel(e.vendor); sub = "Vendor"; bg = ` style="background:${vendorColor(e.vendor)}"`; }
+          else if (e.type === "vendor") { ic = initials(e.vendor); cls = "vendor"; title = vendorLabel(e.vendor); sub = `${vendorGlyph(e.vendor, 10)} Vendor`; bg = ` style="background:${vendorColor(e.vendor)}"`; }
           else { ic = "⬡"; cls = "kind"; title = KIND_LABEL[e.kind] || e.kind; sub = "Kind filter"; }
           return `<li role="option" data-i="${i}" aria-selected="${i === 0}" class="pal-item${i === 0 ? " active" : ""}">
               <span class="pal-ic ${cls}"${bg}>${ic}</span>
@@ -1966,13 +2033,41 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         const frontPts = pts.filter((p) => front.has(p.key)).sort((a, b) => a.x - b.x);
         const frontLine = frontPts.length > 1
           ? `<polyline points="${frontPts.map((p) => xPix(p.x).toFixed(1) + "," + yPix(p.y).toFixed(1)).join(" ")}" fill="none" stroke="var(--brand)" stroke-width="1.5" stroke-dasharray="4 3" opacity=".7"/>` : "";
+        // Each model is drawn in its vendor's colour AND shape (T64) — the composite
+        // is what keeps 12 vendors apart where colour alone blurs. Frontier models
+        // keep their vendor identity but gain a brand ring + full size/opacity.
+        const dark = document.documentElement.getAttribute("data-theme") === "dark";
+        const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
         const dots = pts.map((p) => {
           const on = front.has(p.key);
-          return `<circle class="dot" data-key="${p.key}" cx="${xPix(p.x).toFixed(1)}" cy="${yPix(p.y).toFixed(1)}" r="${on ? 5 : 3.5}" style="fill:${on ? "var(--brand)" : vendorColor(p.vendor)};opacity:${on ? 1 : 0.5}"><title>${p.label} — $${p.x}/1M in · intelligence ${p.y}${on ? " · on the frontier" : ""}</title></circle>`;
+          const cx = xPix(p.x), cy = yPix(p.y), r = on ? 5.5 : 4;
+          const title = `<title>${esc(p.label)} — ${esc(vendorLabel(p.vendor))} · $${p.x}/1M in · intelligence ${p.y}${on ? " · on the frontier" : ""}</title>`;
+          const attrs = `class="dot mark${on ? " front" : ""}" data-key="${p.key}" data-vendor="${p.vendor}" style="fill:${markFill(vendorColor(p.vendor), dark)};opacity:${on ? 1 : 0.78};stroke:${on ? "var(--brand)" : "var(--mark-edge)"};stroke-width:${on ? 1.8 : 1}"`;
+          return shapeEl(vendorShape(p.vendor), cx, cy, r, attrs, title);
         }).join("");
         const labels = `<text class="c-l" x="${ML + plotW / 2}" y="${H - 14}" text-anchor="middle">Input price (US list, $/1M) — log scale</text>`
           + `<text class="c-l" x="13" y="${MT + plotH / 2}" text-anchor="middle" transform="rotate(-90 13 ${MT + plotH / 2})">Intelligence index (cited)</text>`;
-        host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Price versus cited intelligence scatter of chat models">${yAxis}${xAxis}${frontLine}${dots}${labels}</svg>`;
+        // Legend: only vendors present, most models first; each row is its glyph +
+        // label + count and highlights its own dots on hover. Plus the frontier key.
+        const counts = {};
+        pts.forEach((p) => { counts[p.vendor] = (counts[p.vendor] || 0) + 1; });
+        const legend = Object.keys(counts).sort((a, b) => counts[b] - counts[a] || vendorLabel(a).localeCompare(vendorLabel(b)))
+          .map((v) => `<li class="lg-item" data-vendor="${v}">${vendorGlyph(v)}${vendorLabel(v)} <b>${counts[v]}</b></li>`).join("");
+        host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Price versus cited intelligence scatter of chat models, coloured and shaped by vendor">${yAxis}${xAxis}${frontLine}${dots}${labels}</svg>`
+          + `<ul class="chart-legend">${legend}<li class="lg-item lg-front"><span class="lg-ring"></span>On the frontier</li></ul>`;
+        // Hover a legend vendor → spotlight its dots (dim the rest).
+        const svg = host.querySelector("svg"), legendEl = host.querySelector(".chart-legend");
+        legendEl.querySelectorAll(".lg-item[data-vendor]").forEach((item) => {
+          const v = item.dataset.vendor;
+          const spotlight = (on) => {
+            svg.classList.toggle("dim-others", on);
+            legendEl.classList.toggle("has-hover", on);
+            item.classList.toggle("active", on);
+            svg.querySelectorAll(".mark").forEach((m) => m.classList.toggle("on", on && m.dataset.vendor === v));
+          };
+          item.addEventListener("mouseenter", () => spotlight(true));
+          item.addEventListener("mouseleave", () => spotlight(false));
+        });
         return true;
       }
 
@@ -1990,7 +2085,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         if (!data || !Array.isArray(data.leaderboards) || !data.leaderboards.length) return false;
         document.getElementById("leaderboards").innerHTML = data.leaderboards.map((b) => {
           const rows = b.entries.map((e, i) =>
-            `<tr data-key="${e.vendor}/${e.id}"><td class="lb-rank">${i + 1}</td><td><span class="mid">${e.id}</span><div class="lbl">${vendorLabel(e.vendor)}</div></td><td class="col-num"><span class="chip num">${lbValue(b, e.value)}</span></td></tr>`).join("");
+            `<tr data-key="${e.vendor}/${e.id}"><td class="lb-rank">${i + 1}</td><td><span class="mid">${e.id}</span><div class="lbl">${vendorGlyph(e.vendor, 11)} ${vendorLabel(e.vendor)}</div></td><td class="col-num"><span class="chip num">${lbValue(b, e.value)}</span></td></tr>`).join("");
           return `<div class="feat chart-card"><h3>${b.label} <span class="lbl">${b.population}/${b.total}</span></h3>
             <div class="table-scroll"><table class="lb"><tbody>${rows}</tbody></table></div>
             <p class="chart-note">${b.unit} · ${b.order === "asc" ? "lower is better" : "higher is better"} — indicative/cited, verify at the source</p></div>`;

@@ -1,7 +1,7 @@
-# Last task number — `T63` · next block letter — `N`
+# Last task number — `T64` · next block letter — `N`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T63`; after assigning it, bump the number above and the log line below.
+> `T65`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T64 SHIPPED** (Block L §L9 — vendor colour+shape visual identity: replaced brand-only VENDOR_COLOR (9/12 charted vendors fell back to one shared orange) with VENDOR_STYLE giving all 22 vendors a colour AND a shape [circle/square/triangle/diamond]; identity is the composite so hue-family clashes [4 Google/Azure blues, darks] separate by shape while same-shape pairs are ≥19.8 OKLab ΔE apart [4-coloured the too-close conflict graph, verified offline; brand kept where recognised, azure/vercel nodded]. Scatter (T54) draws per-vendor shapes, frontier stays own-colour under a brand ring [not recoloured], markFill lifts near-black on dark + theme-aware edge stroke, new legend [vendors present, counts, on-frontier key] spotlights a vendor's dots on hover, re-renders on theme toggle; shape glyph travels site-wide [browse headers/drawer/leaderboards/⌘K] + 12 vendors gained VENDOR_LABELs; page-only zero-dep, 34 tests green) — 2026-07-22.
 - **T63 SHIPPED** (Block J §J1 — deterministic AA slug↔id auto-matcher extending the T45 live source: unmapped AA slugs auto-resolve against committed catalog ids via exact→date-stripped→order-independent-token canonical forms, unique-only [never fuzzy], so reordered/separator/dated names match without a hand-written map entry while ambiguous/unknown still drop; curated map still overrides + `null`/`{skip:true}` blocks; normalize() stays pure over raw [catalogIds attached in fetch], exports buildMatchIndex/resolveTarget; 2 tests [34 green]; map _comment + pipeline.md updated) — 2026-07-22.
 
 - **T59-T62 CREATED** (📋/💭, Block M §M — Conversational catalog: make the reference askable with cited answers via a separate vectorless-RAG backend (Turing's grounded catalog copilot `POST /api/sn/{site}/copilot` on turing-demo.viglet.org) — site stays static+zero-dep, no LLM here. Emit `query-manifest.json` (per-field type/facet/enum/range descriptor over catalog.ndjson — the field-schema + NL→filter contract for the external RAG) (T59); emit `context.txt` (token-budgeted ≤~40k one-line-per-model digest for stuff-all/GEO, complements llms.txt) (T60); optional "Ask the catalog" widget POSTing to a configurable endpoint + rendering cited model deep-links, hidden when unconfigured (T61); 💭 qa-eval.jsonl grounded-answer eval set + example prompts (T62). Pairs with Turing Block BF; all additive, zero-dep, provenance-first [answers cite ids, never invented]) — 2026-07-22.
