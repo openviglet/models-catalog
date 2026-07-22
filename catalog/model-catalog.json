@@ -34,8 +34,30 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 59.9,
+          "scores": {
+            "coding": {
+              "value": 76.5
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 69.473,
+          "latencyTtftSec": 58.275,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "anthropic-api",
+          "artificial-analysis",
+          "committed",
           "litellm"
         ],
         "lastVerified": "2026-07-22"
@@ -69,8 +91,30 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 23.7,
+          "scores": {
+            "math": {
+              "value": 39
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 110.416,
+          "latencyTtftSec": 0.788,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "anthropic-api",
+          "artificial-analysis",
+          "committed",
           "litellm"
         ],
         "lastVerified": "2026-07-22"
@@ -197,8 +241,30 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 34.7,
+          "scores": {
+            "math": {
+              "value": 62.7
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 67.692,
+          "latencyTtftSec": 1.324,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "anthropic-api",
+          "artificial-analysis",
+          "committed",
           "litellm"
         ],
         "lastVerified": "2026-07-22"
@@ -232,8 +298,25 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 37.8,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 56.657,
+          "latencyTtftSec": 2.197,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "anthropic-api",
+          "artificial-analysis",
+          "committed",
           "litellm"
         ],
         "lastVerified": "2026-07-22"
@@ -267,8 +350,30 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 53.5,
+          "scores": {
+            "coding": {
+              "value": 73.6
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 61.056,
+          "latencyTtftSec": 23.5,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "anthropic-api",
+          "artificial-analysis",
+          "committed",
           "litellm"
         ],
         "lastVerified": "2026-07-22"
@@ -302,8 +407,30 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 55.7,
+          "scores": {
+            "coding": {
+              "value": 74.3
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 64.336,
+          "latencyTtftSec": 37.626,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "anthropic-api",
+          "artificial-analysis",
+          "committed",
           "litellm"
         ],
         "lastVerified": "2026-07-22"
@@ -443,8 +570,25 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 35.9,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 59.908,
+          "latencyTtftSec": 1.102,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "anthropic-api",
+          "artificial-analysis",
+          "committed",
           "litellm"
         ],
         "lastVerified": "2026-07-22"
@@ -478,8 +622,30 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 53.4,
+          "scores": {
+            "coding": {
+              "value": 71.5
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 87.842,
+          "latencyTtftSec": 90.434,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
           "anthropic-api",
+          "artificial-analysis",
+          "committed",
           "litellm"
         ],
         "lastVerified": "2026-07-22"
@@ -2020,7 +2186,31 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 14.9,
+          "scores": {
+            "coding": {
+              "value": 20.7
+            },
+            "math": {
+              "value": 89.3
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 243.28,
+          "latencyTtftSec": 0.405,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "overrides"
@@ -2089,7 +2279,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 28.3,
+          "scores": {
+            "math": {
+              "value": 78.3
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 96.733,
+          "latencyTtftSec": 1.169,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "overrides"
@@ -2123,7 +2334,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 44.4,
+          "scores": {
+            "coding": {
+              "value": 58.6
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 100.356,
+          "latencyTtftSec": 1.357,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "overrides"
@@ -2423,7 +2655,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 3.6,
+          "scores": {
+            "coding": {
+              "value": 10.7
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 151.701,
+          "latencyTtftSec": 0.85,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -2815,7 +3068,31 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 14.8,
+          "scores": {
+            "coding": {
+              "value": 20.2
+            },
+            "math": {
+              "value": 46.3
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 77.551,
+          "latencyTtftSec": 0.58,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -2889,7 +3166,31 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 9.6,
+          "scores": {
+            "coding": {
+              "value": 11.1
+            },
+            "math": {
+              "value": 24
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 168.005,
+          "latencyTtftSec": 0.412,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -3924,7 +4225,31 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 36.9,
+          "scores": {
+            "coding": {
+              "value": 49.4
+            },
+            "math": {
+              "value": 94
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 118.622,
+          "latencyTtftSec": 39.497,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4039,7 +4364,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 34.7,
+          "scores": {
+            "math": {
+              "value": 95.7
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 228.409,
+          "latencyTtftSec": 7.034,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4115,7 +4461,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 30.6,
+          "scores": {
+            "math": {
+              "value": 91.7
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 210.408,
+          "latencyTtftSec": 5.507,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4154,7 +4521,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 42.2,
+          "scores": {
+            "math": {
+              "value": 99
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 85.379,
+          "latencyTtftSec": 104.091,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4269,7 +4657,23 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 40.1,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 162.362,
+          "latencyTtftSec": 2.744,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4421,7 +4825,23 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 44.3,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 115.634,
+          "latencyTtftSec": 41.56,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4459,7 +4879,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 51.4,
+          "scores": {
+            "coding": {
+              "value": 71.1
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 152.148,
+          "latencyTtftSec": 121.156,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4535,7 +4976,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 40,
+          "scores": {
+            "coding": {
+              "value": 56.1
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 182.435,
+          "latencyTtftSec": 8.23,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4611,7 +5073,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 38.2,
+          "scores": {
+            "coding": {
+              "value": 56.1
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 156.571,
+          "latencyTtftSec": 3.62,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4763,7 +5246,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 54.8,
+          "scores": {
+            "coding": {
+              "value": 74.9
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 92.434,
+          "latencyTtftSec": 35.934,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4915,7 +5419,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 51.2,
+          "scores": {
+            "coding": {
+              "value": 71.4
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 201.659,
+          "latencyTtftSec": 91.629,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4953,7 +5478,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 58.9,
+          "scores": {
+            "coding": {
+              "value": 77.4
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 65.818,
+          "latencyTtftSec": 87.94,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -4991,7 +5537,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 55,
+          "scores": {
+            "coding": {
+              "value": 76.7
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 137.56,
+          "latencyTtftSec": 100.446,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "openai-api"
@@ -6892,7 +7459,15 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 3.9,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "overrides"
@@ -7014,7 +7589,23 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 3.5,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 44.571,
+          "latencyTtftSec": 0.614,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "overrides"
         ],
@@ -7278,7 +7869,23 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 14.2,
+          "scores": {
+            "coding": {
+              "value": 23
+            },
+            "math": {
+              "value": 26
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "overrides"
@@ -7458,7 +8065,20 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 7.7,
+          "scores": {
+            "math": {
+              "value": 7
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "overrides"
@@ -7522,7 +8142,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 7.7,
+          "scores": {
+            "math": {
+              "value": 13
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 59.799,
+          "latencyTtftSec": 0.41,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "overrides"
@@ -8189,7 +8830,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 16.5,
+          "scores": {
+            "math": {
+              "value": 80.7
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 78.49,
+          "latencyTtftSec": 1.394,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "overrides"
@@ -8222,7 +8884,28 @@
           "source": "litellm",
           "lastVerified": "2026-07-22"
         },
+        "benchmarks": {
+          "intelligenceIndex": 23,
+          "scores": {
+            "math": {
+              "value": 44.3
+            }
+          },
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
+        "performance": {
+          "throughputTps": 69.954,
+          "latencyTtftSec": 0.893,
+          "indicative": true,
+          "note": "Cited third-party benchmark — verify at the source.",
+          "source": "Artificial Analysis",
+          "lastVerified": "2026-07-22"
+        },
         "sources": [
+          "artificial-analysis",
           "committed",
           "litellm",
           "overrides"
