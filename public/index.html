@@ -1519,7 +1519,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
               : `<span class="mono">${price}</span><span class="lbl">/mo</span>`;
             const annual = p.annualMonthlyUSD != null ? ` <span class="lbl">($${p.annualMonthlyUSD}/mo billed annually)</span>` : "";
             const feats = (p.features || []).length ? `<div class="lbl" style="margin-top:.3rem">${p.features.join(" · ")}</div>` : "";
-            const prov = `${p.url || p.source ? `<a href="${p.url || p.source}" target="_blank" rel="noopener">source ↗</a> ` : ""}<span class="lbl">${p.lastVerified || ""}</span>`;
+            const prov = `${p.url || p.source ? `<a href="${p.url || p.source}" target="_blank" rel="noopener" style="white-space:nowrap">source ↗</a> ` : ""}<span class="lbl" style="white-space:nowrap">${p.lastVerified || ""}</span>`;
             return `<tr>
               <td><strong>${p.name}</strong>${p.tier ? ` <span class="chip">${p.tier}</span>` : ""}${feats}</td>
               <td>${priceStr}${annual}</td>
