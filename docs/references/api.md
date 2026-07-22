@@ -38,6 +38,7 @@ capability* — **not pricing** (see [STRATEGY.md](../STRATEGY.md) §I).
 | `…/by-modality/<m>.json` | **Faceted slice** — filtered to one modality present on **input or output** (e.g. `by-modality/image.json`). Same envelope, plus a `modality` field. |
 | `…/aliases.json` | **Alias resolution map** — `alias id → { vendor, id }` of the canonical entry, so a consumer can resolve a `-latest`/dated-snapshot alias without scanning every entry. Its own envelope. |
 | `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `stats`, `changes`, `feed`, `csv`, `ndjson`, `aliases`, `schema`, and the available `byKind` / `byVendor` / `byCapability` / `byModality` slice keys. Read this to discover the surface rather than hard-coding paths. |
+| `…/badge.json` | **Status badge** — a [shields.io endpoint](https://shields.io/badges/endpoint-badge) payload (`{ schemaVersion, label, message, color }`) so a README can show a live "N models · M vendors" badge. |
 | `…/llms.txt` | **`llms.txt` index** — the [llms.txt](https://llmstxt.org) convention: a titled, linked map of the catalog data + every vendor / model page, for assistants and crawlers. |
 | `…/models/` | **Per-vendor / per-model pages** — an indexable, quotable URL per model (`models/<vendor>/<slug>.md` + `.html`) and per vendor (`models/<vendor>/`), with the facts in prose. |
 | `…/catalog.schema.json` | The JSON Schema (Draft 2020-12) describing the envelope + entry. |
@@ -182,6 +183,20 @@ curl -s https://openviglet.github.io/model-catalog/catalog.csv \
 # stream every embedding model's id + dimensions
 curl -s https://openviglet.github.io/model-catalog/catalog.ndjson \
   | jq -c 'select(.kind=="EMBEDDING") | {id, embeddingDimensions}'
+```
+
+## Status badge (`badge.json`)
+
+`badge.json` is a [shields.io endpoint](https://shields.io/badges/endpoint-badge) payload,
+so any README can render a live badge that always reflects the current totals (read from
+the same numbers as `stats.json`, computed at emit):
+
+```markdown
+![Model Catalog](https://img.shields.io/endpoint?url=https://openviglet.github.io/model-catalog/badge.json)
+```
+
+```jsonc
+{ "schemaVersion": 1, "label": "Model Catalog", "message": "194 models · 14 vendors", "color": "ea580c", "cacheSeconds": 3600 }
 ```
 
 ## Citability pages (`llms.txt` + `models/`)

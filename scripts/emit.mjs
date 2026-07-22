@@ -173,6 +173,7 @@ const endpoints = {
   csv: `${SOURCE_URL}/catalog.csv`,
   ndjson: `${SOURCE_URL}/catalog.ndjson`,
   aliases: `${SOURCE_URL}/aliases.json`,
+  badge: `${SOURCE_URL}/badge.json`,
   llms: `${SOURCE_URL}/llms.txt`,
   pages: `${SOURCE_URL}/models/`,
   schema: `${SOURCE_URL}/catalog.schema.json`,
@@ -225,6 +226,19 @@ const stats = {
       lastVerified: filled((e) => e.lastVerified != null),
     },
   },
+};
+
+// Embeddable status badge (T27): a shields.io endpoint-shaped `badge.json`
+// (`{ schemaVersion, label, message, color }`) so any README can render a live
+// "Model Catalog · N models · M vendors" badge via
+// https://img.shields.io/endpoint?url=<source>/badge.json. Reads the same totals
+// as stats.json, computed at emit, so the number is never stale.
+const badge = {
+  schemaVersion: 1,
+  label: "Model Catalog",
+  message: `${stats.totals.models} models · ${stats.totals.vendors} vendors`,
+  color: "ea580c", // Viglet brand orange
+  cacheSeconds: 3600,
 };
 
 // ── Catalog change feed (T22) ─────────────────────────────────────────────
@@ -540,6 +554,7 @@ writeFileSync(resolve(OUT_DIR, `catalog-v${root.version}.json`), json, "utf8"); 
 writeFileSync(resolve(OUT_DIR, "catalog.schema.json"), readFileSync(SCHEMA_SRC, "utf8"), "utf8");
 write("index.json", index); // compact
 write("stats.json", stats); // aggregate metrics (T24)
+write("badge.json", badge); // shields.io endpoint badge (T27)
 write("changes.json", changes); // change feed (T22)
 writeFileSync(resolve(OUT_DIR, "feed.xml"), feedXml, "utf8"); // Atom feed (T22)
 writeFileSync(resolve(OUT_DIR, "catalog.csv"), catalogCsv, "utf8"); // flat export (T23)
@@ -564,6 +579,7 @@ console.log(
     `(${Object.keys(vendors).length} vendors, ${count} models) to ${OUT_DIR}`,
 );
 console.log(`emit-model-catalog: GEO pages — llms.txt + ${geoPages.length - 2} vendor/model pages under models/`);
+console.log(`emit-model-catalog: badge.json — "${badge.label}: ${badge.message}"`);
 console.log(
   `emit-model-catalog: change feed (baseline: ${changes.baseline}) — ` +
     `${added.length} added, ${removed.length} removed, ${changed.length} lifecycle`,

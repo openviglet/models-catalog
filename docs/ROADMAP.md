@@ -27,13 +27,11 @@
 > **Block C — Web experience & discoverability** shipped in full — permalinks + URL
 > state, detail drawer, comparison view, command palette, capability/modality filters +
 > sortable columns, and the insights dashboard (see [CHANGELOG.md](CHANGELOG.md) → Block C).
-
-## Block D — API surface expansion (new static artifacts)
-
-> More ways to consume the same canonical file, all emitted deterministically at publish
-> time — no server, no query runtime, no new dependency. Design rationale → §D.
-
-- **T27** 💭 **Embeddable status badge** — a shields.io-endpoint-compatible `badge.json` (`{schemaVersion,label,message}`) so any README can show a live "Model Catalog · 194 models · 14 vendors" badge; cheap, high-visibility adoption driver. deps: T24 → §D6
+>
+> **Block D — API surface expansion** shipped in full — the change feed (changes.json +
+> Atom feed.xml), CSV/NDJSON exports, stats.json, capability/modality slices + aliases.json,
+> the GEO/citability layer (llms.txt + per-vendor/model pages) and the embeddable badge
+> (see [CHANGELOG.md](CHANGELOG.md) → Block D).
 
 ## Block E — Community & contribution
 

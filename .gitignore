@@ -14,6 +14,7 @@ public/feed.xml
 public/catalog.csv
 public/catalog.ndjson
 public/aliases.json
+public/badge.json
 public/llms.txt
 public/by-kind/
 public/by-vendor/

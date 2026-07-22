@@ -705,6 +705,7 @@
                 <tr><td><code>by-capability/&lt;cap&gt;.json</code></td><td>Filtered to one capability — e.g. <a href="./by-capability/reasoning.json"><code>reasoning</code></a>, <a href="./by-capability/vision.json"><code>vision</code></a>.</td></tr>
                 <tr><td><code>by-modality/&lt;m&gt;.json</code></td><td>Filtered to one input/output modality — e.g. <a href="./by-modality/image.json"><code>image</code></a>, <a href="./by-modality/audio.json"><code>audio</code></a>.</td></tr>
                 <tr><td><a href="./aliases.json"><code>aliases.json</code></a></td><td>Alias resolution map — <code>alias id → { vendor, id }</code> of the canonical entry. Resolve <code>-latest</code> / dated snapshots without walking the catalog.</td></tr>
+                <tr><td><a href="./badge.json"><code>badge.json</code></a></td><td>Status badge — a shields.io endpoint payload for a live "N models · M vendors" README badge.</td></tr>
                 <tr><td><a href="./llms.txt"><code>llms.txt</code></a> · <a href="./models/"><code>models/…</code></a></td><td>Citability layer — an <code>llms.txt</code> index plus an indexable, quotable page (Markdown + HTML) per vendor and per model, for assistants and search engines.</td></tr>
                 <tr><td><a href="./endpoints.json"><code>endpoints.json</code></a></td><td>Discovery manifest — absolute URLs for every path, plus the available <code>byKind</code>/<code>byVendor</code> keys. Read this instead of hard-coding paths.</td></tr>
                 <tr><td><a href="./catalog.schema.json"><code>catalog.schema.json</code></a></td><td>JSON Schema (Draft 2020-12) describing the envelope + entry.</td></tr>
@@ -724,6 +725,18 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">by-kind/EMBE
 
 <span class="cm"># discover the whole surface</span>
 curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.json</span> | jq</code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>Embed a live badge</h3>
+            <p class="meta" style="margin-bottom:.9rem">A <a href="https://shields.io/badges/endpoint-badge" target="_blank" rel="noopener">shields.io endpoint</a> that always reflects the current totals. Drop it in any README:</p>
+            <p style="margin:0 0 .9rem"><img src="https://img.shields.io/endpoint?url=https://openviglet.github.io/model-catalog/badge.json" alt="Model Catalog — live model and vendor count" /></p>
+            <div class="codeblock">
+              <button class="copy" data-copy>Copy</button>
+              <pre><code><span class="cm">&lt;!-- Markdown --&gt;</span>
+![Model Catalog](https://img.shields.io/endpoint?url=<span class="tk">https://openviglet.github.io/model-catalog/badge.json</span>)</code></pre>
             </div>
           </div>
         </div>

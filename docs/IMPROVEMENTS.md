@@ -10,18 +10,6 @@
 > artifacts are *derived* from the canonical file at emit time, exactly like today's
 > `index.json` / faceted slices, so they can never drift from the source of truth.
 
-## §D — API surface expansion
-
-The canonical file is the single source of truth; the published surface is whatever we
-can *derive* from it deterministically at emit time. Everything here is another such
-derivation — same guarantee as `index.json` and the faceted slices, no new moving parts.
-
-### §D6 — T27 · Embeddable status badge
-A `badge.json` in the shields.io endpoint shape (`{schemaVersion,label,message,color}`)
-lets any project drop a live "Model Catalog · N models · M vendors" badge into its
-README — a low-cost, high-visibility distribution loop. Reads its numbers from
-`stats.json` (T24).
-
 ## §E — Community & contribution
 
 Adoption isn't just consumption; a reference the community *owns* is one it can correct
