@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T18 SHIPPED** (Block C §C3 — comparison view: pin 2–4 via row ⇄ / drawer action into a bottom tray, side-by-side attributes×models modal, shareable `#compare=v/id,v/id` deep link through the T16 router, per-column remove + Esc/backdrop close) — 2026-07-22.
 - **T17 SHIPPED** (Block C §C2 — model detail drawer: click row / permalink opens right-side panel with full record + input/output modalities + conditional status/cutoff/release/aliases, provenance foregrounded, copy-id + copy-as-JSON; wired through the T16 hash router, ✕/Esc/backdrop close) — 2026-07-22.
 - **T16 SHIPPED** (Block C §C1 — URL-addressable explorer state: hash sync of search+kind via replaceState + citable model permalinks `#vendor/id` with hover-copy, hashchange router, scroll+flash on deep link) — 2026-07-22.
 - **T29 CREATED** (💭, Block E §E2 — coverage & gaps transparency: coverage.json + site section; deps T24) — 2026-07-22.

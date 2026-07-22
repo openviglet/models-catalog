@@ -18,12 +18,6 @@ filtering. For a *reference*, shareability and depth are the whole point — you
 reference by linking to it. This block makes the page linkable, deep, and pleasant to
 explore, without adding a single dependency.
 
-### §C3 — T18 · Model comparison view
-"Which of these should I use" is the question a model catalog should answer. Let the user
-pin 2–4 models and render them in a side-by-side column layout (context/output windows,
-modalities, capabilities, lifecycle, cutoff). Comparison is what turns a lookup table
-into a decision tool, and it reuses the full-record rendering from T17.
-
 ### §C4 — T19 · Command palette (⌘K / Ctrl-K)
 A fuzzy quick-switcher over models/vendors/kinds — the keyboard-first affordance
 developer tools are now expected to have. Selecting an entry navigates to its permalink

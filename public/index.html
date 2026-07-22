@@ -427,6 +427,78 @@
         color: var(--brand-ink); font-family: var(--brand-font); }
       .prov .src { display: inline-block; margin: 0 .3rem .3rem 0; padding: .12rem .5rem; border-radius: .4rem;
         font-size: .74rem; font-weight: 600; background: var(--card); border: 1px solid var(--border-strong); }
+
+      /* ── Compare: pin · tray · modal (T18) ───────────── */
+      .pin {
+        opacity: 0; flex: none; width: 1.55rem; height: 1.55rem; border-radius: .4rem; cursor: pointer;
+        border: 1px solid var(--border-strong); background: var(--card); color: var(--muted);
+        font-size: .82rem; line-height: 1; display: grid; place-items: center;
+        transition: opacity .12s, color .12s, background .12s, border-color .12s;
+      }
+      tbody tr:hover .pin, .pin[aria-pressed="true"], .pin:focus-visible { opacity: 1; }
+      .pin:hover { border-color: var(--brand); color: var(--brand-3); }
+      .pin[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+      [data-theme="dark"] .pin[aria-pressed="true"] { color: #1a0e05; }
+
+      #compare-tray {
+        position: fixed; left: 50%; bottom: 1.2rem; transform: translateX(-50%) translateY(2rem);
+        display: flex; align-items: center; gap: .7rem; max-width: min(54rem, 94vw);
+        background: var(--card); border: 1px solid var(--border-strong); border-radius: .9rem;
+        box-shadow: var(--shadow-hover); padding: .6rem .7rem .6rem 1rem; z-index: 80;
+        opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+      }
+      #compare-tray.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+      #tray-go { padding: .5rem .95rem; font-size: .85rem; }
+      #tray-go:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+      #compare-tray .tray-label { font-size: .8rem; color: var(--muted); font-weight: 700; white-space: nowrap; }
+      #compare-tray .tray-chips { display: flex; gap: .4rem; flex-wrap: wrap; min-width: 0; }
+      .tchip {
+        display: inline-flex; align-items: center; gap: .3rem; font-size: .78rem; font-weight: 600;
+        padding: .2rem .3rem .2rem .55rem; border-radius: .5rem; background: var(--bg-alt); border: 1px solid var(--border);
+        max-width: 12rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+      .tchip button { border: none; background: none; cursor: pointer; color: var(--muted); font-size: .82rem; line-height: 1; padding: 0 .1rem; }
+      .tchip button:hover { color: var(--brand-3); }
+
+      #cbackdrop {
+        position: fixed; inset: 0; background: rgba(0,0,0,.42); -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 110;
+      }
+      #cbackdrop.show { opacity: 1; pointer-events: auto; }
+      #compare-modal {
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -48%) scale(.98);
+        width: min(66rem, 94vw); max-height: 86vh; overflow: auto; z-index: 120;
+        background: var(--card); border: 1px solid var(--border-strong); border-radius: 1rem;
+        box-shadow: var(--shadow-hover); opacity: 0; pointer-events: none;
+        transition: opacity .2s ease, transform .2s ease;
+      }
+      #compare-modal.show { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+      @media (prefers-reduced-motion: reduce) { #compare-modal { transition: opacity .2s ease; } }
+      .cmp-head {
+        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+        padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--border);
+        position: sticky; top: 0; background: var(--card); z-index: 3;
+      }
+      .cmp-head h3 { margin: 0; font-size: 1.1rem; }
+      table.cmp { width: 100%; border-collapse: collapse; }
+      table.cmp th, table.cmp td {
+        padding: .7rem .9rem; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border);
+        text-align: left; vertical-align: top; font-size: .88rem;
+      }
+      table.cmp th:first-child, table.cmp td:first-child { border-left: none; }
+      table.cmp thead th {
+        position: sticky; top: 3.6rem; background: var(--bg-alt); z-index: 2; vertical-align: bottom;
+      }
+      table.cmp th[scope="row"] {
+        color: var(--muted); font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+        white-space: nowrap; width: 1%; background: var(--bg-alt);
+      }
+      .cmp-model { display: flex; align-items: center; gap: .5rem; }
+      .cmp-model .avatar { width: 1.75rem; height: 1.75rem; border-radius: .45rem; font-size: .7rem; }
+      .cmp-model .nm { font-weight: 700; font-size: .9rem; display: block; }
+      .cmp-model code { display: block; font-family: var(--mono); font-size: .72rem; color: var(--muted); word-break: break-all; }
+      .cmp-remove { border: none; background: none; cursor: pointer; color: var(--muted); font-size: .9rem; margin-left: auto; padding: 0 .2rem; }
+      .cmp-remove:hover { color: var(--brand-3); }
     </style>
   </head>
   <body>
@@ -683,6 +755,22 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
       <div class="drawer-body" id="drawer-body"></div>
     </aside>
 
+    <!-- ── Compare tray + modal (T18) ──────────────────── -->
+    <div id="compare-tray" aria-live="polite">
+      <span class="tray-label" id="tray-label">Compare</span>
+      <div class="tray-chips" id="tray-chips"></div>
+      <button type="button" class="btn btn-primary" id="tray-go">Compare</button>
+      <button type="button" class="mini-btn" id="tray-clear">Clear</button>
+    </div>
+    <div id="cbackdrop"></div>
+    <div id="compare-modal" role="dialog" aria-modal="true" aria-label="Model comparison">
+      <div class="cmp-head">
+        <h3>Compare models</h3>
+        <button type="button" class="drawer-close" id="cmp-close" aria-label="Close comparison" title="Close (Esc)">✕</button>
+      </div>
+      <div id="compare-body"></div>
+    </div>
+
     <script>
       /* ── Theme ─────────────────────────────────────── */
       (function () {
@@ -747,6 +835,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
       let byKey = new Map();               // "vendor/id" -> full model record (T17 drawer lookup)
       let drawerModel = null;              // record currently shown in the detail drawer
       const collapsed = new Set();
+      const pinned = new Set();            // "vendor/id" keys pinned for comparison (max 4) — T18
 
       function render() {
         const q = document.getElementById("q").value.trim().toLowerCase();
@@ -774,7 +863,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
             const key = vendor + "/" + m.id;
             return `<tr data-key="${key}">
               <td>
-                <div class="model-cell"><span class="mid">${m.id}</span><a class="permalink" href="#${encodeURI(key)}" title="Copy permalink" aria-label="Permalink to ${m.id}">#</a></div>
+                <div class="model-cell"><span class="mid">${m.id}</span><a class="permalink" href="#${encodeURI(key)}" title="Copy permalink" aria-label="Permalink to ${m.id}">#</a><button type="button" class="pin" data-pin aria-pressed="${pinned.has(key)}" title="Add to compare" aria-label="Add ${m.id} to compare">⇄</button></div>
                 ${m.label && m.label !== m.id ? `<div class="lbl">${m.label}</div>` : ""}
               </td>
               <td><span class="badge" style="--kc:${kc}">${KIND_LABEL[m.kind] || m.kind}</span></td>
@@ -816,8 +905,13 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
       // or a bare section anchor (#browse) / empty → baseline view + native scroll.
       function applyHash() {
         const rawEnc = location.hash.slice(1);
+        if (rawEnc.startsWith("compare=")) {   // shareable comparison #compare=v/id,v/id
+          if (!document.getElementById("list").children.length) { buildFilters(); render(); }
+          openCompare(rawEnc.slice(8).split(",").map((s) => decodeURIComponent(s)).filter(Boolean));
+          return;
+        }
         if (rawEnc.includes("=")) {
-          hideDrawer();
+          hideDrawer(); hideCompare();
           const p = new URLSearchParams(rawEnc);
           document.getElementById("q").value = p.get("q") || "";
           const kind = p.get("kind");
@@ -828,11 +922,12 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         const raw = decodeURIComponent(rawEnc);
         if (raw.includes("/")) {
           // model permalink → make sure the table exists to scroll to, then open the drawer
+          hideCompare();
           if (!document.getElementById("list").children.length) { buildFilters(); render(); }
           openModel(raw);
           return;
         }
-        hideDrawer();
+        hideDrawer(); hideCompare();
         document.getElementById("q").value = ""; activeKind = null;
         buildFilters(); render();
       }
@@ -898,13 +993,100 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
             <div style="margin-bottom:.5rem">${srcs || '<span class="lbl">—</span>'}</div>
             <div class="lbl">Last verified: ${m.lastVerified || "unknown"}</div>
           </div>`;
+        const cmpOn = pinned.has(m.vendor + "/" + m.id);
         return `<div class="drawer-actions">
             <button type="button" class="mini-btn" data-copy-id>⧉ Copy id</button>
             <button type="button" class="mini-btn" data-copy-json>{ } Copy JSON</button>
+            <button type="button" class="mini-btn" data-pin-drawer aria-pressed="${cmpOn}">${cmpOn ? "✓ Comparing" : "⇄ Compare"}</button>
           </div>
           <dl class="dl">${rows.join("")}</dl>
           ${caps}
           ${prov}`;
+      }
+
+      /* ── Compare (T18) ─────────────────────────────── */
+      function togglePin(key) {
+        if (pinned.has(key)) pinned.delete(key);
+        else if (pinned.size >= 4) { toast("Compare up to 4 models"); return; }
+        else pinned.add(key);
+        syncPinButtons(); updateTray();
+      }
+      function unpin(key) {
+        pinned.delete(key); syncPinButtons(); updateTray();
+        if (!document.getElementById("compare-modal").classList.contains("show")) return;
+        if (pinned.size >= 2) {
+          document.getElementById("compare-body").innerHTML = renderCompare([...pinned]);
+          history.replaceState(null, "", "#compare=" + [...pinned].map(encodeURIComponent).join(","));
+        } else {
+          closeCompareByUser();
+        }
+      }
+      function syncPinButtons() {
+        document.querySelectorAll("[data-pin]").forEach((b) => {
+          const tr = b.closest("tr[data-key]");
+          if (tr) b.setAttribute("aria-pressed", String(pinned.has(tr.dataset.key)));
+        });
+      }
+      function updateTray() {
+        const chips = document.getElementById("tray-chips");
+        chips.innerHTML = [...pinned].map((k) => {
+          const m = byKey.get(k);
+          const nm = m ? (m.label && m.label !== m.id ? m.label : m.id) : k;
+          return `<span class="tchip">${nm}<button type="button" data-unpin="${k}" aria-label="Remove from compare">✕</button></span>`;
+        }).join("");
+        document.getElementById("tray-label").textContent = `Compare (${pinned.size})`;
+        const go = document.getElementById("tray-go");
+        go.disabled = pinned.size < 2;
+        document.getElementById("compare-tray").classList.toggle("show", pinned.size > 0);
+      }
+      function openCompare(keys) {
+        const valid = keys.filter((k) => byKey.has(k)).slice(0, 4);
+        if (valid.length < 2) return;
+        pinned.clear(); valid.forEach((k) => pinned.add(k));
+        syncPinButtons(); updateTray(); hideDrawer();
+        document.getElementById("compare-body").innerHTML = renderCompare(valid);
+        document.getElementById("compare-modal").classList.add("show");
+        document.getElementById("cbackdrop").classList.add("show");
+      }
+      function hideCompare() {
+        document.getElementById("compare-modal").classList.remove("show");
+        document.getElementById("cbackdrop").classList.remove("show");
+      }
+      function closeCompareByUser() {
+        if (!document.getElementById("compare-modal").classList.contains("show")) return;
+        hideCompare(); writeCurrentState();
+      }
+      function renderCompare(keys) {
+        const models = keys.map((k) => ({ k, m: byKey.get(k) })).filter((x) => x.m);
+        const chips = (xs) => (xs || []).map((x) => `<span class="chip">${x}</span>`).join(" ");
+        const tokens = (n) => n ? `${fmtTokens(n)} <span class="lbl">${n.toLocaleString("en-US")}</span>` : "";
+        const spec = [
+          ["Vendor", ({ m }) => vendorLabel(m.vendor)],
+          ["Kind", ({ m }) => `<span class="badge" style="--kc:${KIND_COLOR[m.kind] || KIND_COLOR.UNKNOWN}">${KIND_LABEL[m.kind] || m.kind}</span>`],
+          ["Context window", ({ m }) => tokens(m.contextWindow)],
+          ["Max output", ({ m }) => tokens(m.maxOutputTokens)],
+          ["Embedding dims", ({ m }) => m.embeddingDimensions ? `<span class="mono">${m.embeddingDimensions}</span>` : ""],
+          ["Input", ({ m }) => chips(m.modalities && m.modalities.input)],
+          ["Output", ({ m }) => chips(m.modalities && m.modalities.output)],
+          ["Capabilities", ({ m }) => chips(m.capabilities)],
+          ["Status", ({ m }) => m.status || ""],
+          ["Knowledge cutoff", ({ m }) => m.knowledgeCutoff || ""],
+          ["Release date", ({ m }) => m.releaseDate || ""],
+          ["Sources", ({ m }) => chips(m.sources)],
+          ["Last verified", ({ m }) => m.lastVerified || ""],
+        ];
+        const head = `<tr><th scope="row"></th>${models.map(({ k, m }) => `
+            <th scope="col"><div class="cmp-model">
+              <span class="avatar" style="background:${vendorColor(m.vendor)}">${initials(m.vendor)}</span>
+              <span><span class="nm">${m.label && m.label !== m.id ? m.label : m.id}</span><code>${m.id}</code></span>
+              <button type="button" class="cmp-remove" data-unpin="${k}" aria-label="Remove from comparison">✕</button>
+            </div></th>`).join("")}</tr>`;
+        const body = spec.map(([label, get]) => {
+          const cells = models.map(get);
+          if (cells.every((c) => !c)) return "";   // hide a row no pinned model has
+          return `<tr><th scope="row">${label}</th>${cells.map((c) => `<td>${c || '<span class="lbl">—</span>'}</td>`).join("")}</tr>`;
+        }).join("");
+        return `<table class="cmp"><thead>${head}</thead><tbody>${body}</tbody></table>`;
       }
 
       function buildFilters() {
@@ -952,7 +1134,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           // Row click → navigate to the model permalink (hashchange opens the drawer).
           // Skip clicks on the permalink anchor (handled separately) and vendor headers.
           document.getElementById("list").addEventListener("click", (e) => {
-            if (e.target.closest(".permalink") || e.target.closest(".vendor-head")) return;
+            if (e.target.closest(".permalink") || e.target.closest("[data-pin]") || e.target.closest(".vendor-head")) return;
             const tr = e.target.closest("tr[data-key]");
             if (tr) location.hash = "#" + encodeURI(tr.dataset.key);
           });
@@ -1009,14 +1191,38 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
       /* ── Drawer close + copy actions (T17) ─────────── */
       document.getElementById("drawer-close").onclick = closeDrawerByUser;
       document.getElementById("dbackdrop").onclick = closeDrawerByUser;
-      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawerByUser(); });
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        closeCompareByUser(); closeDrawerByUser();
+      });
       document.addEventListener("click", (e) => {
-        if (!drawerModel) return;
-        if (e.target.closest("[data-copy-id]")) {
+        if (drawerModel && e.target.closest("[data-copy-id]")) {
           navigator.clipboard && navigator.clipboard.writeText(drawerModel.id).then(() => toast("Model id copied ✓"));
-        } else if (e.target.closest("[data-copy-json]")) {
+        } else if (drawerModel && e.target.closest("[data-copy-json]")) {
           navigator.clipboard && navigator.clipboard.writeText(JSON.stringify(drawerModel, null, 2)).then(() => toast("Model JSON copied ✓"));
+        } else if (drawerModel && e.target.closest("[data-pin-drawer]")) {
+          const key = drawerModel.vendor + "/" + drawerModel.id;
+          togglePin(key);
+          const b = e.target.closest("[data-pin-drawer]");
+          const on = pinned.has(key);
+          b.setAttribute("aria-pressed", String(on));
+          b.textContent = on ? "✓ Comparing" : "⇄ Compare";
         }
+      });
+
+      /* ── Compare wiring (T18) ──────────────────────── */
+      document.getElementById("cmp-close").onclick = closeCompareByUser;
+      document.getElementById("cbackdrop").onclick = closeCompareByUser;
+      document.getElementById("tray-clear").onclick = () => { pinned.clear(); syncPinButtons(); updateTray(); closeCompareByUser(); };
+      document.getElementById("tray-go").onclick = () => {
+        if (pinned.size >= 2) location.hash = "#compare=" + [...pinned].map(encodeURIComponent).join(",");
+      };
+      // Pin / unpin via delegation (row buttons + tray/modal ✕ chips).
+      document.addEventListener("click", (e) => {
+        const pinBtn = e.target.closest("[data-pin]");
+        if (pinBtn) { const tr = pinBtn.closest("tr[data-key]"); if (tr) togglePin(tr.dataset.key); return; }
+        const un = e.target.closest("[data-unpin]");
+        if (un) unpin(un.getAttribute("data-unpin"));
       });
     </script>
   </body>
