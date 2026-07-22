@@ -38,7 +38,7 @@ workflow).
 
 - **Zero dependencies.** Node built-ins + global `fetch` only; inline HTML/CSS/JS in the page. Nothing to `npm install`. Node ≥ 20. Keep it this way.
 - **Propose, never auto-overwrite.** The canonical file is written only on `npm run regen -- --apply`. A plain run is read-only (writes a proposed envelope + diff report to `pipeline/out/`). CI may open a PR but never merges — a bad upstream fetch must never silently publish.
-- **Non-pricing.** Identity + kind + capability only, never cost/price (STRATEGY §I). The LiteLLM adapter strips every `*cost*`/`*price*` key. Do not add pricing fields.
+- **Pricing = indicative US list only.** Per STRATEGY §I (reversed 2026-07-22, tracked as Block F), the catalog carries an *optional* per-token US **list** price — flagged **indicative, not authoritative** (a reference, verify with the vendor), sourced + `lastVerified`, never invented. Never per-contract/region/negotiated pricing; it is not a billing engine. Until Block F ships the field + adapter mapping, the LiteLLM adapter still strips `*cost*`/`*price*` keys.
 - **Additive schema, `version: 1`.** New `ModelEntry` fields are optional; consumers ignore unknowns. A breaking shape change bumps `version` and the pinned `catalog-vN.json` path.
 - **Provenance is first-class.** Regenerated entries carry `sources` + `lastVerified`. Prefer omitting a field over guessing it — wrong metadata poisons the reference.
 - **Merge safety rules** (see `pipeline/lib/merge.mjs`): carry-forward (committed catalog is a low-priority source, so a partial-key run never drops un-fetched vendors), positive-evidence removal (drop an id only when its vendor's live API ran and omitted it), and the anchoring rule (LiteLLM enriches but never introduces a brand-new id).

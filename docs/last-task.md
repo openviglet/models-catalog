@@ -1,4 +1,4 @@
-# Last task number — `T29` · next block letter — `F`
+# Last task number — `T34` · next block letter — `H`
 
 > **Single source of truth for the next free task number.** The next new task is
 > `T30`; after assigning it, bump the number above and the log line below.
@@ -18,6 +18,11 @@
 
 ## Log (most recent first)
 
+- **T34 CREATED** (📋, Block G §G1 — more static landing pages: per-capability/modality/kind pages + sitemap.xml/robots.txt via emit.mjs; Next.js rejected for zero-dep; deps — [T26 shipped]) — 2026-07-22.
+- **T33 CREATED** (💭, Block F §F4 — provider consumer plans dataset (Claude Pro/Max, ChatGPT, Gemini), US-only, separate from ModelEntry; scope open) — 2026-07-22.
+- **T32 CREATED** (📋, Block F §F3 — surface pricing across artifacts: drawer/compare/column, per-model pages, CSV/NDJSON, stats/coverage, api.md + SDK docs; deps T31) — 2026-07-22.
+- **T31 CREATED** (📋, Block F §F2 — pipeline pricing enrichment: LiteLLM adapter maps cost/price → pricing (per-token USD, provenance), overrides pin; deps T30) — 2026-07-22.
+- **T30 CREATED** (📋, Block F §F1 — pricing field + schema, STRATEGY §I reversal: optional pricing{inputPer1M,outputPer1M,USD,source,lastVerified,indicative}, additive, version 1) — 2026-07-22.
 - **T29 SHIPPED** (Block E §E2 — coverage & gaps transparency: emit.mjs writes coverage.json (per-vendor + overall per-field {filled,rate} via a shared COVERAGE_FIELDS predicate list, byVendor ranked by model count); advertised in endpoints.json/api.md/page; browsable page gained a Coverage & gaps heatmap section (vendor×field, brand-intensity cells, gap cells deep-link to the T28 propose form prefilled per vendor), hidden if coverage.json absent. **Block E now shipped in full — backlog clear.**) — 2026-07-22.
 - **T28 SHIPPED** (Block E §E1 — "propose a model" contribution flow: GitHub issue-form `propose-model.yml` (vendor/id/kind/context/sources + no-pricing gate) + `config.yml` contact links; root `CONTRIBUTING.md` mapping proposal → overrides.json → regen --apply → PR; site Contribute section + nav/footer links + per-model ✎ Correct drawer deep-link prefilling the form. **Block E now shipped — begins in CHANGELOG.**) — 2026-07-22.
 - **T27 SHIPPED** (Block D §D6 — embeddable status badge: emit.mjs writes badge.json in shields.io endpoint shape {schemaVersion,label,message:"N models · M vendors",color:ea580c,cacheSeconds} from stats totals; advertised endpoints.json badge + api.md + page "Embed a live badge" card w/ preview + Markdown snippet. **Block D now shipped in full.**) — 2026-07-22.
