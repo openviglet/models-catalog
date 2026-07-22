@@ -428,6 +428,39 @@ test("merge benchmarks source: enriches an existing id, drops one not in the cat
   assert.ok(skipped.some((s) => s.id === "not-in-catalog"), "a leaderboard model absent from the catalog is dropped, never introduced");
 });
 
+test("validateEnvelope: cited performance metrics — valid passes, bad ones flagged (Block I / T43)", () => {
+  assert.deepEqual(
+    validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { openai: [
+      { id: "a", label: "A", kind: "CHAT", performance: { throughputTps: 180, latencyTtftSec: 0.4, indicative: true, source: "Artificial Analysis", lastVerified: WHEN } },
+    ] } }),
+    [],
+    "cited throughput + latency with provenance is valid",
+  );
+  const errs = validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { openai: [
+    { id: "a", label: "A", kind: "CHAT", performance: { throughputTps: -1, indicative: false } },
+  ] } });
+  assert.ok(errs.some((e) => /performance.indicative must be true/.test(e)));
+  assert.ok(errs.some((e) => /performance missing string source/.test(e)));
+  assert.ok(errs.some((e) => /invalid performance.throughputTps/.test(e)));
+});
+
+test("benchmarks adapter: emits a performance object + benchmarks from one snapshot entry (Block I / T43)", () => {
+  const [d] = benchmarks.normalize({
+    source: "Artificial Analysis", lastVerified: "2026-07-22",
+    models: [{ vendor: "openai", id: "gpt-5", intelligenceIndex: 69, throughputTps: 180, latencyTtftSec: 0.4 }],
+  });
+  assert.equal(d.benchmarks.intelligenceIndex, 69);
+  assert.deepEqual(d.performance, {
+    throughputTps: 180, latencyTtftSec: 0.4, indicative: true,
+    note: "Cited third-party benchmark — verify at the source.",
+    source: "Artificial Analysis", lastVerified: "2026-07-22",
+  });
+  // a snapshot entry with ONLY speed still emits (performance without benchmarks).
+  const [p] = benchmarks.normalize({ source: "AA", lastVerified: WHEN, models: [{ vendor: "x", id: "fast", throughputTps: 500 }] });
+  assert.equal(p.benchmarks, undefined, "no capability numbers → no benchmarks object");
+  assert.equal(p.performance.throughputTps, 500);
+});
+
 test("diffReport: counts add/remove/change", () => {
   const existing = { vendors: { openai: [{ id: "old", label: "Old", kind: "CHAT" }, { id: "chg", label: "Chg", kind: "CHAT" }] } };
   const proposed = { vendors: { openai: [{ id: "chg", label: "Chg", kind: "CHAT", contextWindow: 100, sources: ["litellm"] }, { id: "new", label: "New", kind: "CHAT", sources: ["openai-api"] }] } };

@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T43 SHIPPED** (Block I §I6 — speed & cost-efficiency axis: cited `performance` object {throughputTps?, latencyTtftSec?, indicative, source, lastVerified}; shared citedCoreErrors() validator + OBJECT_FIELDS merge loop; adapter emits performance from snapshot; emit coverage/CSV/facts; page Speed row + DERIVED cost-per-capability (index÷price); 2 tests) — 2026-07-22.
 - **T42 SHIPPED** (Block I §I5 — per-domain cited scores: benchmarks.scores map {domain:{value,source?,lastVerified?}} recommended reasoning/coding/math; schema/validate/adapter(scoresFrom)/emit(line+3 CSV cols)/page cell; merge unchanged (atomic object); 2 tests) — 2026-07-22.
 - **T41 SHIPPED** (Block I §I4 — benchmark SourceAdapter adapters/benchmarks.mjs reading curated pipeline/benchmarks.json snapshot → provenance-stamped benchmarks drafts; non-anchoring/fail-safe (drops uncatalogued ids), merge priority 25 (above committed for freshness, below overrides); snapshot ships models:[] [maintainer refreshes with verified figures]; 3 tests) — 2026-07-22.
 - **T40 SHIPPED** (Block I §I3 — cited intelligence/benchmark index: optional provenance-gated `benchmarks` object {intelligenceIndex?, arenaElo?, indicative, source, lastVerified}, treated like pricing (never our verdict); schema/validate/merge/emit + page drawer/compare; NO data seeded [T41 populates]; 2 tests) — 2026-07-22.

@@ -6,7 +6,7 @@
   "note": "Cited third-party capability index — a reference, not our verdict. Verify at the source.",
   "models": [],
   "_exampleModels": [
-    { "vendor": "openai", "id": "gpt-5", "intelligenceIndex": 69, "scores": { "reasoning": 71, "coding": 68, "math": 74 } },
+    { "vendor": "openai", "id": "gpt-5", "intelligenceIndex": 69, "scores": { "reasoning": 71, "coding": 68, "math": 74 }, "throughputTps": 180, "latencyTtftSec": 0.4 },
     { "vendor": "anthropic", "id": "claude-opus-4-1", "intelligenceIndex": 64, "arenaElo": 1451, "scores": { "coding": 72 } },
     { "vendor": "deepseek", "id": "deepseek-reasoner", "intelligenceIndex": 60, "source": "LMArena", "lastVerified": "2026-07-22", "scores": { "math": { "value": 80, "source": "MathArena", "lastVerified": "2026-07-10" } } }
   ]

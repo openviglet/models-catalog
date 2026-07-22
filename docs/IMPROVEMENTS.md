@@ -36,12 +36,6 @@ opinion, decay fast, and erode trust). T38 (shipped) delivered a purely *derived
 transparent market proxy, honestly labelled). The remaining tasks add the *factual inputs*
 that a stronger, still-non-opinionated signal needs.
 
-### §I6 — T43 · Speed & cost-efficiency axis
-Capability isn't only "smart" — it's also "fast/cheap enough". Carry cited **throughput**
-(tokens/s) and **latency** (time-to-first-token) so the catalog exposes a second axis, and pair
-it with the list price for a derived cost-per-capability view. Cited + indicative like pricing;
-needs its own data source (often the same leaderboard as T41).
-
 ### §I7 — T44 · Filter & sort by tier + use-case
 The T38 classification is display-only; make it a discovery tool. Add filter chips (use-case
 tags, tier bands) and sorting on the browsable page, reusing the T20 capability/modality filter

@@ -291,6 +291,7 @@ const COVERAGE_FIELDS = [
   ["lastVerified", (e) => e.lastVerified != null],
   ["pricing", (e) => e.pricing != null], // indicative US list price (Block F / T32)
   ["benchmarks", (e) => e.benchmarks != null], // cited third-party capability index (Block I / T40)
+  ["performance", (e) => e.performance != null], // cited speed metrics (Block I / T43)
 ];
 const round4 = (n, d) => (d ? Math.round((n / d) * 1e4) / 1e4 : 0);
 // Per-field { filled, rate } over an arbitrary set of entries.
@@ -473,6 +474,8 @@ const CSV_COLUMNS = [
   // Per-domain cited scores (Block I / T42) — recommended domains, empty when absent.
   "benchmarkReasoning", "benchmarkCoding", "benchmarkMath",
   "benchmarkSource", "benchmarkLastVerified",
+  // Cited speed metrics (Block I / T43) — a reference, verify at the source.
+  "perfThroughputTps", "perfLatencyTtftSec", "perfSource", "perfLastVerified",
 ];
 // A per-domain cited score value (Block I / T42), or undefined.
 const benchScore = (e, domain) => e.benchmarks && e.benchmarks.scores && e.benchmarks.scores[domain] && e.benchmarks.scores[domain].value;
@@ -496,6 +499,10 @@ const csvRow = (e) => CSV_COLUMNS.map((c) => {
   if (c === "benchmarkMath") return csvCell(benchScore(e, "math"));
   if (c === "benchmarkSource") return csvCell(e.benchmarks && e.benchmarks.source);
   if (c === "benchmarkLastVerified") return csvCell(e.benchmarks && e.benchmarks.lastVerified);
+  if (c === "perfThroughputTps") return csvCell(e.performance && e.performance.throughputTps);
+  if (c === "perfLatencyTtftSec") return csvCell(e.performance && e.performance.latencyTtftSec);
+  if (c === "perfSource") return csvCell(e.performance && e.performance.source);
+  if (c === "perfLastVerified") return csvCell(e.performance && e.performance.lastVerified);
   return csvCell(e[c]);
 }).join(",");
 const catalogCsv = [CSV_COLUMNS.join(","), ...flat.map(csvRow)].join("\r\n") + "\r\n";
@@ -572,6 +579,15 @@ const benchmarkLine = (b) => {
   if (!bits.length) return null;
   return `${bits.join(" · ")} (cited from ${b.source || "source"} — verify at the source)`;
 };
+// Cited speed metrics, one human line (Block I / T43).
+const performanceLine = (p) => {
+  if (!p) return null;
+  const bits = [];
+  if (p.throughputTps != null) bits.push(`${p.throughputTps} tokens/s`);
+  if (p.latencyTtftSec != null) bits.push(`${p.latencyTtftSec}s to first token`);
+  if (!bits.length) return null;
+  return `${bits.join(" · ")} (cited from ${p.source || "source"} — verify at the source)`;
+};
 
 const proseText = (e) => {
   let s = `${e.label} (${e.id}) is a ${e.kind.toLowerCase()} model from ${e.vendor}`;
@@ -595,6 +611,7 @@ const factRows = (e) => [
   ["Embedding dimensions", e.embeddingDimensions != null ? comma(e.embeddingDimensions) : null],
   ["Indicative price (US list)", priceLine(e.pricing)],
   ["Cited capability index", benchmarkLine(e.benchmarks)],
+  ["Cited speed", performanceLine(e.performance)],
   ["Input modalities", inMods(e).join(", ") || null],
   ["Output modalities", outMods(e).join(", ") || null],
   ["Capabilities", (e.capabilities || []).join(", ") || null],

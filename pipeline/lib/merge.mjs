@@ -61,6 +61,9 @@ const SCALAR_FIELDS = [
 ];
 // Set-union fields (no conflict — sources complement each other).
 const UNION_FIELDS = ["capabilities", "aliases"];
+// Cited value objects — merged atomically, highest-priority-wins (pricing Block F,
+// benchmarks + performance Block I). `lastVerified` is stamped when a source omits it.
+const OBJECT_FIELDS = ["pricing", "benchmarks", "performance"];
 // Provenance fields carried forward from committed entries are recomputed, not merged.
 const PROVENANCE_FIELDS = new Set(["sources", "lastVerified", "vendor", "id"]);
 
@@ -69,7 +72,7 @@ const PROVENANCE_FIELDS = new Set(["sources", "lastVerified", "vendor", "id"]);
 const FIELD_ORDER = [
   "id", "label", "kind", "contextWindow", "maxOutputTokens", "embeddingDimensions",
   "capabilities", "openWeights", "parameters", "modalities", "knowledgeCutoff",
-  "releaseDate", "aliases", "status", "deprecated", "pricing", "benchmarks",
+  "releaseDate", "aliases", "status", "deprecated", "pricing", "benchmarks", "performance",
   "sources", "lastVerified",
 ];
 
@@ -223,33 +226,22 @@ export function merge({ sources, overrides = [], existing, anchoringSources, liv
       fieldProvenance.modalities = ranked.filter((r) => r.draft.modalities).map((r) => r.sourceId).join("+");
     }
 
-    // Pricing (Block F / T31): a highest-priority-wins object, so it enriches a
-    // blank price then stays stable (committed beats litellm — same as every other
-    // field) and is corrected only by an override/pin. A freshly-supplied object
-    // gets `lastVerified` stamped; a carried-forward committed price keeps its own.
-    for (const r of ranked) {
-      if (!r.draft.pricing) continue;
-      const p = { ...r.draft.pricing };
-      if (p.lastVerified === undefined) p.lastVerified = when;
-      entry.pricing = p;
-      fieldProvenance.pricing = r.sourceId;
-      contributingSources.add(r.sourceId);
-      break; // ranked is highest-priority-first
-    }
-
-    // Benchmarks (Block I / T40): a cited third-party capability index, handled
-    // exactly like pricing — a highest-priority-wins object that enriches a blank
-    // then stays stable (committed beats a source), corrected only by an override.
-    // A freshly-supplied object gets `lastVerified` stamped; a carried-forward one
-    // keeps its own. Population is T41 (a benchmark SourceAdapter).
-    for (const r of ranked) {
-      if (!r.draft.benchmarks) continue;
-      const b = { ...r.draft.benchmarks };
-      if (b.lastVerified === undefined) b.lastVerified = when;
-      entry.benchmarks = b;
-      fieldProvenance.benchmarks = r.sourceId;
-      contributingSources.add(r.sourceId);
-      break; // ranked is highest-priority-first
+    // Cited value objects — pricing (Block F / T31), benchmarks (Block I / T40)
+    // and performance (Block I / T43). Each is a highest-priority-wins object: it
+    // enriches a blank then stays stable (committed beats litellm — same as every
+    // scalar field) and is corrected only by an override/pin (benchmarks/performance
+    // also update from the higher-priority `benchmarks` source, T41). A freshly-
+    // supplied object gets `lastVerified` stamped; a carried-forward one keeps its own.
+    for (const field of OBJECT_FIELDS) {
+      for (const r of ranked) {
+        if (!r.draft[field]) continue;
+        const obj = { ...r.draft[field] };
+        if (obj.lastVerified === undefined) obj.lastVerified = when;
+        entry[field] = obj;
+        fieldProvenance[field] = r.sourceId;
+        contributingSources.add(r.sourceId);
+        break; // ranked is highest-priority-first
+      }
     }
 
     if (!entry.label) entry.label = id;

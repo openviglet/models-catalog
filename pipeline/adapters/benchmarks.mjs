@@ -57,9 +57,11 @@ export default {
   },
 
   // Snapshot shape: { source, sourceUrl?, lastVerified, models: [ { vendor, id,
-  // intelligenceIndex?, arenaElo?, source?, lastVerified?, note? } ] }. Per-model
-  // `source`/`lastVerified` override the top-level default (a model may be cited
-  // from a different leaderboard). Numbers are a reference to the source, not ours.
+  // intelligenceIndex?, arenaElo?, scores?, throughputTps?, latencyTtftSec?,
+  // source?, lastVerified?, note? } ] }. Per-model `source`/`lastVerified` override
+  // the top-level default (a model may be cited from a different leaderboard). Every
+  // number is a reference to the source, never ours. Emits a `benchmarks` object
+  // (T40/T42) and/or a `performance` object (T43) — a draft with neither is dropped.
   normalize(raw) {
     if (!raw || typeof raw !== "object") return [];
     const models = Array.isArray(raw.models) ? raw.models : [];
@@ -67,19 +69,31 @@ export default {
     for (const m of models) {
       if (!m || typeof m !== "object" || !m.vendor || !m.id) continue;
       const source = m.source || raw.source;
-      if (!source) continue; // never emit an un-sourced benchmark
+      if (!source) continue; // never emit an un-sourced number
+      const note = m.note || raw.note || "Cited third-party benchmark — verify at the source.";
+      const lastVerified = m.lastVerified || raw.lastVerified;
+
       const scores = scoresFrom(m.scores);
       const benchmarks = compact({
         intelligenceIndex: num(m.intelligenceIndex),
         arenaElo: num(m.arenaElo),
         scores,
-        indicative: true,
-        note: m.note || raw.note || "Cited third-party benchmark — verify at the source.",
-        source,
-        lastVerified: m.lastVerified || raw.lastVerified,
+        indicative: true, note, source, lastVerified,
       });
-      if (benchmarks.intelligenceIndex === undefined && benchmarks.arenaElo === undefined && scores === undefined) continue;
-      drafts.push({ vendor: String(m.vendor), id: String(m.id), benchmarks });
+      const hasBenchmarks = benchmarks.intelligenceIndex !== undefined || benchmarks.arenaElo !== undefined || scores !== undefined;
+
+      const performance = compact({
+        throughputTps: num(m.throughputTps),
+        latencyTtftSec: num(m.latencyTtftSec),
+        indicative: true, note, source, lastVerified,
+      });
+      const hasPerformance = performance.throughputTps !== undefined || performance.latencyTtftSec !== undefined;
+
+      if (!hasBenchmarks && !hasPerformance) continue;
+      const draft = { vendor: String(m.vendor), id: String(m.id) };
+      if (hasBenchmarks) draft.benchmarks = benchmarks;
+      if (hasPerformance) draft.performance = performance;
+      drafts.push(draft);
     }
     return drafts;
   },

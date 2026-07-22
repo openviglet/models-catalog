@@ -63,7 +63,6 @@
 > page classification (T38) shipped; the next tasks add the *factual* inputs that make
 > a stronger, non-opinionated capability signal possible. Design rationale → §I.
 
-- **T43** 💭 **Speed & cost-efficiency axis** — carry cited throughput (tokens/s) + latency (TTFT) from a source, giving a second axis ("fast vs capable") and a derived cost-per-capability view alongside the price tier. Needs a data source; complements T40/T41. deps: — → §I6
 - **T44** 📋 **Filter & sort by tier + use-case** — turn the T38 derived classification into interactive discovery: filter chips (use-case tags, tier bands) and sort, mirroring the existing capability/modality filters (T20), serialized into the URL hash. Page-only, factual, zero-dep. deps: — (T38 shipped) → §I7
 
 > The endpoint intentionally stays on its public GitHub Pages URL

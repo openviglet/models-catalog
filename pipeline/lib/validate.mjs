@@ -11,39 +11,38 @@ import { KINDS } from "./util.mjs";
 const STATUSES = new Set(["PREVIEW", "GA", "DEPRECATED", "RETIRED"]);
 
 /**
- * Structural mirror of $defs/pricing (Block F / T30). Provenance-gated: an
- * indicative US list price is admitted only with `indicative: true`, a `source`
- * and a `lastVerified`; the per-* figures, when present, are non-negative USD.
+ * Shared provenance core for the CITED value objects (`pricing` Block F / T30,
+ * `benchmarks` Block I / T40, `performance` Block I / T43). Each is admitted only
+ * with `indicative: true`, a `source` and a `lastVerified`; its listed numeric
+ * fields, when present, are non-negative. Field-specific extras (currency, scores)
+ * are checked by the callers. `label` names the field in the error text.
  * @returns string[] of errors (empty = valid).
  */
-function pricingErrors(p, at) {
-  if (typeof p !== "object" || p === null || Array.isArray(p)) return [`${at} pricing is not an object`];
+function citedCoreErrors(o, at, label, numericFields) {
+  if (typeof o !== "object" || o === null || Array.isArray(o)) return [`${at} ${label} is not an object`];
   const errs = [];
-  if (p.indicative !== true) errs.push(`${at} pricing.indicative must be true`);
-  if (!p.source || typeof p.source !== "string") errs.push(`${at} pricing missing string source`);
-  if (typeof p.lastVerified !== "string") errs.push(`${at} pricing missing string lastVerified`);
-  for (const nf of ["inputPer1M", "outputPer1M"]) {
-    if (p[nf] !== undefined && !(typeof p[nf] === "number" && p[nf] >= 0)) errs.push(`${at} invalid pricing.${nf}`);
+  if (o.indicative !== true) errs.push(`${at} ${label}.indicative must be true`);
+  if (!o.source || typeof o.source !== "string") errs.push(`${at} ${label} missing string source`);
+  if (typeof o.lastVerified !== "string") errs.push(`${at} ${label} missing string lastVerified`);
+  for (const nf of numericFields) {
+    if (o[nf] !== undefined && !(typeof o[nf] === "number" && o[nf] >= 0)) errs.push(`${at} invalid ${label}.${nf}`);
   }
-  if (p.currency !== undefined && p.currency !== "USD") errs.push(`${at} pricing.currency must be USD`);
   return errs;
 }
 
-/**
- * Structural mirror of $defs/benchmarks (Block I / T40). Provenance-gated exactly
- * like pricing: cited third-party numbers are admitted only with `indicative: true`,
- * a `source` and a `lastVerified`; the numeric fields, when present, are non-negative.
- * @returns string[] of errors (empty = valid).
- */
-function benchmarksErrors(b, at) {
-  if (typeof b !== "object" || b === null || Array.isArray(b)) return [`${at} benchmarks is not an object`];
-  const errs = [];
-  if (b.indicative !== true) errs.push(`${at} benchmarks.indicative must be true`);
-  if (!b.source || typeof b.source !== "string") errs.push(`${at} benchmarks missing string source`);
-  if (typeof b.lastVerified !== "string") errs.push(`${at} benchmarks missing string lastVerified`);
-  for (const nf of ["intelligenceIndex", "arenaElo"]) {
-    if (b[nf] !== undefined && !(typeof b[nf] === "number" && b[nf] >= 0)) errs.push(`${at} invalid benchmarks.${nf}`);
+/** Structural mirror of $defs/pricing (Block F / T30). Indicative US list price. */
+function pricingErrors(p, at) {
+  const errs = citedCoreErrors(p, at, "pricing", ["inputPer1M", "outputPer1M"]);
+  if (typeof p === "object" && p !== null && !Array.isArray(p) && p.currency !== undefined && p.currency !== "USD") {
+    errs.push(`${at} pricing.currency must be USD`);
   }
+  return errs;
+}
+
+/** Structural mirror of $defs/benchmarks (Block I / T40, T42). Cited capability index. */
+function benchmarksErrors(b, at) {
+  const errs = citedCoreErrors(b, at, "benchmarks", ["intelligenceIndex", "arenaElo"]);
+  if (typeof b !== "object" || b === null || Array.isArray(b)) return errs;
   // Per-domain scores (T42): a map of domain → { value, source?, lastVerified? }.
   if (b.scores !== undefined) {
     if (typeof b.scores !== "object" || b.scores === null || Array.isArray(b.scores)) {
@@ -56,6 +55,11 @@ function benchmarksErrors(b, at) {
     }
   }
   return errs;
+}
+
+/** Structural mirror of $defs/performance (Block I / T43). Cited speed metrics. */
+function performanceErrors(p, at) {
+  return citedCoreErrors(p, at, "performance", ["throughputTps", "latencyTtftSec"]);
 }
 
 /** @returns string[] of validation errors (empty = valid). */
@@ -82,6 +86,7 @@ export function validateEnvelope(env) {
       if (e.openWeights !== undefined && typeof e.openWeights !== "boolean") errs.push(`${at} (${e.id}) openWeights must be boolean`);
       if (e.pricing !== undefined) errs.push(...pricingErrors(e.pricing, `${at} (${e.id})`));
       if (e.benchmarks !== undefined) errs.push(...benchmarksErrors(e.benchmarks, `${at} (${e.id})`));
+      if (e.performance !== undefined) errs.push(...performanceErrors(e.performance, `${at} (${e.id})`));
     }
   }
   return errs;
@@ -90,7 +95,7 @@ export function validateEnvelope(env) {
 const CMP_FIELDS = [
   "label", "kind", "contextWindow", "maxOutputTokens", "embeddingDimensions",
   "capabilities", "openWeights", "parameters", "modalities", "knowledgeCutoff",
-  "releaseDate", "aliases", "status", "deprecated", "pricing", "benchmarks",
+  "releaseDate", "aliases", "status", "deprecated", "pricing", "benchmarks", "performance",
 ];
 
 function fmt(v) {

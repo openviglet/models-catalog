@@ -105,6 +105,7 @@ are regenerated deterministically from the canonical source
 | `lastVerified` | string | — | ISO-8601 date the entry was last confirmed against its sources. |
 | `pricing` | object | — | **Indicative US list price** — `{ inputPer1M, outputPer1M, currency: "USD", unit, indicative: true, note, source, lastVerified }`, per 1,000,000 tokens. **A reference only, not authoritative — verify with the vendor.** Never per-contract/region/negotiated; omitted when no trusted price exists. See below. |
 | `benchmarks` | object | — | **Cited third-party capability index** — `{ intelligenceIndex?, arenaElo?, scores?, indicative: true, note?, source, lastVerified }`. A reference to a public leaderboard (Artificial Analysis / LMArena), **not our verdict** — verify at the source. `scores` is an optional per-domain map (`reasoning` / `coding` / `math`). Provenance-gated + never invented; omitted when no cited number exists. See below. |
+| `performance` | object | — | **Cited speed metrics** — `{ throughputTps?, latencyTtftSec?, indicative: true, note?, source, lastVerified }`. A second axis (fast vs capable): cited output throughput + time-to-first-token, **not our own benchmark** — verify at the source. Provenance-gated + never invented; omitted when no cited number exists. See below. |
 
 ### `pricing` — indicative US list price ⚠️
 
@@ -145,6 +146,26 @@ source?, lastVerified? }`, inheriting the object's `source`/`lastVerified` unles
     "reasoning": { "value": 71 },
     "coding": { "value": 68, "source": "SWE-bench", "lastVerified": "2026-07-01" }
   },
+  "indicative": true,
+  "note": "Cited from Artificial Analysis — verify at the source.",
+  "source": "Artificial Analysis", "lastVerified": "2026-07-22"
+}
+```
+
+### `performance` — cited speed metrics ⚠️
+
+Optional, and **cited, not our benchmark**: a reference to a public speed measurement —
+output `throughputTps` (tokens/second, higher = faster) and `latencyTtftSec` (time-to-first-
+token in seconds, lower = more responsive) — so the catalog exposes a *second axis* (fast vs
+cheap vs capable) alongside `pricing` and `benchmarks`. Same discipline: flagged `indicative:
+true`, provenance-gated (`source` + `lastVerified` required), never invented. **Verify at the
+source.** The browsable page also derives a **cost-efficiency** figure on the fly (cited
+intelligence index ÷ input list price) — a derived view, never a stored field.
+
+```json
+"performance": {
+  "throughputTps": 180,
+  "latencyTtftSec": 0.4,
   "indicative": true,
   "note": "Cited from Artificial Analysis — verify at the source.",
   "source": "Artificial Analysis", "lastVerified": "2026-07-22"

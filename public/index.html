@@ -1318,6 +1318,36 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         return `${figs}
           <div class="lbl" style="margin-top:.25rem">Cited — verify at the source${meta ? ` · ${meta}` : ""}</div>`;
       }
+
+      /* ── Cited speed & derived cost-efficiency (Block I / T43) ─────────
+         `performance` is cited throughput + latency (a second axis: fast vs capable).
+         The cost-efficiency figure is DERIVED on the page from cited numbers already
+         loaded (intelligence index ÷ input list price) — clearly labelled derived. */
+      const PERF_CAVEAT = "Cited speed metrics — a reference to a public measurement, not our benchmark. Verify at the source.";
+      function performanceParts(p) {
+        const bits = [];
+        if (p && p.throughputTps != null) bits.push([p.throughputTps + " tok/s", "throughput"]);
+        if (p && p.latencyTtftSec != null) bits.push([p.latencyTtftSec + "s", "to first token"]);
+        return bits;
+      }
+      function performanceCell(p) {
+        const bits = performanceParts(p);
+        if (!bits.length) return "";
+        const figs = bits.map(([v, lbl]) => `<span class="mono">${v}</span> <span class="lbl">${lbl}</span>`).join(" · ");
+        const meta = [p.source ? `source: ${p.source}` : "", p.lastVerified ? p.lastVerified : ""].filter(Boolean).join(" · ");
+        return `${figs}
+          <div class="lbl" style="margin-top:.25rem">Cited — verify at the source${meta ? ` · ${meta}` : ""}</div>`;
+      }
+      // Derived cost-efficiency: cited intelligence index per $ of input list price
+      // (per 1M tokens). Higher = more capability per dollar. Derived from facts
+      // already shown, never a stored/invented number — omitted unless both exist.
+      function costPerCapability(m) {
+        const idx = m.benchmarks && m.benchmarks.intelligenceIndex;
+        const inp = m.pricing && m.pricing.inputPer1M;
+        if (idx == null || inp == null || inp <= 0) return "";
+        const v = idx / inp;
+        return `<span class="mono">${v >= 100 ? Math.round(v) : v.toFixed(1)}</span> <span class="lbl">index pts per $/1M input (derived)</span>`;
+      }
       function renderDetail(m) {
         const rows = [];
         const add = (dt, dd) => { if (dd || dd === 0) rows.push(`<dt>${dt}</dt><dd>${dd}</dd>`); };
@@ -1335,6 +1365,8 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         if (m.parameters != null) add("Parameters", `<span class="mono">${fmtParams(m.parameters)}</span> <span class="lbl">${m.parameters.toLocaleString("en-US")}</span>`);
         if (m.pricing) add('Price <span class="lbl">US list</span>', priceCell(m.pricing));
         if (m.benchmarks) add('Benchmarks <span class="lbl">cited</span>', benchmarkCell(m.benchmarks));
+        if (m.performance) add('Speed <span class="lbl">cited</span>', performanceCell(m.performance));
+        { const cpc = costPerCapability(m); if (cpc) add('Value <span class="lbl">derived</span>', cpc); }
         if (m.status) add("Status", m.status);
         if (m.knowledgeCutoff) add("Knowledge cutoff", m.knowledgeCutoff);
         if (m.releaseDate) add("Release date", m.releaseDate);
@@ -1430,6 +1462,8 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           ["Parameters", ({ m }) => m.parameters != null ? `<span class="mono">${fmtParams(m.parameters)}</span>` : ""],
           ["Price (US list)", ({ m }) => m.pricing ? priceCell(m.pricing) : ""],
           ["Benchmarks (cited)", ({ m }) => m.benchmarks ? benchmarkCell(m.benchmarks) : ""],
+          ["Speed (cited)", ({ m }) => m.performance ? performanceCell(m.performance) : ""],
+          ["Value (derived)", ({ m }) => costPerCapability(m)],
           ["Input", ({ m }) => chips(m.modalities && m.modalities.input)],
           ["Output", ({ m }) => chips(m.modalities && m.modalities.output)],
           ["Capabilities", ({ m }) => chips(m.capabilities)],
