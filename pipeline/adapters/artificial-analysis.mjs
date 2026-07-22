@@ -12,9 +12,13 @@
  *    cached snapshot with no key and no network, exactly like every other source.
  *  - `vendor: null` → a non-anchoring enrichment source: the merge anchoring rule
  *    bars a leaderboard model absent from the catalog (dropped, never introduced).
- *  - matching is a CURATED, committed table (`artificial-analysis-map.json`): only
- *    an AA slug we have EXPLICITLY mapped to a catalog `(vendor, id)` emits — an
- *    unmapped model is dropped, never fuzzily mis-attributed (omit, don't guess).
+ *  - matching resolves an AA slug to a catalog `(vendor, id)` in two steps: the
+ *    curated table (`artificial-analysis-map.json`) wins, then a DETERMINISTIC
+ *    auto-matcher (T63) resolves the rest against the committed catalog ids —
+ *    matching ONLY on an identical *and unique* canonical/token form, never by fuzzy
+ *    similarity. An ambiguous or unrecognised slug is dropped (omit, don't guess), so
+ *    the "never mis-attribute" guarantee holds; the table also *blocks* a slug
+ *    (`null` / `{skip:true}`) or overrides a reordered/aliased name the matcher can't.
  *  - every draft is provenance-stamped (`indicative` + `source` + `lastVerified`);
  *    a fetch failure / empty map returns nothing (skipped), never a bad publish —
  *    the numbers are still *cited* ("verify at the source"), only the fill is now
@@ -23,7 +27,7 @@
  * @since 2026.3.x (T45)
  */
 import { existsSync } from "node:fs";
-import { AA_MAP_FILE, fetchOrReplay, readJson } from "../lib/util.mjs";
+import { AA_MAP_FILE, CANONICAL, fetchOrReplay, readJson } from "../lib/util.mjs";
 import { benchmarkDraft } from "./benchmarks.mjs";
 
 // Artificial Analysis public data API (v2). The response carries a `data[]` array
@@ -53,6 +57,84 @@ function loadMap() {
   if (!existsSync(AA_MAP_FILE)) return {};
   const raw = readJson(AA_MAP_FILE);
   return raw && typeof raw.map === "object" && raw.map ? raw.map : {};
+}
+
+/** Flat `[{vendor,id}]` of the committed catalog — the pool auto-matching resolves into. */
+function loadCatalogIds() {
+  if (!existsSync(CANONICAL)) return [];
+  const root = readJson(CANONICAL);
+  const vendors = (root && root.vendors) || {};
+  const out = [];
+  for (const [vendor, entries] of Object.entries(vendors)) {
+    if (!Array.isArray(entries)) continue;
+    for (const e of entries) if (e && e.id) out.push({ vendor, id: e.id });
+  }
+  return out;
+}
+
+// ── Deterministic auto-matching (T63) ──────────────────────────────────────
+// The curated map (above) is authoritative; anything it doesn't list is passed to
+// a *deterministic* auto-matcher that resolves an AA slug to a catalog id ONLY when
+// a canonical form is IDENTICAL and UNIQUE across the catalog — never by fuzzy
+// similarity. So the T45 "never mis-attribute" guarantee holds: an ambiguous or
+// unrecognised slug still drops. Three canonical forms are tried, most-specific first
+// (so a bare "gpt-4o" resolves to the un-dated id before its dated snapshots):
+//   A) exactKey — lower-cased, `org/` prefix stripped, separators removed, DATE KEPT.
+//      "gpt-4o" ↔ "gpt-4o"; "gpt-4o-2024-08-06" ↔ its exact self.
+//   B) normKey  — like A but with a trailing date snapshot stripped.
+//      Matches "gemini-1-5-flash" ↔ "gemini-1.5-flash", "claude-3-5-haiku" ↔ "…-20241022".
+//   C) tokenKey — the B base as an ORDER-INDEPENDENT sorted token multiset.
+//      Matches reordered names: AA "claude-4-8-opus" ↔ catalog "claude-opus-4-8".
+const DATE_RE = /[-_@]?(20\d{2}[-_]?\d{2}[-_]?\d{2}|20\d{6})$/;
+const strip = (s) => String(s).toLowerCase().replace(/^[^/]*\//, ""); // drop "org/" prefix
+const exactKey = (s) => strip(s).replace(/[^a-z0-9]+/g, ""); // full form — keeps the date
+const normKey = (s) => strip(s).replace(DATE_RE, "").replace(/[^a-z0-9]+/g, ""); // date-stripped
+const tokenKey = (s) => strip(s).replace(DATE_RE, "").split(/[^a-z0-9]+/).filter(Boolean).sort().join("|");
+
+/** Build unique-only indexes over the catalog ids for each canonical form. */
+export function buildMatchIndex(catalogIds) {
+  const byExact = new Map(); // exactKey → Set<"vendor::id">
+  const byNorm = new Map(); //  normKey  → Set<"vendor::id">
+  const byTok = new Map(); //   tokenKey → Set<"vendor::id">
+  const target = new Map(); // "vendor::id" → {vendor,id}
+  const add = (m, k, v) => {
+    if (!k) return;
+    let set = m.get(k);
+    if (!set) { set = new Set(); m.set(k, set); }
+    set.add(v);
+  };
+  for (const t of catalogIds) {
+    if (!t || !t.vendor || !t.id) continue;
+    const key = `${t.vendor}::${t.id}`;
+    target.set(key, { vendor: t.vendor, id: t.id });
+    add(byExact, exactKey(t.id), key);
+    add(byNorm, normKey(t.id), key);
+    add(byTok, tokenKey(t.id), key);
+  }
+  return { byExact, byNorm, byTok, target };
+}
+/** A canonical-form lookup that returns a target ONLY when exactly one id matches. */
+function uniqueMatch(index, mapObj, key) {
+  const set = mapObj.get(key);
+  if (!set || set.size !== 1) return undefined; // absent OR ambiguous → skip (never guess)
+  return index.target.get([...set][0]);
+}
+/**
+ * Resolve an AA slug to a catalog `{vendor,id}`:
+ *   1. curated map wins — an entry that is `null`/`{skip:true}` explicitly BLOCKS the
+ *      slug (suppresses a wrong auto-match); a `{vendor,id}` entry is used as-is.
+ *   2. otherwise auto-match: exactKey → normKey → tokenKey, unique-only.
+ * Returns undefined when nothing resolves — the slug is then dropped, as before.
+ */
+export function resolveTarget(slug, map, index) {
+  if (Object.hasOwn(map, slug)) {
+    const m = map[slug];
+    if (!m || m.skip) return undefined; // explicit block
+    return m.vendor && m.id ? { vendor: m.vendor, id: m.id } : undefined;
+  }
+  return uniqueMatch(index, index.byExact, exactKey(slug))
+    || uniqueMatch(index, index.byNorm, normKey(slug))
+    || uniqueMatch(index, index.byTok, tokenKey(slug));
 }
 
 /** Extract the models array from AA's response shape (defensive about wrappers). */
@@ -91,8 +173,8 @@ export default {
   label: "Artificial Analysis leaderboard (live, cited)",
 
   // Fetch the leaderboard (key in a header) or replay the cached snapshot offline.
-  // The committed matching table is attached to `raw` so `normalize` stays a pure
-  // function of `raw` (and thus unit-testable without touching the filesystem).
+  // The curated map + the committed catalog ids are attached to `raw` so `normalize`
+  // stays a pure function of `raw` (and thus unit-testable without touching the fs).
   async fetch(env, ctx) {
     const key = env.ARTIFICIAL_ANALYSIS_API_KEY;
     const res = await fetchOrReplay(this.id, API_URL, {
@@ -101,20 +183,24 @@ export default {
       when: ctx.when,
     });
     if (!res) return null;
-    return { ...res, raw: { items: itemsOf(res.raw), map: loadMap() } };
+    return { ...res, raw: { items: itemsOf(res.raw), map: loadMap(), catalogIds: loadCatalogIds() } };
   },
 
-  // `raw` = { items: AA models[], map: slug→{vendor,id} }. Only mapped slugs emit;
-  // an unmapped leaderboard model is dropped (fail safe). Empty map / no items → [].
+  // `raw` = { items: AA models[], map: slug→{vendor,id}, catalogIds: [{vendor,id}] }.
+  // Each slug resolves via the curated map first, then the deterministic auto-matcher
+  // (unique canonical/token match) — anything unresolved drops (fail safe).
   normalize(raw) {
     const items = Array.isArray(raw?.items) ? raw.items : [];
     const map = raw && typeof raw.map === "object" && raw.map ? raw.map : {};
-    if (!items.length || !Object.keys(map).length) return [];
+    const catalogIds = Array.isArray(raw?.catalogIds) ? raw.catalogIds : [];
+    if (!items.length) return [];
+    const index = buildMatchIndex(catalogIds);
     const drafts = [];
     for (const item of items) {
       const slug = item && (item.slug || item.id);
-      const target = slug ? map[slug] : undefined;
-      if (!target || !target.vendor || !target.id) continue; // unmapped → dropped
+      if (!slug) continue;
+      const target = resolveTarget(slug, map, index); // map → auto-match → undefined
+      if (!target) continue; // unmapped / ambiguous → dropped
       const draft = benchmarkDraft(toSnapshotModel(item, target), { source: SOURCE });
       if (draft) drafts.push(draft);
     }

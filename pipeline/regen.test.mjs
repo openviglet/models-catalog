@@ -11,7 +11,7 @@ import { merge } from "./lib/merge.mjs";
 import { validateEnvelope, diffReport } from "./lib/validate.mjs";
 import litellm from "./adapters/litellm.mjs";
 import benchmarks from "./adapters/benchmarks.mjs";
-import artificialAnalysis from "./adapters/artificial-analysis.mjs";
+import artificialAnalysis, { buildMatchIndex, resolveTarget } from "./adapters/artificial-analysis.mjs";
 import ollama from "./adapters/ollama.mjs";
 import bedrock from "./adapters/bedrock.mjs";
 import huggingface from "./adapters/huggingface.mjs";
@@ -479,6 +479,51 @@ test("artificial-analysis: AA's 0 / null 'not measured' becomes an omitted field
   assert.equal(d.benchmarks.intelligenceIndex, 29, "real index kept");
   assert.equal(d.benchmarks.scores, undefined, "0 / null domain scores omitted, not published as 0");
   assert.equal(d.performance, undefined, "0 tok/s + 0s TTFT → no performance object (AA didn't measure it)");
+});
+
+test("artificial-analysis: deterministic auto-matcher resolves slugs without a map entry (T63)", () => {
+  const catalogIds = [
+    { vendor: "anthropic", id: "claude-opus-4-8" },
+    { vendor: "anthropic", id: "claude-3-5-haiku-20241022" },
+    { vendor: "gemini", id: "gemini-1.5-flash" },
+    { vendor: "openai", id: "gpt-4o" },
+    { vendor: "openai", id: "gpt-4o-2024-08-06" },
+    { vendor: "openai", id: "gpt-4o-2024-05-13" },
+  ];
+  const idx = buildMatchIndex(catalogIds);
+  // A) exact wins even when dated siblings share a date-stripped form (no false ambiguity).
+  assert.deepEqual(resolveTarget("gpt-4o", {}, idx), { vendor: "openai", id: "gpt-4o" });
+  assert.deepEqual(resolveTarget("gpt-4o-2024-08-06", {}, idx), { vendor: "openai", id: "gpt-4o-2024-08-06" });
+  // B) separators differ; C) tokens reordered; date-strip on the catalog side.
+  assert.deepEqual(resolveTarget("gemini-1-5-flash", {}, idx), { vendor: "gemini", id: "gemini-1.5-flash" });
+  assert.deepEqual(resolveTarget("claude-4-8-opus", {}, idx), { vendor: "anthropic", id: "claude-opus-4-8" });
+  assert.deepEqual(resolveTarget("claude-3-5-haiku", {}, idx), { vendor: "anthropic", id: "claude-3-5-haiku-20241022" });
+  // Never guess: an unrecognised slug drops (undefined), not a nearest neighbour.
+  assert.equal(resolveTarget("some-unknown-model", {}, idx), undefined);
+  // The curated map still wins, and a null/{skip} entry BLOCKS an otherwise-good auto-match.
+  assert.deepEqual(resolveTarget("gpt-4o", { "gpt-4o": { vendor: "openai", id: "override" } }, idx), { vendor: "openai", id: "override" });
+  assert.equal(resolveTarget("claude-4-8-opus", { "claude-4-8-opus": null }, idx), undefined, "map null blocks the auto-match");
+  assert.equal(resolveTarget("claude-4-8-opus", { "claude-4-8-opus": { skip: true } }, idx), undefined, "{skip:true} blocks");
+});
+
+test("artificial-analysis: normalize() auto-matches an unmapped slug against catalogIds, still drops the ambiguous (T63)", () => {
+  const drafts = artificialAnalysis.normalize({
+    items: [
+      { slug: "claude-4-8-opus", evaluations: { artificial_analysis_intelligence_index: 71 } }, // auto → claude-opus-4-8
+      { slug: "gpt-4o", evaluations: { artificial_analysis_intelligence_index: 50 } }, // exact
+      { slug: "totally-unknown", evaluations: { artificial_analysis_intelligence_index: 40 } }, // dropped
+    ],
+    map: {}, // EMPTY map — resolution is now entirely via the auto-matcher
+    catalogIds: [
+      { vendor: "anthropic", id: "claude-opus-4-8" },
+      { vendor: "openai", id: "gpt-4o" },
+      { vendor: "openai", id: "gpt-4o-2024-08-06" },
+    ],
+  });
+  const byId = Object.fromEntries(drafts.map((d) => [`${d.vendor}/${d.id}`, d]));
+  assert.equal(drafts.length, 2, "unknown slug dropped; the two resolvable ones emit");
+  assert.equal(byId["anthropic/claude-opus-4-8"].benchmarks.intelligenceIndex, 71, "reordered AA slug auto-matched");
+  assert.equal(byId["openai/gpt-4o"].benchmarks.intelligenceIndex, 50);
 });
 
 test("artificial-analysis: empty map or no items emits nothing (Block J / T45)", () => {

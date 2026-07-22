@@ -1,4 +1,4 @@
-# Last task number — `T62` · next block letter — `N`
+# Last task number — `T63` · next block letter — `N`
 
 > **Single source of truth for the next free task number.** The next new task is
 > `T63`; after assigning it, bump the number above and the log line below.
@@ -17,6 +17,8 @@
    real maximum by grepping `CHANGELOG.md`, then bump the letter after creating it.
 
 ## Log (most recent first)
+
+- **T63 SHIPPED** (Block J §J1 — deterministic AA slug↔id auto-matcher extending the T45 live source: unmapped AA slugs auto-resolve against committed catalog ids via exact→date-stripped→order-independent-token canonical forms, unique-only [never fuzzy], so reordered/separator/dated names match without a hand-written map entry while ambiguous/unknown still drop; curated map still overrides + `null`/`{skip:true}` blocks; normalize() stays pure over raw [catalogIds attached in fetch], exports buildMatchIndex/resolveTarget; 2 tests [34 green]; map _comment + pipeline.md updated) — 2026-07-22.
 
 - **T59-T62 CREATED** (📋/💭, Block M §M — Conversational catalog: make the reference askable with cited answers via a separate vectorless-RAG backend (Turing's grounded catalog copilot `POST /api/sn/{site}/copilot` on turing-demo.viglet.org) — site stays static+zero-dep, no LLM here. Emit `query-manifest.json` (per-field type/facet/enum/range descriptor over catalog.ndjson — the field-schema + NL→filter contract for the external RAG) (T59); emit `context.txt` (token-budgeted ≤~40k one-line-per-model digest for stuff-all/GEO, complements llms.txt) (T60); optional "Ask the catalog" widget POSTing to a configurable endpoint + rendering cited model deep-links, hidden when unconfigured (T61); 💭 qa-eval.jsonl grounded-answer eval set + example prompts (T62). Pairs with Turing Block BF; all additive, zero-dep, provenance-first [answers cite ids, never invented]) — 2026-07-22.
 - **T57 SHIPPED** (Block L §L8 — mobile & render perf: compact ☰ mobile menu (#navmenu) restoring nav <720px + Star into it; card view <720px scoped to #list via media query + data-label ::before labels; debounced search render (~140ms, debounce() helper). **Block L shipped in full.**) — 2026-07-22.
