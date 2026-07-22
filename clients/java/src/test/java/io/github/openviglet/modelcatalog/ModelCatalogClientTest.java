@@ -2,6 +2,7 @@ package io.github.openviglet.modelcatalog;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -318,6 +319,29 @@ class ModelCatalogClientTest {
         assertEquals(1L, ((Map<String, Object>) changes.get("counts")).get("added"));
         List<Object> added = (List<Object>) changes.get("added");
         assertEquals("gpt-4o", ((Map<String, Object>) added.get(0)).get("id"));
+    }
+
+    @Test
+    void classifyDerivesTagsAndTier() {
+        assertEquals("Frontier", Classifier.TIERS.get(0));
+        ModelCatalogClient c = client(new FakeFetcher()).build();
+        ModelEntry gpt = c.get("openai", "gpt-4o").orElseThrow();
+        Classification cl = Classifier.classify(gpt);
+        assertTrue(cl.tags().contains("Multimodal")); // vision capability
+        assertEquals("High", cl.tier()); // $2.5/1M input
+
+        ModelEntry emb = c.get("openai", "text-embedding-3-large").orElseThrow();
+        assertEquals(List.of("Embeddings"), Classifier.classify(emb).tags());
+        assertNull(Classifier.classify(emb).tier());
+
+        ModelEntry frontier = ModelEntry.fromJson(Json.parseObject("""
+                { "id": "coder-x", "label": "Reasoner", "kind": "CHAT",
+                  "capabilities": ["reasoning", "vision"], "modalities": { "input": ["text", "image"] },
+                  "openWeights": true, "pricing": { "inputPer1M": 9 } }
+                """), "v");
+        Classification f = Classifier.classify(frontier);
+        assertEquals(List.of("Reasoning", "Coding", "Multimodal", "Open weights"), f.tags());
+        assertEquals("Frontier", f.tier());
     }
 
     @Test

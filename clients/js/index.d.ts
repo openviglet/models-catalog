@@ -21,6 +21,25 @@ export type Kind =
 
 export declare const KINDS: readonly Kind[];
 
+/** Price-bucketed tier — a market proxy for capability, NOT a benchmark or quality verdict. */
+export type Tier = "Frontier" | "High" | "Mid" | "Light";
+
+export declare const TIERS: readonly Tier[];
+
+/** The derived at-a-glance classification `classify()` returns. */
+export interface Classification {
+  /** Use-case tags from kind + capabilities + modalities (+ "Open weights"). */
+  tags: string[];
+  /** Price band, or `null` when the model carries no indicative price. */
+  tier: Tier | null;
+}
+
+/**
+ * Derive use-case tags + a price-bucketed tier for a model entry — the same logic the
+ * browsable page uses, purely derived from published fields (no schema/contract change).
+ */
+export declare function classify(entry: Partial<ModelEntry>): Classification;
+
 /** Lifecycle stage (optional, additive). */
 export type Status = "PREVIEW" | "GA" | "DEPRECATED" | "RETIRED";
 

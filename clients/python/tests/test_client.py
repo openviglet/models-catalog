@@ -8,7 +8,7 @@ an injected monotonic clock drives the TTL assertions without sleeping.
 
 import unittest
 
-from model_catalog_client import KINDS, ModelCatalogClient, ModelEntry
+from model_catalog_client import KINDS, TIERS, Classification, ModelCatalogClient, ModelEntry, classify
 
 BASE = "https://example.test/models"
 
@@ -256,6 +256,26 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(fetch.calls[2], BASE + "/changes.json")
         self.assertEqual(changes["counts"]["added"], 1)
         self.assertEqual(changes["added"][0]["id"], "gpt-4o")
+
+    def test_classify_derives_tags_and_tier(self):
+        self.assertEqual(TIERS[0], "Frontier")
+        gpt = ModelEntry.from_dict({"id": "gpt-4o", "label": "GPT-4o", "kind": "CHAT", "pricing": {"inputPer1M": 2.5}}, vendor="openai")
+        cl = classify(gpt)
+        self.assertIsInstance(cl, Classification)
+        self.assertEqual(cl.tags, ["Chat"])
+        self.assertEqual(cl.tier, "High")
+        emb = ModelEntry.from_dict({"id": "e", "label": "E", "kind": "EMBEDDING"}, vendor="openai")
+        self.assertEqual(classify(emb).tags, ["Embeddings"])
+        self.assertIsNone(classify(emb).tier)
+        frontier = ModelEntry.from_dict({"id": "coder-x", "label": "Reasoner", "kind": "CHAT",
+            "capabilities": ["reasoning", "vision"], "modalities": {"input": ["text", "image"]},
+            "openWeights": True, "pricing": {"inputPer1M": 9}}, vendor="v")
+        f = classify(frontier)
+        self.assertEqual(f.tags, ["Reasoning", "Coding", "Multimodal", "Open weights"])
+        self.assertEqual(f.tier, "Frontier")
+        # Price-band boundaries.
+        self.assertEqual(classify(ModelEntry.from_dict({"id": "a", "label": "a", "kind": "CHAT", "pricing": {"inputPer1M": 0.2}}, vendor="v")).tier, "Mid")
+        self.assertEqual(classify(ModelEntry.from_dict({"id": "a", "label": "a", "kind": "CHAT", "pricing": {"inputPer1M": 0.19}}, vendor="v")).tier, "Light")
 
     def test_base_url_trailing_slashes_normalized(self):
         fetch = make_fetch()

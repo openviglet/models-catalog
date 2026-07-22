@@ -58,6 +58,15 @@
 > Artificial Analysis source that auto-refreshes the T41 `benchmarks` + `performance`
 > fields over the network (curated slug→id matching table, offline-replayable,
 > provenance-stamped, propose-and-review) (see [CHANGELOG.md](CHANGELOG.md) → Block J).
+>
+> **Block K — Client SDK modernization** shipped in full — the three SDKs
+> (JS/TS · Python · Java) brought back to parity with the published contract: typed new
+> `ModelEntry` fields (T46), aggregate/registry accessors (stats/coverage/providers/plans/
+> aliases, T47), faceted-slice + change-feed accessors + a refreshed endpoints manifest
+> (T48), and the shared derived `classify()` use-case-tag + price-tier helper (T49) (see
+> [CHANGELOG.md](CHANGELOG.md) → Block K). The endpoint intentionally stays on its public
+> GitHub Pages URL (`openviglet.github.io/model-catalog`) — an unbranded, community-owned
+> home signals a public resource, not a brand asset.
 
 ## Block G — Static-site expansion & indexing
 
@@ -68,23 +77,6 @@
 
 - **T34** 📋 **Per-segment hubs + sitemap** — evolve the T26 page generator in `scripts/emit.mjs` into real per-capability / per-modality / per-kind (+ per-tier) **hubs**: each a compact static leaderboard (top models pre-sorted, cross-linked to per-model pages) + prose intro + links to the JSON slice and to Explore pre-filtered — *not* a bare link list — plus `sitemap.xml` + `robots.txt`. Serves humans and crawlers; zero-dep, derived-at-emit, no framework. deps: — (T26 shipped) → §G1
 - **T58** 📋 **First-class per-model page** — promote the emitted per-model page (T26) from a bare table into a scannable reference styled to the SPA design tokens: header + at-a-glance stat tiles + populated-only cited sections + always-on provenance + derived related models; omit empty sections (not "—"); the drawer gains an "Open full page ↗" link. Unifies the SPA↔static visual system. deps: — (T26 shipped) → §G2
-
-## Block K — Client SDK modernization
-
-> The three client SDKs (JS/TS · Python · Java) shipped in Block B (T9–T11) and still
-> expose only that original surface — their `ModelEntry` stops at `lastVerified` and they
-> know only `catalog`/`index`/`by-kind`/`by-vendor`/`endpoints`. Everything added since
-> (Block F pricing, Block I classification fields, and the Block D/E/H discovery artifacts)
-> is reachable only as untyped pass-through, if at all. This block brings all three back to
-> parity with the published contract. **Split by feature, not by language** — each task
-> updates JS + Python + Java together so the shared surface never diverges. Additive,
-> read-only, zero-dep. Design rationale → §K.
-
-- **T49** 💭 **Shared use-case-tag + price-tier classifier in the SDKs** — port the page's client-side `classify()` (T38) into each SDK as an optional *derived* helper (use-case tags from kind/capabilities/modalities + price-bucketed tier), so consumers get the same at-a-glance categorization without re-implementing it; derived-only, no schema/contract change. deps: T46 → §K4
-
-> The endpoint intentionally stays on its public GitHub Pages URL
-> (`openviglet.github.io/model-catalog`) — an unbranded, community-owned home signals
-> it is a public resource, not a brand asset.
 
 ## Block L — Explore & decide: catalog data experience
 

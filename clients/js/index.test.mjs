@@ -7,7 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { DEFAULT_BASE_URL, KINDS, ModelCatalogClient } from "./index.js";
+import { classify, DEFAULT_BASE_URL, KINDS, ModelCatalogClient, TIERS } from "./index.js";
 
 const BASE = "https://example.test/models";
 
@@ -255,6 +255,25 @@ test("capability/modality slice loaders + change feed hit their own paths", asyn
   assert.equal(fetch.calls[2], `${BASE}/changes.json`);
   assert.equal(changes.counts.added, 1);
   assert.equal(changes.added[0].id, "gpt-4o");
+});
+
+test("classify() derives use-case tags + a price tier (matches the page)", () => {
+  assert.deepEqual([...TIERS], ["Frontier", "High", "Mid", "Light"]);
+  // CHAT, priced $2.5/1M input → High; no caps/modalities → Chat.
+  assert.deepEqual(classify({ id: "gpt-4o", label: "GPT-4o", kind: "CHAT", pricing: { inputPer1M: 2.5 } }),
+    { tags: ["Chat"], tier: "High" });
+  // Embedding, unpriced → Embeddings tag, no tier.
+  assert.deepEqual(classify({ id: "e", label: "E", kind: "EMBEDDING" }), { tags: ["Embeddings"], tier: null });
+  // Reasoning + coding (id) + multimodal (vision) + open weights, Frontier price — all together.
+  const f = classify({ id: "coder-x", label: "Reasoner", kind: "CHAT",
+    capabilities: ["reasoning", "vision"], modalities: { input: ["text", "image"] },
+    openWeights: true, pricing: { inputPer1M: 9 } });
+  assert.deepEqual(f.tags, ["Reasoning", "Coding", "Multimodal", "Open weights"]);
+  assert.equal(f.tier, "Frontier");
+  // Price-band boundaries.
+  assert.equal(classify({ kind: "CHAT", pricing: { inputPer1M: 1 } }).tier, "High");
+  assert.equal(classify({ kind: "CHAT", pricing: { inputPer1M: 0.2 } }).tier, "Mid");
+  assert.equal(classify({ kind: "CHAT", pricing: { inputPer1M: 0.19 } }).tier, "Light");
 });
 
 test("a non-ok response throws with the url and status", async () => {

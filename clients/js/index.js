@@ -36,6 +36,52 @@ export const KINDS = Object.freeze([
   "UNKNOWN",
 ]);
 
+/** Tier bands, highest first — the price-bucketed capability proxy `classify()` derives. */
+export const TIERS = Object.freeze(["Frontier", "High", "Mid", "Light"]);
+
+const CODING_RE = /cod(e|er|ing)/;
+
+/**
+ * Derive at-a-glance classification for a model entry — the *same* logic the browsable
+ * page uses, so any consumer gets the identical categorization without re-implementing
+ * it. Purely derived from fields already published (no schema or contract change):
+ *   - `tags`: use-case tags from `kind` + `capabilities` + `modalities`, plus
+ *     `"Open weights"` when `openWeights === true`.
+ *   - `tier`: a band bucketed from `pricing.inputPer1M` (>= 5 `Frontier` · >= 1 `High`
+ *     · >= 0.2 `Mid` · else `Light`) — a market proxy for capability, **not** a benchmark
+ *     or quality verdict; `null` when the model carries no indicative price.
+ *
+ * @param {object} entry a (flattened) ModelEntry
+ * @returns {{ tags: string[], tier: string|null }}
+ */
+export function classify(entry) {
+  const m = entry || {};
+  const caps = m.capabilities || [];
+  const inMod = (m.modalities && m.modalities.input) || [];
+  const hay = `${m.id || ""} ${m.label || ""}`.toLowerCase();
+  const tags = [];
+  switch (m.kind) {
+    case "EMBEDDING": tags.push("Embeddings"); break;
+    case "RERANK": tags.push("Reranking"); break;
+    case "IMAGE": tags.push("Image gen"); break;
+    case "SPEECH": tags.push("Speech"); break;
+    case "TRANSCRIPTION": tags.push("Transcription"); break;
+    case "VIDEO": tags.push("Video"); break;
+    case "MODERATION": tags.push("Moderation"); break;
+    default: // CHAT / UNKNOWN
+      if (caps.includes("reasoning")) tags.push("Reasoning");
+      if (CODING_RE.test(hay)) tags.push("Coding");
+      if (inMod.includes("image") || caps.includes("vision")) tags.push("Multimodal");
+      if (!tags.length) tags.push("Chat");
+  }
+  // Open weights (a factual, discovery-relevant attribute) is surfaced as a tag too.
+  if (m.openWeights === true) tags.push("Open weights");
+  let tier = null;
+  const inp = m.pricing && m.pricing.inputPer1M;
+  if (inp != null) tier = inp >= 5 ? "Frontier" : inp >= 1 ? "High" : inp >= 0.2 ? "Mid" : "Light";
+  return { tags, tier };
+}
+
 /** Flatten a catalog envelope's `vendors` map into entries that each carry `vendor`. */
 function flatten(envelope) {
   const vendors = envelope?.vendors || {};

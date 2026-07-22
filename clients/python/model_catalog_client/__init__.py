@@ -9,6 +9,7 @@ only — no ``requests``. Carries no pricing: identity, kind and capability only
     embeddings = catalog.by_kind("EMBEDDING")
 """
 
+from .classify import TIERS, Classification, classify
 from .client import DEFAULT_BASE_URL, ModelCatalogClient
 from .models import KINDS, STATUSES, ModelEntry
 
@@ -18,6 +19,9 @@ __all__ = [
     "KINDS",
     "STATUSES",
     "DEFAULT_BASE_URL",
+    "classify",
+    "Classification",
+    "TIERS",
 ]
 
 __version__ = "1.0.0"

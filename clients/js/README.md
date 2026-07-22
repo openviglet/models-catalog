@@ -91,6 +91,21 @@ new ModelCatalogClient({
 `byKind`/`byVendor` filter the cached full catalog; `fetchByKind`/`fetchByVendor`
 download a pre-filtered slice instead, for consumers that only ever need one facet.
 
+### Derived classification
+
+`classify(entry)` derives the same at-a-glance categorization the browsable page shows —
+purely from fields already published, no schema or contract change:
+
+```js
+import { classify } from "@openviglet/model-catalog-client";
+const { tags, tier } = classify(entry);
+// tags: use-case tags from kind + capabilities + modalities (+ "Open weights")
+// tier: "Frontier" | "High" | "Mid" | "Light" | null — a price band from pricing.inputPer1M,
+//       a market proxy for capability, NOT a benchmark or quality verdict (null when unpriced).
+```
+
+`TIERS` is the tier order (highest first) for sorting.
+
 ## Test
 
 ```bash

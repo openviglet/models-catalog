@@ -123,6 +123,20 @@ ModelCatalogClient.builder()
 
 A custom transport (e.g. for tests) can be supplied via `.fetcher(url -> body)`.
 
+### Derived classification
+
+`Classifier.classify(entry)` derives the same at-a-glance categorization the browsable page
+shows — purely from fields already published, no schema or contract change:
+
+```java
+Classification cl = Classifier.classify(entry);
+// cl.tags(): use-case tags from kind + capabilities + modalities (+ "Open weights")
+// cl.tier(): "Frontier"/"High"/"Mid"/"Light"/null — a price band from pricing.inputPer1M(),
+//            a market proxy for capability, NOT a benchmark or quality verdict.
+```
+
+`Classifier.TIERS` is the tier order (highest first) for sorting.
+
 ## Test
 
 ```bash

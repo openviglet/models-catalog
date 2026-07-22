@@ -102,6 +102,22 @@ ModelCatalogClient(
 | `plans()` | The consumer subscription-plans dataset (`plans.json`, indicative US list prices). |
 | `aliases()` | The alias resolution map (`aliases.json`) — alias id → `{vendor, id}`. |
 
+### Derived classification
+
+`classify(entry)` derives the same at-a-glance categorization the browsable page shows —
+purely from fields already published, no schema or contract change:
+
+```python
+from model_catalog_client import classify
+
+cl = classify(entry)  # -> Classification(tags=[...], tier="High" | None)
+# cl.tags: use-case tags from kind + capabilities + modalities (+ "Open weights")
+# cl.tier: "Frontier"/"High"/"Mid"/"Light"/None — a price band from pricing["inputPer1M"],
+#          a market proxy for capability, NOT a benchmark or quality verdict.
+```
+
+`TIERS` is the tier order (highest first) for sorting.
+
 ## Test
 
 ```bash

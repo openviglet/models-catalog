@@ -48,34 +48,6 @@ separate mini-stylesheet). Sparse-aware by *omitting* empty sections (a low-data
 intentional, not broken) — unlike the drawer/compare, which show "—" for alignment. The drawer
 stays as the in-context preview and gains an "Open full page ↗" link. Evolves T26.
 
-## §K — Client SDK modernization
-
-The three SDKs were built early (Block B, T9–T11) and froze at that surface: a `ModelEntry`
-that ends at `lastVerified`, plus loaders for `catalog`/`index`/`by-kind`/`by-vendor`/`endpoints`
-only. Six-plus catalog releases later (Blocks D–I) the published contract has grown a lot —
-pricing, benchmarks/scores, performance, open-weights/parameters facts, and a family of
-discovery artifacts (stats, coverage, providers, plans, aliases, capability/modality slices, a
-change feed). A consumer *can* still reach the new model fields through the unknown-field
-tolerance each client already has (`[key: string]: unknown` / `.extra` / `extra()`), and can
-hand-roll the new endpoint URLs, but that defeats the point of a typed client. This block closes
-the gap so the SDKs are a faithful, typed mirror of the current contract again.
-
-**Split by feature, not by language.** The three clients deliberately share one surface (their
-READMEs say so); updating them one language at a time would let that surface drift between
-commits. Each task instead lands the same capability across JS + Python + Java together. All work
-here is additive, read-only and zero-dep — no new schema, no envelope-shape change — and the
-existing T13 publish workflows (auto-incrementing patch) ship the result, so no new release
-plumbing is needed.
-
-### §K4 — T49 · Shared use-case-tag + price-tier classifier
-The browsable page derives at-a-glance *use-case tags* (from kind/capabilities/modalities) and a
-price-bucketed *tier* client-side via `classify()` (T38). That logic is useful to any consumer,
-not just the page. Port it into each SDK as an optional derived helper so consumers get the same
-categorization without re-implementing it. Purely derived from fields already present — no
-schema or contract change — hence exploratory (💭): the open question is keeping one classifier
-definition in step across four implementations (page + three SDKs). Depends on T46 so the tier
-logic can read a typed `pricing`.
-
 ## §L — Explore & decide: catalog data experience
 
 The catalog outgrew its container. Rich per-model data (pricing, cited benchmarks + per-domain
