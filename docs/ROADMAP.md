@@ -89,7 +89,6 @@
 > SDK — gaps found here are fixed in the SDK (feeding Block K), never worked around in the page.
 > Sparse data stays honest (denominators, opt-in overlays, never invented). Design rationale → §L.
 
-- **T56** 💭 **Facet rail + shareable presets** — grouped/collapsible facet rail with per-chip match counts + "clear all" + labelled AND/OR; "copy link to this view" + curated preset links. deps: T51, T52 → §L7
 - **T57** 💭 **Mobile & render performance** — restore mobile nav (compact menu), card view < 720px, debounce the keystroke re-render. deps: T51 → §L8
 
 ## Non-goals

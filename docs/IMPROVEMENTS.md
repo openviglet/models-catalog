@@ -77,14 +77,6 @@ Dense facts drive the defaults; sparse facts are opt-in overlays that always pri
 the provenance-first bet. All views keep the existing framing: tier is a *price proxy, not a quality
 verdict*; every benchmark/speed number is *cited — verify at the source*.
 
-### §L7 — T56 · Facet rail + shareable presets
-Replace the tall stacked facet wall with a grouped, collapsible **facet rail** carrying per-chip
-match counts, an "N active · clear all" summary, and labelled AND/OR semantics — so filtering has
-real scent and dead-end empty states get rarer. Add a **"copy link to this view"** action over the
-existing URL-state and ship a handful of curated **preset** links (e.g. "Frontier reasoning",
-"Open-weight ≥ 70B", "Cheapest long-context chat", "Embeddings by dimension"). Exploratory (💭):
-preset curation + rail layout want a design pass. Depends on the flat table (T51) + columns (T52).
-
 ### §L8 — T57 · Mobile & render performance
 Restore usable **mobile navigation** (today every nav link is hidden < 720px, leaving only ⌘K +
 theme) via a compact menu, add a **card view** < 720px (an 8-column horizontally-scrolling table is

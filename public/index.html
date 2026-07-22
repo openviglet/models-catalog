@@ -539,13 +539,44 @@
         border-radius: .3rem; padding: .05rem .3rem;
       }
 
-      /* ── Capability/modality facets + sortable columns (T20) ── */
-      .facets { display: flex; flex-direction: column; gap: .5rem; margin: -.4rem 0 1.4rem; }
-      .facet-group { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
-      .facet-label {
-        font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted);
-        font-weight: 700; min-width: 5.2rem; padding-top: .1rem;
+      /* ── Facet rail + presets (T20 · reworked T56) ────── */
+      .browse-layout { display: grid; grid-template-columns: 15.5rem 1fr; gap: 1.4rem; align-items: start; }
+      @media (max-width: 900px) { .browse-layout { grid-template-columns: 1fr; } }
+      .rail {
+        position: sticky; top: 4.6rem; background: var(--card); border: 1px solid var(--border);
+        border-radius: 1rem; padding: 1rem 1.1rem; box-shadow: var(--shadow-card);
+        max-height: calc(100vh - 6rem); overflow-y: auto;
       }
+      @media (max-width: 900px) { .rail { position: static; max-height: none; } }
+      .rail-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: .7rem; }
+      .rail-title { font-family: var(--brand-font); font-weight: 800; font-size: 1rem; }
+      .rail-active { color: var(--brand-3); font-size: .78rem; font-weight: 700; }
+      .rail-actions { display: flex; gap: .4rem; margin-bottom: 1rem; }
+      .rail-actions .mini-btn:disabled { opacity: .45; cursor: not-allowed; }
+      .presets { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .4rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+      .preset {
+        font-size: .76rem; font-weight: 600; padding: .3rem .6rem; border-radius: 999px;
+        border: 1px solid var(--border-strong); background: var(--bg-alt); color: var(--brand-3); cursor: pointer;
+      }
+      .preset:hover { border-color: var(--brand); text-decoration: none; }
+      .facets { display: flex; flex-direction: column; }
+      .facet-rgroup { border-top: 1px solid var(--border); }
+      .facet-rgroup:first-child { border-top: none; }
+      .facet-rhead { display: flex; align-items: center; gap: .45rem; width: 100%; background: none; border: none; cursor: pointer; padding: .65rem 0; font-family: var(--sans); }
+      .facet-rhead .chev { color: var(--muted); font-size: .7rem; transition: transform .18s; }
+      .facet-rgroup.collapsed .chev { transform: rotate(-90deg); }
+      .facet-rgroup.collapsed .facet-chips { display: none; }
+      .facet-rlabel { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; color: var(--muted); }
+      .facet-mode { font-size: .6rem; font-weight: 700; color: var(--brand-3); background: var(--brand-wash);
+        border: 1px solid color-mix(in srgb, var(--brand) 20%, transparent); border-radius: .3rem; padding: 0 .3rem; }
+      .facet-nactive { margin-left: auto; background: var(--brand); color: #fff; font-size: .68rem; font-weight: 700; border-radius: 999px; padding: 0 .42rem; }
+      [data-theme="dark"] .facet-nactive { color: #1a0e05; }
+      .facet-chips { display: flex; flex-wrap: wrap; gap: .3rem; padding-bottom: .8rem; }
+      .facet-chip { padding: .3rem .55rem; font-size: .78rem; font-weight: 600; font-family: var(--sans);
+        border: 1px solid var(--border-strong); border-radius: 999px; background: var(--card); color: var(--muted); cursor: pointer; }
+      .facet-chip:hover { border-color: var(--brand); color: var(--text); }
+      .facet-chip[aria-pressed="true"] { background: linear-gradient(135deg, var(--brand-2), var(--brand-3)); color: #fff; border-color: transparent; }
+      [data-theme="dark"] .facet-chip[aria-pressed="true"] { color: #1a0e05; }
       /* Group-by segmented control (T51) — sits beside the kind filters in the controls row. */
       .groupby-ctl { align-items: center; padding-left: .6rem; border-left: 1px solid var(--border-strong); }
       .groupby-ctl .gb-label {
@@ -774,13 +805,28 @@
             <div class="col-menu" id="col-menu" hidden></div>
           </div>
         </div>
-        <div class="facets" id="facets"></div>
-        <p id="status" class="status">
-          <span class="skeleton" style="display:block"></span>
-          <span class="skeleton" style="display:block"></span>
-          <span class="skeleton" style="display:block"></span>
-        </p>
-        <div id="list"></div>
+        <div class="browse-layout">
+          <aside class="rail" id="rail" aria-label="Filters">
+            <div class="rail-head">
+              <span class="rail-title">Filters</span>
+              <span class="rail-active" id="rail-active"></span>
+            </div>
+            <div class="rail-actions">
+              <button type="button" class="mini-btn" id="clear-filters">Clear all</button>
+              <button type="button" class="mini-btn" id="copy-view" title="Copy a link to this exact view">⧉ Copy link</button>
+            </div>
+            <div class="presets" id="presets" aria-label="Preset views"></div>
+            <div class="facets" id="facets"></div>
+          </aside>
+          <div class="browse-main">
+            <p id="status" class="status">
+              <span class="skeleton" style="display:block"></span>
+              <span class="skeleton" style="display:block"></span>
+              <span class="skeleton" style="display:block"></span>
+            </p>
+            <div id="list"></div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1240,6 +1286,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         document.getElementById("status").innerHTML = shown
           ? `<span style="color:var(--brand-3);font-weight:600">${shown}</span> model${shown !== 1 ? "s" : ""} shown`
           : "No models match your search.";
+        updateRailActive();
       }
 
       /* ── URL-addressable state + permalinks (T16 · extended T20) ──── */
@@ -2055,54 +2102,91 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           `<div class="col-menu-foot"><button type="button" class="linkish" data-cols-default>Reset to default</button></div>`;
       }
 
-      /* ── Capability & modality facets (T20) ────────── */
+      /* ── Facet rail (T20 · reworked T56) ───────────────
+         A grouped, collapsible rail: every chip carries its match count (scent), each
+         group is labelled with its AND/OR semantics, and the head shows how many chips
+         are active. The long lists (capability/modalities) collapse by default so the
+         rail isn't a tall wall. Counts are over the whole catalog — a stable denominator. */
+      const facetCollapsed = new Set(["cap", "in", "out"]); // long groups collapse by default
+      function facetChip(label, count, active, onToggle) {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "facet-chip";
+        b.innerHTML = `${label} <span class="chip-count">${count}</span>`;
+        b.setAttribute("aria-pressed", String(active));
+        b.onclick = onToggle;
+        return b;
+      }
       function buildFacets() {
         const all = Object.values(catalog.vendors).flat();
         const caps = [...new Set(all.flatMap((m) => m.capabilities || []))].sort();
         const insM = [...new Set(all.flatMap((m) => (m.modalities && m.modalities.input) || []))].sort();
         const outM = [...new Set(all.flatMap((m) => (m.modalities && m.modalities.output) || []))].sort();
-        // Derived classification facets (T44): use-case tags + price-tier bands, from
-        // the same client-side classify() the table shows — factual, no new data.
         const tags = [...new Set(all.flatMap((m) => classify(m).tags))].sort();
         const tiers = TIER_ORDER.filter((t) => all.some((m) => classify(m).tier === t));
-        const chip = (set, value) => {
-          const b = document.createElement("button");
-          b.type = "button"; b.textContent = value;
-          b.setAttribute("aria-pressed", String(set.has(value)));
-          b.onclick = () => { set.has(value) ? set.delete(value) : set.add(value); buildFacets(); render(); writeCurrentState(); };
-          return b;
-        };
-        const group = (label, values, set) => {
-          if (!values.length) return null;
-          const g = document.createElement("div"); g.className = "facet-group";
-          const l = document.createElement("span"); l.className = "facet-label"; l.textContent = label; g.appendChild(l);
-          const wrap = document.createElement("div"); wrap.className = "filters";
-          for (const v of values) wrap.appendChild(chip(set, v));
-          g.appendChild(wrap); return g;
-        };
-        // "Has data" quick filters (T53) — each chip carries its match count (a
-        // denominator) so sparsity is visible before you click: e.g. "Has speed 18".
-        const HAS_DEFS = [["price", "Has price"], ["benchmark", "Has benchmark"], ["speed", "Has speed"]];
-        const hasGroup = () => {
-          const g = document.createElement("div"); g.className = "facet-group";
-          const l = document.createElement("span"); l.className = "facet-label"; l.textContent = "Has data"; g.appendChild(l);
-          const wrap = document.createElement("div"); wrap.className = "filters";
-          for (const [h, label] of HAS_DEFS) {
-            const n = all.filter((m) => HAS_FN[h](m)).length;
-            const b = document.createElement("button");
-            b.type = "button";
-            b.innerHTML = `${label} <span class="chip-count">${n}</span>`;
-            b.setAttribute("aria-pressed", String(activeHas.has(h)));
-            b.onclick = () => { activeHas.has(h) ? activeHas.delete(h) : activeHas.add(h); buildFacets(); render(); writeCurrentState(); };
-            wrap.appendChild(b);
-          }
-          g.appendChild(wrap); return g;
-        };
+        const groups = [
+          { key: "tag", label: "Use case", mode: "AND", set: activeTags, values: tags, count: (v) => all.filter((m) => classify(m).tags.includes(v)).length },
+          { key: "tier", label: "Tier", mode: "OR", set: activeTiers, values: tiers, count: (v) => all.filter((m) => classify(m).tier === v).length },
+          { key: "has", label: "Has data", mode: "AND", set: activeHas, values: ["price", "benchmark", "speed"], labelOf: (v) => "Has " + v, count: (v) => all.filter((m) => HAS_FN[v](m)).length },
+          { key: "cap", label: "Capability", mode: "AND", set: activeCaps, values: caps, count: (v) => all.filter((m) => (m.capabilities || []).includes(v)).length },
+          { key: "in", label: "Input", mode: "AND", set: activeInMods, values: insM, count: (v) => all.filter((m) => ((m.modalities && m.modalities.input) || []).includes(v)).length },
+          { key: "out", label: "Output", mode: "AND", set: activeOutMods, values: outM, count: (v) => all.filter((m) => ((m.modalities && m.modalities.output) || []).includes(v)).length },
+        ];
         const host = document.getElementById("facets");
         host.innerHTML = "";
-        [group("Use case", tags, activeTags), group("Tier", tiers, activeTiers), hasGroup(),
-         group("Capability", caps, activeCaps), group("Input", insM, activeInMods), group("Output", outM, activeOutMods)]
-          .forEach((g) => { if (g) host.appendChild(g); });
+        for (const g of groups) {
+          if (!g.values.length) continue;
+          const wrapG = document.createElement("div");
+          wrapG.className = "facet-rgroup" + (facetCollapsed.has(g.key) ? " collapsed" : "");
+          const nActive = g.values.filter((v) => g.set.has(v)).length;
+          const head = document.createElement("button");
+          head.type = "button"; head.className = "facet-rhead";
+          head.innerHTML = `<span class="chev">▾</span><span class="facet-rlabel">${g.label}</span><span class="facet-mode">${g.mode}</span>${nActive ? `<span class="facet-nactive">${nActive}</span>` : ""}`;
+          head.onclick = () => { facetCollapsed.has(g.key) ? facetCollapsed.delete(g.key) : facetCollapsed.add(g.key); buildFacets(); };
+          wrapG.appendChild(head);
+          const chips = document.createElement("div");
+          chips.className = "facet-chips";
+          for (const v of g.values) {
+            chips.appendChild(facetChip(g.labelOf ? g.labelOf(v) : v, g.count(v), g.set.has(v), () => {
+              g.set.has(v) ? g.set.delete(v) : g.set.add(v);
+              buildFacets(); render(); writeCurrentState();
+            }));
+          }
+          wrapG.appendChild(chips);
+          host.appendChild(wrapG);
+        }
+        updateRailActive();
+      }
+
+      /* ── Rail summary · clear-all · presets · copy-link (T56) ── */
+      function activeFilterCount() {
+        return (document.getElementById("q").value.trim() ? 1 : 0) + (activeKind ? 1 : 0)
+          + activeCaps.size + activeInMods.size + activeOutMods.size + activeTags.size + activeTiers.size + activeHas.size;
+      }
+      function updateRailActive() {
+        const n = activeFilterCount();
+        document.getElementById("rail-active").textContent = n ? `${n} active` : "";
+        document.getElementById("clear-filters").disabled = n === 0;
+      }
+      function clearFilters() {
+        document.getElementById("q").value = "";
+        activeKind = null;
+        activeCaps.clear(); activeInMods.clear(); activeOutMods.clear();
+        activeTags.clear(); activeTiers.clear(); activeHas.clear();
+        buildFilters(); buildFacets(); render(); writeCurrentState();
+      }
+      // Curated preset views — each is just a shareable hash of filter/sort/column state,
+      // so clicking one routes through applyHash exactly like a pasted deep link.
+      const PRESETS = [
+        { label: "Frontier reasoning", params: { tag: "Reasoning", tier: "Frontier" } },
+        { label: "Open weights", params: { tag: "Open weights" } },
+        { label: "Multimodal chat", params: { kind: "CHAT", tag: "Multimodal" } },
+        { label: "Cheapest chat", params: { kind: "CHAT", has: "price", sort: "price:1", cols: "tags,context,price" } },
+        { label: "Embeddings by dimension", params: { kind: "EMBEDDING", sort: "dims:-1", cols: "dims,context,price" } },
+        { label: "Fastest", params: { has: "speed", sort: "speed:-1", cols: "tags,speed,price" } },
+      ];
+      function buildPresets() {
+        document.getElementById("presets").innerHTML = PRESETS.map((p) =>
+          `<a class="preset" href="#${new URLSearchParams(p.params).toString()}">${p.label}</a>`).join("");
       }
 
       /* ── Global column sort (T20 · cross-vendor T51) ───
@@ -2205,6 +2289,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           byKey = new Map();
           for (const [v, ms] of Object.entries(data.vendors)) for (const m of ms) byKey.set(v + "/" + m.id, m);
           buildPaletteIndex();
+          buildPresets(); // curated preset links in the facet rail (T56)
           const all = Object.values(data.vendors).flat();
           const kinds = new Set(all.map((m) => m.kind));
           countUp(document.querySelector('[data-stat="models"]'), all.length);
@@ -2364,6 +2449,12 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         const t = e.target.closest(".atab");
         if (t) selectAnalyticsTab(t.dataset.atab);
       });
+
+      /* ── Facet rail: clear-all + copy-link (T56) ───── */
+      document.getElementById("clear-filters").onclick = clearFilters;
+      document.getElementById("copy-view").onclick = () => {
+        if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(() => toast("Link to this view copied ✓")).catch(() => {});
+      };
 
       /* ── Palette wiring (T19) ──────────────────────── */
       document.getElementById("palbtn").onclick = openPalette;
