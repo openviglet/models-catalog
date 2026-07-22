@@ -47,9 +47,10 @@ export function validateEnvelope(env) {
       if (!e.label || typeof e.label !== "string") errs.push(`${at} (${e.id}) missing label`);
       if (!KINDS.has(e.kind)) errs.push(`${at} (${e.id}) invalid kind "${e.kind}"`);
       if (e.status !== undefined && !STATUSES.has(e.status)) errs.push(`${at} (${e.id}) invalid status "${e.status}"`);
-      for (const nf of ["contextWindow", "maxOutputTokens", "embeddingDimensions"]) {
+      for (const nf of ["contextWindow", "maxOutputTokens", "embeddingDimensions", "parameters"]) {
         if (e[nf] !== undefined && !(Number.isInteger(e[nf]) && e[nf] >= 1)) errs.push(`${at} (${e.id}) invalid ${nf}`);
       }
+      if (e.openWeights !== undefined && typeof e.openWeights !== "boolean") errs.push(`${at} (${e.id}) openWeights must be boolean`);
       if (e.pricing !== undefined) errs.push(...pricingErrors(e.pricing, `${at} (${e.id})`));
     }
   }
@@ -58,8 +59,8 @@ export function validateEnvelope(env) {
 
 const CMP_FIELDS = [
   "label", "kind", "contextWindow", "maxOutputTokens", "embeddingDimensions",
-  "capabilities", "modalities", "knowledgeCutoff", "releaseDate", "aliases",
-  "status", "deprecated", "pricing",
+  "capabilities", "openWeights", "parameters", "modalities", "knowledgeCutoff",
+  "releaseDate", "aliases", "status", "deprecated", "pricing",
 ];
 
 function fmt(v) {

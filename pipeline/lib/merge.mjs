@@ -52,7 +52,7 @@ const KIND_ORDER = [
 // Highest-priority-wins scalar fields (conflicts are detected + reported).
 const SCALAR_FIELDS = [
   "label", "kind", "contextWindow", "maxOutputTokens", "embeddingDimensions",
-  "knowledgeCutoff", "releaseDate", "status", "deprecated",
+  "openWeights", "parameters", "knowledgeCutoff", "releaseDate", "status", "deprecated",
 ];
 // Set-union fields (no conflict — sources complement each other).
 const UNION_FIELDS = ["capabilities", "aliases"];
@@ -63,8 +63,8 @@ const PROVENANCE_FIELDS = new Set(["sources", "lastVerified", "vendor", "id"]);
 // applied diffs minimal). Unlisted keys keep their insertion order at the end.
 const FIELD_ORDER = [
   "id", "label", "kind", "contextWindow", "maxOutputTokens", "embeddingDimensions",
-  "capabilities", "modalities", "knowledgeCutoff", "releaseDate", "aliases",
-  "status", "deprecated", "pricing", "sources", "lastVerified",
+  "capabilities", "openWeights", "parameters", "modalities", "knowledgeCutoff",
+  "releaseDate", "aliases", "status", "deprecated", "pricing", "sources", "lastVerified",
 ];
 
 function orderEntry(entry) {

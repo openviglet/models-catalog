@@ -9,33 +9,33 @@
   "cohere": [],
   "mistral": [],
   "deepseek": [
-    { "id": "deepseek-chat", "label": "DeepSeek-V3", "kind": "CHAT" },
-    { "id": "deepseek-reasoner", "label": "DeepSeek-R1", "kind": "CHAT" }
+    { "id": "deepseek-chat", "label": "DeepSeek-V3", "kind": "CHAT", "openWeights": true, "parameters": 671000000000 },
+    { "id": "deepseek-reasoner", "label": "DeepSeek-R1", "kind": "CHAT", "openWeights": true, "parameters": 671000000000 }
   ],
   "xai": [
-    { "id": "grok-4", "label": "Grok 4", "kind": "CHAT" },
-    { "id": "grok-3", "label": "Grok 3", "kind": "CHAT" },
-    { "id": "grok-3-mini", "label": "Grok 3 Mini", "kind": "CHAT" },
-    { "id": "grok-code-fast-1", "label": "Grok Code Fast 1", "kind": "CHAT" }
+    { "id": "grok-4", "label": "Grok 4", "kind": "CHAT", "openWeights": false },
+    { "id": "grok-3", "label": "Grok 3", "kind": "CHAT", "openWeights": false },
+    { "id": "grok-3-mini", "label": "Grok 3 Mini", "kind": "CHAT", "openWeights": false },
+    { "id": "grok-code-fast-1", "label": "Grok Code Fast 1", "kind": "CHAT", "openWeights": false }
   ],
   "minimax": [
-    { "id": "MiniMax-M2", "label": "MiniMax M2", "kind": "CHAT" },
+    { "id": "MiniMax-M2", "label": "MiniMax M2", "kind": "CHAT", "openWeights": true },
     { "id": "MiniMax-M3", "label": "MiniMax M3", "kind": "CHAT" }
   ],
   "zai": [
-    { "id": "glm-4.6", "label": "GLM-4.6", "kind": "CHAT" },
-    { "id": "glm-4.5", "label": "GLM-4.5", "kind": "CHAT" },
-    { "id": "glm-4.5-air", "label": "GLM-4.5-Air", "kind": "CHAT" }
+    { "id": "glm-4.6", "label": "GLM-4.6", "kind": "CHAT", "openWeights": true },
+    { "id": "glm-4.5", "label": "GLM-4.5", "kind": "CHAT", "openWeights": true, "parameters": 355000000000 },
+    { "id": "glm-4.5-air", "label": "GLM-4.5-Air", "kind": "CHAT", "openWeights": true, "parameters": 106000000000 }
   ],
   "groq": [
-    { "id": "llama-3.3-70b-versatile", "label": "Llama 3.3 70B Versatile", "kind": "CHAT" },
-    { "id": "llama-3.1-8b-instant", "label": "Llama 3.1 8B Instant", "kind": "CHAT" },
-    { "id": "openai/gpt-oss-120b", "label": "GPT-OSS 120B", "kind": "CHAT" },
-    { "id": "openai/gpt-oss-20b", "label": "GPT-OSS 20B", "kind": "CHAT" },
-    { "id": "moonshotai/kimi-k2-instruct-0905", "label": "Kimi K2 Instruct", "kind": "CHAT" },
-    { "id": "qwen/qwen3-32b", "label": "Qwen3 32B", "kind": "CHAT" },
-    { "id": "meta-llama/llama-4-maverick-17b-128e-instruct", "label": "Llama 4 Maverick 17B", "kind": "CHAT" },
-    { "id": "meta-llama/llama-4-scout-17b-16e-instruct", "label": "Llama 4 Scout 17B", "kind": "CHAT" }
+    { "id": "llama-3.3-70b-versatile", "label": "Llama 3.3 70B Versatile", "kind": "CHAT", "openWeights": true, "parameters": 70000000000 },
+    { "id": "llama-3.1-8b-instant", "label": "Llama 3.1 8B Instant", "kind": "CHAT", "openWeights": true, "parameters": 8000000000 },
+    { "id": "openai/gpt-oss-120b", "label": "GPT-OSS 120B", "kind": "CHAT", "openWeights": true, "parameters": 117000000000 },
+    { "id": "openai/gpt-oss-20b", "label": "GPT-OSS 20B", "kind": "CHAT", "openWeights": true, "parameters": 21000000000 },
+    { "id": "moonshotai/kimi-k2-instruct-0905", "label": "Kimi K2 Instruct", "kind": "CHAT", "openWeights": true, "parameters": 1000000000000 },
+    { "id": "qwen/qwen3-32b", "label": "Qwen3 32B", "kind": "CHAT", "openWeights": true, "parameters": 32000000000 },
+    { "id": "meta-llama/llama-4-maverick-17b-128e-instruct", "label": "Llama 4 Maverick 17B", "kind": "CHAT", "openWeights": true, "parameters": 400000000000 },
+    { "id": "meta-llama/llama-4-scout-17b-16e-instruct", "label": "Llama 4 Scout 17B", "kind": "CHAT", "openWeights": true, "parameters": 109000000000 }
   ],
   "together": [
     { "id": "meta-llama/Llama-3.3-70B-Instruct-Turbo", "label": "Llama 3.3 70B Instruct Turbo", "kind": "CHAT" },

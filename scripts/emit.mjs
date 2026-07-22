@@ -280,6 +280,8 @@ const COVERAGE_FIELDS = [
   ["maxOutputTokens", (e) => e.maxOutputTokens != null],
   ["embeddingDimensions", (e) => e.embeddingDimensions != null],
   ["capabilities", (e) => (e.capabilities || []).length > 0],
+  ["openWeights", (e) => e.openWeights != null], // open-weight vs proprietary (Block I / T39)
+  ["parameters", (e) => e.parameters != null], // disclosed total params (Block I / T39)
   ["modalities", (e) => e.modalities != null],
   ["knowledgeCutoff", (e) => e.knowledgeCutoff != null],
   ["releaseDate", (e) => e.releaseDate != null],
@@ -457,7 +459,8 @@ ${feedEntries.length ? feedEntries.join("\n") + "\n" : ""}</feed>
 // fields are `;`-joined in CSV; modalities are split into input/output columns.
 const CSV_COLUMNS = [
   "vendor", "id", "label", "kind", "contextWindow", "maxOutputTokens",
-  "embeddingDimensions", "capabilities", "inputModalities", "outputModalities",
+  "embeddingDimensions", "capabilities", "openWeights", "parameters",
+  "inputModalities", "outputModalities",
   "knowledgeCutoff", "releaseDate", "status", "deprecated", "aliases",
   "sources", "lastVerified",
   // Indicative US list price (Block F / T32) — a reference only, verify with the
@@ -516,6 +519,18 @@ const modelHtmlUrl = (e) => `${SOURCE_URL}/models/${e.vendor}/${slugFor(e)}.html
 const modelMdUrl = (e) => `${SOURCE_URL}/models/${e.vendor}/${slugFor(e)}.md`;
 const inMods = (e) => (e.modalities && e.modalities.input) || [];
 const outMods = (e) => (e.modalities && e.modalities.output) || [];
+// Open-weight vs proprietary, when known (Block I / T39).
+const weightsLabel = (e) => {
+  if (e.openWeights == null) return null;
+  return e.openWeights ? "Open-weight" : "Proprietary (API-only)";
+};
+// Disclosed total parameter count → human string (Block I / T39), e.g. 671B, 8B, 1.7M.
+const humanParams = (n) => {
+  if (n == null) return null;
+  if (n >= 1e9) return `${n % 1e9 === 0 ? n / 1e9 : (n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `${n % 1e6 === 0 ? n / 1e6 : (n / 1e6).toFixed(1)}M`;
+  return comma(n);
+};
 // Indicative US list price, one human line (Block F / T32). Always carries the
 // "indicative — verify with vendor" caveat so the reference framing travels.
 const money = (v) => "$" + Number(v.toFixed(6)).toString();
@@ -532,6 +547,9 @@ const proseText = (e) => {
   let s = `${e.label} (${e.id}) is a ${e.kind.toLowerCase()} model from ${e.vendor}`;
   if (e.contextWindow != null) s += ` with a ${humanCtx(e.contextWindow)}-token context window`;
   const extra = [];
+  if (e.openWeights === true) extra.push(e.parameters != null ? `open-weight (${humanParams(e.parameters)} parameters)` : "open-weight");
+  else if (e.openWeights === false) extra.push("proprietary (API-only)");
+  else if (e.parameters != null) extra.push(`${humanParams(e.parameters)} parameters`);
   if (e.embeddingDimensions != null) extra.push(`${comma(e.embeddingDimensions)}-dimensional embeddings`);
   if ((e.capabilities || []).length) extra.push(`capabilities ${e.capabilities.join(", ")}`);
   if (inMods(e).length) extra.push(`input ${inMods(e).join(", ")}`);
@@ -549,6 +567,8 @@ const factRows = (e) => [
   ["Input modalities", inMods(e).join(", ") || null],
   ["Output modalities", outMods(e).join(", ") || null],
   ["Capabilities", (e.capabilities || []).join(", ") || null],
+  ["Weights", weightsLabel(e)],
+  ["Parameters", e.parameters != null ? humanParams(e.parameters) : null],
   ["Status", e.status || (e.deprecated ? "DEPRECATED" : null)],
   ["Knowledge cutoff", e.knowledgeCutoff || null],
   ["Release date", e.releaseDate || null],

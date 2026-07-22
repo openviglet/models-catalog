@@ -36,14 +36,6 @@ opinion, decay fast, and erode trust). T38 (shipped) delivered a purely *derived
 transparent market proxy, honestly labelled). The remaining tasks add the *factual inputs*
 that a stronger, still-non-opinionated signal needs.
 
-### §I2 — T39 · Factual capability attributes (`openWeights` + `parameters`)
-Two optional, provenance-gated fields. `openWeights` (open-weight/downloadable vs
-proprietary-API-only) is a universal, unambiguous fact that strongly informs *type of use*;
-`parameters` (total params) is a fact only for open models — absent for the closed frontier
-ones, so it can't be a universal intelligence proxy, but it's useful where known. Both
-curated/anchored and omitted rather than guessed. They feed the T38 classification (an
-open-weight badge, a size hint).
-
 ### §I3 — T40 · Cited intelligence / benchmark index (field + shape)
 The honest way to signal "how capable" is not our opinion but a **cited third-party number** —
 an Artificial Analysis Intelligence Index, LMArena Elo, or similar — carried like `pricing`:

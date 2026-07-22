@@ -1241,10 +1241,24 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
             if (inMod.includes("image") || caps.includes("vision")) tags.push("Multimodal");
             if (!tags.length) tags.push("Chat");
         }
+        // Open weights (T39) is a factual, discovery-relevant attribute — surface it
+        // as a use-case tag so "show me open models" is filterable (T44).
+        if (m.openWeights === true) tags.push("Open weights");
         let tier = null;
         const inp = m.pricing && m.pricing.inputPer1M;
         if (inp != null) tier = inp >= 5 ? "Frontier" : inp >= 1 ? "High" : inp >= 0.2 ? "Mid" : "Light";
         return { tags, tier };
+      }
+      // Disclosed total parameter count → short label (T39), e.g. 671B, 8B, 1.7M.
+      function fmtParams(n) {
+        if (n == null) return "";
+        if (n >= 1e9) return `${n % 1e9 === 0 ? n / 1e9 : (n / 1e9).toFixed(1)}B`;
+        if (n >= 1e6) return `${n % 1e6 === 0 ? n / 1e6 : (n / 1e6).toFixed(1)}M`;
+        return n.toLocaleString("en-US");
+      }
+      function weightsLabel(m) {
+        if (m.openWeights == null) return "";
+        return m.openWeights ? "Open-weight" : "Proprietary (API-only)";
       }
       function tierBadge(tier) {
         return tier ? `<span class="chip" style="background:${TIER_BG[tier]};color:#fff;border-color:transparent" title="${TIER_HINT}">${tier}</span>` : "";
@@ -1295,6 +1309,8 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         if (m.contextWindow) add("Context window", `<span class="mono">${m.contextWindow.toLocaleString("en-US")}</span> tokens <span class="lbl">(${fmtTokens(m.contextWindow)})</span>`);
         if (m.maxOutputTokens) add("Max output", `<span class="mono">${m.maxOutputTokens.toLocaleString("en-US")}</span> tokens <span class="lbl">(${fmtTokens(m.maxOutputTokens)})</span>`);
         if (m.embeddingDimensions) add("Embedding dims", `<span class="mono">${m.embeddingDimensions}</span>`);
+        if (m.openWeights != null) add("Weights", `<span class="chip">${weightsLabel(m)}</span>`);
+        if (m.parameters != null) add("Parameters", `<span class="mono">${fmtParams(m.parameters)}</span> <span class="lbl">${m.parameters.toLocaleString("en-US")}</span>`);
         if (m.pricing) add('Price <span class="lbl">US list</span>', priceCell(m.pricing));
         if (m.status) add("Status", m.status);
         if (m.knowledgeCutoff) add("Knowledge cutoff", m.knowledgeCutoff);
@@ -1387,6 +1403,8 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           ["Context window", ({ m }) => tokens(m.contextWindow)],
           ["Max output", ({ m }) => tokens(m.maxOutputTokens)],
           ["Embedding dims", ({ m }) => m.embeddingDimensions ? `<span class="mono">${m.embeddingDimensions}</span>` : ""],
+          ["Weights", ({ m }) => m.openWeights == null ? "" : `<span class="chip">${weightsLabel(m)}</span>`],
+          ["Parameters", ({ m }) => m.parameters != null ? `<span class="mono">${fmtParams(m.parameters)}</span>` : ""],
           ["Price (US list)", ({ m }) => m.pricing ? priceCell(m.pricing) : ""],
           ["Input", ({ m }) => chips(m.modalities && m.modalities.input)],
           ["Output", ({ m }) => chips(m.modalities && m.modalities.output)],

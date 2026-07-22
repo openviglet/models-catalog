@@ -285,6 +285,34 @@ test("validateEnvelope: flags pricing without provenance / non-indicative / bad 
   assert.ok(errs.some((e) => /pricing.currency must be USD/.test(e)));
 });
 
+test("validateEnvelope: openWeights + parameters — valid facts pass, bad ones flagged (Block I / T39)", () => {
+  assert.deepEqual(
+    validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { deepseek: [
+      { id: "v3", label: "DeepSeek-V3", kind: "CHAT", openWeights: true, parameters: 671000000000 },
+      { id: "closed", label: "Closed", kind: "CHAT", openWeights: false },
+    ] } }),
+    [],
+    "boolean openWeights + positive-integer parameters are valid",
+  );
+  const errs = validateEnvelope({ version: 1, lastUpdated: WHEN, vendors: { openai: [
+    { id: "a", label: "A", kind: "CHAT", openWeights: "yes", parameters: 0 },
+  ] } });
+  assert.ok(errs.some((e) => /openWeights must be boolean/.test(e)));
+  assert.ok(errs.some((e) => /invalid parameters/.test(e)));
+});
+
+test("merge: overrides seed openWeights + parameters, carried onto the entry (Block I / T39)", () => {
+  const { vendors, meta } = baseMerge({
+    existing: { version: 1, vendors: { deepseek: [{ id: "v3", label: "DeepSeek-V3", kind: "CHAT" }] } },
+    overrides: [{ vendor: "deepseek", id: "v3", openWeights: true, parameters: 671000000000 }],
+  });
+  const e = vendors.deepseek[0];
+  assert.equal(e.openWeights, true);
+  assert.equal(e.parameters, 671000000000);
+  assert.equal(meta["deepseek::v3"].fieldProvenance.openWeights, "overrides");
+  assert.equal(meta["deepseek::v3"].fieldProvenance.parameters, "overrides");
+});
+
 test("diffReport: counts add/remove/change", () => {
   const existing = { vendors: { openai: [{ id: "old", label: "Old", kind: "CHAT" }, { id: "chg", label: "Chg", kind: "CHAT" }] } };
   const proposed = { vendors: { openai: [{ id: "chg", label: "Chg", kind: "CHAT", contextWindow: 100, sources: ["litellm"] }, { id: "new", label: "New", kind: "CHAT", sources: ["openai-api"] }] } };

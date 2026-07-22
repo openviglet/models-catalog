@@ -83,6 +83,15 @@
           "items": { "type": "string" },
           "description": "Capability hints such as vision, tools, reasoning, multimodal."
         },
+        "openWeights": {
+          "type": "boolean",
+          "description": "True when the model's weights are openly downloadable (open-weight), false when it is proprietary API-only. A universal, unambiguous fact that informs the type of use. Curated/anchored, omitted rather than guessed. Additive (Block I / T39)."
+        },
+        "parameters": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Total parameter count, only when the vendor has publicly disclosed it (typical of open-weight models; absent for closed frontier models, so NOT a universal capability proxy). Curated/anchored, never guessed. Additive (Block I / T39)."
+        },
         "deprecated": {
           "type": "boolean",
           "description": "True when the vendor has retired or superseded the id."

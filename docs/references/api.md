@@ -92,6 +92,8 @@ are regenerated deterministically from the canonical source
 | `contextWindow` | integer | — | Max context tokens, when known. |
 | `embeddingDimensions` | integer | — | Output vector size — only for `kind = EMBEDDING`. |
 | `capabilities` | string[] | — | Hints such as `vision`, `tools`, `reasoning`. |
+| `openWeights` | boolean | — | `true` when the weights are openly downloadable (open-weight), `false` when proprietary API-only. Curated/anchored, omitted when unknown — never guessed. |
+| `parameters` | integer | — | Total parameter count, only when the vendor has publicly disclosed it (typical of open-weight models; absent for closed frontier models). Curated/anchored, never guessed. |
 | `deprecated` | boolean | — | `true` when the vendor has retired/superseded the id. |
 | `maxOutputTokens` | integer | — | Max tokens emittable in one response, when known. |
 | `modalities` | object | — | `{ input: string[], output: string[] }` — supported I/O modalities. |

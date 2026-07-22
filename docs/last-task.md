@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T39 SHIPPED** (Block I §I2 — factual fields `openWeights` (open vs proprietary) + `parameters` (disclosed total, only when public); plumbed through schema/validate/merge/emit + page tags/drawer/compare; seeded 29 verified entries via overrides; 2 tests) — 2026-07-22.
 - **T44 CREATED** (📋, Block I §I7 — filter & sort by tier + use-case on the page: interactive chips/sort reusing T20 filters + T16 hash; page-only; deps — [T38 shipped]) — 2026-07-22.
 - **T43 CREATED** (💭, Block I §I6 — speed & cost-efficiency axis: cited throughput (tok/s) + latency (TTFT) + cost-per-capability; needs a source) — 2026-07-22.
 - **T42 CREATED** (📋, Block I §I5 — per-domain benchmark scores (reasoning/coding/math) extending benchmarks; deps T40) — 2026-07-22.
