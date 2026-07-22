@@ -16,6 +16,8 @@ public/catalog.csv
 public/catalog.ndjson
 public/aliases.json
 public/badge.json
+public/plans.json
+public/plans.schema.json
 public/llms.txt
 public/by-kind/
 public/by-vendor/

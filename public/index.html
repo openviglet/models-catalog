@@ -1494,7 +1494,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
       }
 
       /* ── Consumer plans (Block F / T33) ────────────── */
-      const PLAN_VENDOR_LABEL = { anthropic: "Anthropic", openai: "OpenAI", google: "Google" };
+      const PLAN_VENDOR_LABEL = { anthropic: "Anthropic", openai: "OpenAI", google: "Google", zai: "Z.ai" };
       function renderPlans(data) {
         if (!data || !data.plans || !Object.keys(data.plans).length) return;
         const money = (v) => (v == null ? null : v === 0 ? "Free" : "$" + Number(v).toLocaleString("en-US", { maximumFractionDigits: 2 }));

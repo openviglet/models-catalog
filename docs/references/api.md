@@ -219,7 +219,7 @@ each id's effective status (`status`, falling back to `deprecated → DEPRECATED
 A **separate dataset** from the model catalog — consumer *subscription plans* are not
 models, so they do not live in `ModelEntry` or `catalog.json`. `plans.json` publishes the
 vendors' consumer tiers (Claude Free/Pro/Max, ChatGPT Free/Plus/Pro, Gemini / Google AI
-Pro/Ultra), **US-only**, keyed by consumer brand. It has its own schema (`plans.schema.json`)
+Pro/Ultra, Z.ai GLM Coding Lite/Pro/Max), **US-only**, keyed by consumer brand. It has its own schema (`plans.schema.json`)
 and its own envelope (not a `vendors` map):
 
 ```json
