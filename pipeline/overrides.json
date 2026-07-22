@@ -4,7 +4,10 @@
     { "id": "text-embedding-3-small", "label": "text-embedding-3-small", "embeddingDimensions": 1536, "__pin": true },
     { "id": "text-embedding-3-large", "label": "text-embedding-3-large", "embeddingDimensions": 3072, "__pin": true }
   ],
-  "anthropic": [],
+  "anthropic": [
+    { "id": "claude-opus-4-20250514", "label": "Claude Opus 4", "kind": "CHAT", "openWeights": false },
+    { "id": "claude-sonnet-4-20250514", "label": "Claude Sonnet 4", "kind": "CHAT", "openWeights": false }
+  ],
   "gemini": [],
   "cohere": [],
   "mistral": [],
