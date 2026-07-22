@@ -705,6 +705,18 @@
       </div>
     </section>
 
+    <!-- ── Pricing sources registry (Block H / T35) ────── -->
+    <section class="block alt" id="sources" hidden>
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">Verify</div>
+          <h2>Pricing sources</h2>
+          <p>The official vendor pages to <strong>verify</strong> the catalog's indicative prices against, from <a href="./providers.json"><code>providers.json</code></a>. Grouped by provider type; ✓ marks providers whose models are in the catalog.</p>
+        </div>
+        <div id="sources-wrap"></div>
+      </div>
+    </section>
+
     <!-- ── Browse / Explorer ───────────────────────────── -->
     <section class="block alt" id="browse">
       <div class="wrap">
@@ -755,7 +767,8 @@
                 <tr><td><code>by-capability/&lt;cap&gt;.json</code></td><td>Filtered to one capability — e.g. <a href="./by-capability/reasoning.json"><code>reasoning</code></a>, <a href="./by-capability/vision.json"><code>vision</code></a>.</td></tr>
                 <tr><td><code>by-modality/&lt;m&gt;.json</code></td><td>Filtered to one input/output modality — e.g. <a href="./by-modality/image.json"><code>image</code></a>, <a href="./by-modality/audio.json"><code>audio</code></a>.</td></tr>
                 <tr><td><a href="./aliases.json"><code>aliases.json</code></a></td><td>Alias resolution map — <code>alias id → { vendor, id }</code> of the canonical entry. Resolve <code>-latest</code> / dated snapshots without walking the catalog.</td></tr>
-                <tr><td><a href="./plans.json"><code>plans.json</code></a></td><td>Consumer subscription plans — a separate dataset (Claude, ChatGPT, Gemini), each with an <em>indicative</em> US list price. A reference only — verify with the vendor.</td></tr>
+                <tr><td><a href="./plans.json"><code>plans.json</code></a></td><td>Consumer subscription plans — a separate dataset (Claude, ChatGPT, Gemini, Z.ai), each with an <em>indicative</em> US list price. A reference only — verify with the vendor.</td></tr>
+                <tr><td><a href="./providers.json"><code>providers.json</code></a></td><td>Pricing-source registry — each provider's official API-pricing / consumer-plans page, categorized and linked to its catalog vendor. The canonical places to verify indicative prices.</td></tr>
                 <tr><td><a href="./badge.json"><code>badge.json</code></a></td><td>Status badge — a shields.io endpoint payload for a live "N models · M vendors" README badge.</td></tr>
                 <tr><td><a href="./llms.txt"><code>llms.txt</code></a> · <a href="./models/"><code>models/…</code></a></td><td>Citability layer — an <code>llms.txt</code> index plus an indexable, quotable page (Markdown + HTML) per vendor and per model, for assistants and search engines.</td></tr>
                 <tr><td><a href="./endpoints.json"><code>endpoints.json</code></a></td><td>Discovery manifest — absolute URLs for every path, plus the available <code>byKind</code>/<code>byVendor</code> keys. Read this instead of hard-coding paths.</td></tr>
@@ -1527,6 +1540,40 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         document.getElementById("plans").hidden = false;
       }
 
+      /* ── Pricing sources registry (Block H / T35) ──── */
+      const SOURCE_CAT_LABEL = {
+        "model-creator": "Model creators (direct APIs)", "hyperscaler": "Hyperscaler clouds",
+        "inference-provider": "Fast-inference providers", "aggregator": "Aggregators & gateways",
+      };
+      const SOURCE_CAT_ORDER = ["model-creator", "hyperscaler", "inference-provider", "aggregator"];
+      function renderSources(data) {
+        if (!data || !Array.isArray(data.providers) || !data.providers.length) return;
+        const groups = SOURCE_CAT_ORDER.map((cat) => {
+          const ps = data.providers.filter((p) => p.category === cat);
+          if (!ps.length) return "";
+          const rows = ps.map((p) => {
+            const links = [];
+            if (p.apiPricingUrl) links.push(`<a href="${p.apiPricingUrl}" target="_blank" rel="noopener">API pricing ↗</a>`);
+            if (p.consumerPlansUrl) links.push(`<a href="${p.consumerPlansUrl}" target="_blank" rel="noopener">plans ↗</a>`);
+            const inCatalog = p.catalogVendor
+              ? `<span title="In the catalog as '${p.catalogVendor}'">✓</span>`
+              : '<span class="lbl" title="Not yet in the catalog">—</span>';
+            return `<tr>
+              <td>${inCatalog}</td>
+              <td><strong>${p.name}</strong>${p.note ? `<div class="lbl">${p.note}</div>` : ""}</td>
+              <td>${links.join(" · ") || '<span class="lbl">—</span>'}</td>
+            </tr>`;
+          }).join("");
+          return `<section class="vendor">
+            <div class="vendor-head" style="cursor:default"><h3>${SOURCE_CAT_LABEL[cat]}</h3><span class="count">${ps.length}</span></div>
+            <div class="table-scroll"><table><thead><tr><th>In catalog</th><th>Provider</th><th>Official pricing</th></tr></thead><tbody>${rows}</tbody></table></div>
+          </section>`;
+        }).join("");
+        document.getElementById("sources-wrap").innerHTML =
+          groups + (data.disclaimer ? `<p class="lbl" style="margin-top:1rem">${data.disclaimer}</p>` : "");
+        document.getElementById("sources").hidden = false;
+      }
+
       /* ── Coverage & gaps (T29) ─────────────────────── */
       // Short column headers for the coverage matrix (coverage.json field keys).
       const COV_LABEL = {
@@ -1723,6 +1770,11 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           fetch("./plans.json")
             .then((r) => (r.ok ? r.json() : null))
             .then((p) => { if (p) renderPlans(p); })
+            .catch(() => {});
+          // Pricing sources (T35): official vendor pricing pages. Missing → section stays hidden.
+          fetch("./providers.json")
+            .then((r) => (r.ok ? r.json() : null))
+            .then((p) => { if (p) renderSources(p); })
             .catch(() => {});
         })
         .catch((e) => {

@@ -21,6 +21,8 @@ const SRC = resolve(REPO_ROOT, "catalog/model-catalog.json");
 const SCHEMA_SRC = resolve(REPO_ROOT, "catalog/model-catalog.schema.json");
 const PLANS_SRC = resolve(REPO_ROOT, "catalog/plans.json"); // consumer plans dataset (T33)
 const PLANS_SCHEMA_SRC = resolve(REPO_ROOT, "catalog/plans.schema.json");
+const PROVIDERS_SRC = resolve(REPO_ROOT, "catalog/providers.json"); // pricing-source registry (T35)
+const PROVIDERS_SCHEMA_SRC = resolve(REPO_ROOT, "catalog/providers.schema.json");
 const OUT_DIR = resolve(REPO_ROOT, "public");
 // Public base URL — the GitHub Pages site for this repo. The endpoint intentionally
 // stays on this public host (a community-owned home, not a brand asset); the
@@ -115,6 +117,38 @@ if (existsSync(PLANS_SRC)) {
     source: SOURCE_URL,
     disclaimer: plansRoot.disclaimer,
     plans,
+  };
+}
+
+// Provider pricing-source registry (T35): official pricing pages to VERIFY the
+// catalog's indicative prices against — URLs only, no prices. Optional: absent →
+// not published. Hand-curated + reviewed.
+let providersPublished = null;
+let providersCount = 0;
+if (existsSync(PROVIDERS_SRC)) {
+  const provRoot = JSON.parse(readFileSync(PROVIDERS_SRC, "utf8"));
+  if (typeof provRoot.version !== "number") fail("providers.json missing integer `version`");
+  if (typeof provRoot.lastUpdated !== "string") fail("providers.json missing `lastUpdated`");
+  if (!Array.isArray(provRoot.providers)) fail("providers.json `providers` must be an array");
+  const CATEGORIES = new Set(["model-creator", "hyperscaler", "inference-provider", "aggregator"]);
+  const seen = new Set();
+  for (let i = 0; i < provRoot.providers.length; i++) {
+    const p = provRoot.providers[i];
+    const where = `providers[${i}]`;
+    if (!p.id || typeof p.id !== "string") fail(`${where} missing string \`id\``);
+    if (seen.has(p.id)) fail(`${where} duplicate id "${p.id}"`);
+    seen.add(p.id);
+    if (!p.name || typeof p.name !== "string") fail(`${where} (${p.id}) missing \`name\``);
+    if (!CATEGORIES.has(p.category)) fail(`${where} (${p.id}) invalid category "${p.category}"`);
+    providersCount++;
+  }
+  providersPublished = {
+    $schema: `${SOURCE_URL}/providers.schema.json`,
+    version: provRoot.version,
+    lastUpdated: provRoot.lastUpdated,
+    source: SOURCE_URL,
+    disclaimer: provRoot.disclaimer,
+    providers: provRoot.providers,
   };
 }
 
@@ -224,6 +258,7 @@ const endpoints = {
   pages: `${SOURCE_URL}/models/`,
   schema: `${SOURCE_URL}/catalog.schema.json`,
   ...(plansPublished ? { plans: `${SOURCE_URL}/plans.json`, plansSchema: `${SOURCE_URL}/plans.schema.json` } : {}),
+  ...(providersPublished ? { providers: `${SOURCE_URL}/providers.json`, providersSchema: `${SOURCE_URL}/providers.schema.json` } : {}),
   byKind: Object.fromEntries(presentKinds.map((k) => [k, `${SOURCE_URL}/by-kind/${k}.json`])),
   byVendor: Object.fromEntries(Object.keys(vendors).map((v) => [v, `${SOURCE_URL}/by-vendor/${v}.json`])),
   byCapability: Object.fromEntries(presentCaps.map((c) => [c, `${SOURCE_URL}/by-capability/${c}.json`])),
@@ -605,7 +640,8 @@ const llmsTxt = `# Model Catalog
 - [Compact index](${SOURCE_URL}/index.json): { vendor, id, label, kind } per entry
 - [Aggregate stats](${SOURCE_URL}/stats.json): counts per vendor/kind/capability + field coverage
 - [Change feed](${SOURCE_URL}/changes.json): what changed at the last publish${plansPublished ? `
-- [Consumer plans](${SOURCE_URL}/plans.json): vendor subscription tiers with an indicative US list price (a reference — verify with the vendor)` : ""}
+- [Consumer plans](${SOURCE_URL}/plans.json): vendor subscription tiers with an indicative US list price (a reference — verify with the vendor)` : ""}${providersPublished ? `
+- [Pricing sources](${SOURCE_URL}/providers.json): official vendor pricing pages to verify the catalog's indicative prices against` : ""}
 - [JSON Schema](${SOURCE_URL}/catalog.schema.json): the envelope + entry contract
 - [Discovery manifest](${SOURCE_URL}/endpoints.json): every published path as an absolute URL
 
@@ -659,6 +695,10 @@ if (plansPublished) {
   write("plans.json", plansPublished); // consumer subscription plans (T33)
   writeFileSync(resolve(OUT_DIR, "plans.schema.json"), readFileSync(PLANS_SCHEMA_SRC, "utf8"), "utf8");
 }
+if (providersPublished) {
+  write("providers.json", providersPublished); // pricing-source registry (T35)
+  writeFileSync(resolve(OUT_DIR, "providers.schema.json"), readFileSync(PROVIDERS_SCHEMA_SRC, "utf8"), "utf8");
+}
 for (const [k, v] of Object.entries(byKind)) write(`by-kind/${k}.json`, v);
 for (const [k, v] of Object.entries(byVendor)) write(`by-vendor/${k}.json`, v);
 for (const [k, v] of Object.entries(byCapability)) write(`by-capability/${k}.json`, v);
@@ -680,6 +720,7 @@ console.log(
 console.log(`emit-model-catalog: GEO pages — llms.txt + ${geoPages.length - 2} vendor/model pages under models/`);
 console.log(`emit-model-catalog: badge.json — "${badge.label}: ${badge.message}"`);
 if (plansPublished) console.log(`emit-model-catalog: plans.json — ${plansCount} consumer plans across ${Object.keys(plansPublished.plans).length} vendors (indicative US list)`);
+if (providersPublished) console.log(`emit-model-catalog: providers.json — ${providersCount} provider pricing sources`);
 console.log(
   `emit-model-catalog: change feed (baseline: ${changes.baseline}) — ` +
     `${added.length} added, ${removed.length} removed, ${changed.length} lifecycle`,

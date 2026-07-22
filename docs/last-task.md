@@ -1,7 +1,7 @@
-# Last task number — `T34` · next block letter — `H`
+# Last task number — `T37` · next block letter — `I`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T30`; after assigning it, bump the number above and the log line below.
+> `T38`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,9 @@
 
 ## Log (most recent first)
 
+- **T37 CREATED** (📋, Block H §H3 — onboard aggregators OpenRouter + Vercel as vendors, curated cap so re-served models don't balloon the catalog; deps T35) — 2026-07-22.
+- **T36 CREATED** (📋, Block H §H2 — onboard Groq/Together/Fireworks/Cerebras/Qwen/Azure via LiteLLM adapter map + curated anchoring ids from cached snapshot → models + indicative per-token prices; deps T35) — 2026-07-22.
+- **T35 SHIPPED** (Block H §H1 — pricing-source registry: catalog/providers.json + providers.schema.json, 18 providers categorized (model-creator/hyperscaler/inference-provider/aggregator) + catalogVendor cross-link + official apiPricing/consumerPlans URLs; emit reads+validates+publishes providers.json + endpoints/llms.txt; page Pricing sources section + api.md) — 2026-07-22.
 - **T33 SHIPPED** (Block F §F4 — consumer plans dataset: separate catalog/plans.json + plans.schema.json (plans aren't models), envelope keyed by brand, provenance-gated Plan {id,name,tier,priceMonthlyUSD,indicative,source,lastVerified}; seeded US plans (13/4 — Claude/ChatGPT/Gemini/Z.ai GLM Coding; Z.ai Pro/Max price omitted, SPA+conflicting sources); emit reads+validates+flattens+publishes plans.json + endpoints/llms.txt; page Consumer plans section + api.md section. **Block F shipped in full.**) — 2026-07-22.
 - **T32 SHIPPED** (Block F §F3 — surface pricing across artifacts: page row chip + drawer + compare + coverage heatmap col + marketing text; emit CSV price* cols + per-model page price row + COVERAGE_FIELDS pricing (stats+coverage) + vendor/llms.txt blurbs; api.md pricing field+subsection; JS/Python/Java READMEs; NDJSON/catalog automatic; indicative-verify caveat on every surface) — 2026-07-22.
 - **T31 SHIPPED** (Block F §F2 — pipeline pricing enrichment: litellm adapter maps `*_cost_per_token`→`pricing` (per-1M USD, indicative, source litellm); merge carries pricing as highest-wins object (enrich-blank-then-stable, overrides pin corrects, stamps lastVerified); validate CMP_FIELDS+pricing; offline --apply populated 161 entries, 0/0/161 diff; 2 new tests) — 2026-07-22.

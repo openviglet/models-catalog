@@ -41,7 +41,8 @@ capability*; it also carries an **optional, indicative US list price** per model
 | `…/by-modality/<m>.json` | **Faceted slice** — filtered to one modality present on **input or output** (e.g. `by-modality/image.json`). Same envelope, plus a `modality` field. |
 | `…/aliases.json` | **Alias resolution map** — `alias id → { vendor, id }` of the canonical entry, so a consumer can resolve a `-latest`/dated-snapshot alias without scanning every entry. Its own envelope. |
 | `…/plans.json` | **Consumer subscription plans** — a *separate* dataset (plans are not models): vendor consumer tiers (Claude, ChatGPT, Gemini) with an **indicative US list price** each. Keyed by consumer brand. A reference only — verify with the vendor. See below. |
-| `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `stats`, `changes`, `feed`, `csv`, `ndjson`, `aliases`, `schema`, `plans` (+ `plansSchema` when present), and the available `byKind` / `byVendor` / `byCapability` / `byModality` slice keys. Read this to discover the surface rather than hard-coding paths. |
+| `…/providers.json` | **Pricing-source registry** — each provider's official API-pricing / consumer-plans page, categorized (model creator / hyperscaler / inference provider / aggregator) and cross-linked to its catalog vendor. URLs only — the canonical places to verify indicative prices. See below. |
+| `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `stats`, `changes`, `feed`, `csv`, `ndjson`, `aliases`, `schema`, `plans` / `providers` (+ their `*Schema` when present), and the available `byKind` / `byVendor` / `byCapability` / `byModality` slice keys. Read this to discover the surface rather than hard-coding paths. |
 | `…/badge.json` | **Status badge** — a [shields.io endpoint](https://shields.io/badges/endpoint-badge) payload (`{ schemaVersion, label, message, color }`) so a README can show a live "N models · M vendors" badge. |
 | `…/llms.txt` | **`llms.txt` index** — the [llms.txt](https://llmstxt.org) convention: a titled, linked map of the catalog data + every vendor / model page, for assistants and crawlers. |
 | `…/models/` | **Per-vendor / per-model pages** — an indexable, quotable URL per model (`models/<vendor>/<slug>.md` + `.html`) and per vendor (`models/<vendor>/`), with the facts in prose. |
@@ -245,6 +246,33 @@ a reference only, **not authoritative**, excludes tax, may be stale and vary by 
 + `lastVerified` + `indicative: true` required per plan) and never invented. Hand-curated
 and review-gated — there is no upstream API for consumer plans. Each plan is flattened with
 its `vendor` in the published artifact. The section is omitted if `catalog/plans.json` is absent.
+
+## Pricing-source registry (`providers.json`)
+
+The counterpart to the *indicative* prices: `providers.json` lists each AI provider and its
+**official pricing pages**, so every "verify with the vendor" caveat has a canonical link.
+It carries **URLs only, no prices** — the catalog's own per-model `pricing` (and `plans.json`)
+are the indicative references; these are the authoritative places to confirm them. Its own
+schema (`providers.schema.json`) and envelope:
+
+```json
+{
+  "version": 1, "lastUpdated": "2026-07-22",
+  "providers": [
+    { "id": "openai", "name": "OpenAI (GPT)", "category": "model-creator",
+      "catalogVendor": "openai",
+      "apiPricingUrl": "https://openai.com/api/pricing/",
+      "consumerPlansUrl": "https://openai.com/chatgpt/pricing/" },
+    { "id": "groq", "name": "Groq", "category": "inference-provider",
+      "catalogVendor": null, "apiPricingUrl": "https://groq.com/pricing/" }
+  ]
+}
+```
+
+`category` ∈ `model-creator` · `hyperscaler` · `inference-provider` · `aggregator`.
+`catalogVendor` is the catalog vendor key whose models this provider serves, or `null` when
+the provider is not (yet) represented in the catalog. Hand-curated and review-gated. The
+section is omitted if `catalog/providers.json` is absent.
 
 ## Alternate export formats (`catalog.csv` + `catalog.ndjson`)
 

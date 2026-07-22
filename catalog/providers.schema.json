@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openviglet.github.io/model-catalog/providers.schema.json",
+  "title": "Model Catalog — Provider Pricing-Source Registry",
+  "description": "A registry (Block H / T35) of AI model providers and their OFFICIAL pricing pages, so every 'indicative — verify with the vendor' caveat in the catalog has a canonical link to check. Categorized (model creators, hyperscalers, inference providers, aggregators) and cross-linked to the catalog vendor key where one exists. Carries URLs only — no prices (the catalog's own per-model `pricing` is the indicative reference; these are the authoritative places to confirm it).",
+  "type": "object",
+  "required": ["version", "lastUpdated", "providers"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1, "description": "Schema major version." },
+    "lastUpdated": { "type": "string", "format": "date", "description": "ISO-8601 date the registry was last updated." },
+    "schema": { "type": "string", "description": "URL of this JSON Schema." },
+    "source": { "type": "string", "description": "Origin of the registry." },
+    "disclaimer": { "type": "string", "description": "Reminder that these are the authoritative pages to verify the catalog's indicative prices against." },
+    "providers": {
+      "type": "array",
+      "description": "One entry per provider, in a stable curated order.",
+      "items": { "$ref": "#/$defs/provider" }
+    }
+  },
+  "$defs": {
+    "provider": {
+      "type": "object",
+      "required": ["id", "name", "category"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "description": "Stable slug, unique across the registry (e.g. openai, groq, aws-bedrock)." },
+        "name": { "type": "string", "minLength": 1, "description": "Display name." },
+        "category": {
+          "type": "string",
+          "enum": ["model-creator", "hyperscaler", "inference-provider", "aggregator"],
+          "description": "Kind of provider: direct model creator, hyperscaler cloud, fast-inference host, or multi-vendor gateway/aggregator."
+        },
+        "catalogVendor": {
+          "type": ["string", "null"],
+          "description": "The catalog vendor key this provider maps to (its models appear under that key), or null if the provider is not yet represented in the catalog."
+        },
+        "apiPricingUrl": { "type": "string", "description": "Official developer/API (per-token / usage) pricing page." },
+        "consumerPlansUrl": { "type": "string", "description": "Official consumer subscription-plans page, when the provider sells one." },
+        "note": { "type": "string", "description": "Optional qualifier (e.g. 'gateway re-serving other vendors', 'via Model Studio')." }
+      }
+    }
+  }
+}
