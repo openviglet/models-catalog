@@ -32,13 +32,14 @@
 > Atom feed.xml), CSV/NDJSON exports, stats.json, capability/modality slices + aliases.json,
 > the GEO/citability layer (llms.txt + per-vendor/model pages) and the embeddable badge
 > (see [CHANGELOG.md](CHANGELOG.md) → Block D).
+>
+> **Block E — Community & contribution** shipped in full — the "propose a model" flow
+> (issue form + CONTRIBUTING + site Contribute section with per-model deep links) and the
+> per-vendor coverage/gaps view (coverage.json + heatmap) (see [CHANGELOG.md](CHANGELOG.md)
+> → Block E).
 
-## Block E — Community & contribution
-
-> Lower the barrier for the community to *contribute* and to trust the data's completeness.
-> Design rationale → §E.
-
-- **T29** 💭 **Coverage & gaps transparency** — a `coverage.json` (per-vendor/per-field fill rate) and a site section that surfaces what's incomplete, so gaps are visible and become an open invitation to contribute rather than a hidden weakness. deps: T24 → §E2
+_No unshipped tasks — the backlog is clear. New work starts a new block (next letter →
+[last-task.md](last-task.md)); design rationale goes in [IMPROVEMENTS.md](IMPROVEMENTS.md)._
 
 > The endpoint intentionally stays on its public GitHub Pages URL
 > (`openviglet.github.io/model-catalog`) — an unbranded, community-owned home signals

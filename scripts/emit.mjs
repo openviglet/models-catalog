@@ -168,6 +168,7 @@ const endpoints = {
   pinned: { [String(root.version)]: `${SOURCE_URL}/catalog-v${root.version}.json` },
   index: `${SOURCE_URL}/index.json`,
   stats: `${SOURCE_URL}/stats.json`,
+  coverage: `${SOURCE_URL}/coverage.json`,
   changes: `${SOURCE_URL}/changes.json`,
   feed: `${SOURCE_URL}/feed.xml`,
   csv: `${SOURCE_URL}/catalog.csv`,
@@ -190,11 +191,30 @@ const endpoints = {
 const tally = (values) => { const m = {}; for (const k of values) { m[k] = (m[k] || 0) + 1; } return m; };
 // Sort count maps by descending count then key, so the artifact is deterministic + diff-friendly.
 const ranked = (map) => Object.fromEntries(Object.entries(map).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])));
-const filled = (pred) => {
-  let n = 0;
-  for (const e of flat) if (pred(e)) n++;
-  return { filled: n, rate: flat.length ? Math.round((n / flat.length) * 1e4) / 1e4 : 0 };
-};
+// Which optional fields "coverage" tracks, and what counts as filled for each.
+// Shared by stats.json's overall coverage (T24) and coverage.json's per-vendor
+// breakdown (T29) so the two artifacts can never disagree on the definition.
+const COVERAGE_FIELDS = [
+  ["contextWindow", (e) => e.contextWindow != null],
+  ["maxOutputTokens", (e) => e.maxOutputTokens != null],
+  ["embeddingDimensions", (e) => e.embeddingDimensions != null],
+  ["capabilities", (e) => (e.capabilities || []).length > 0],
+  ["modalities", (e) => e.modalities != null],
+  ["knowledgeCutoff", (e) => e.knowledgeCutoff != null],
+  ["releaseDate", (e) => e.releaseDate != null],
+  ["aliases", (e) => (e.aliases || []).length > 0],
+  ["status", (e) => e.status != null],
+  ["sources", (e) => (e.sources || []).length > 0],
+  ["lastVerified", (e) => e.lastVerified != null],
+];
+const round4 = (n, d) => (d ? Math.round((n / d) * 1e4) / 1e4 : 0);
+// Per-field { filled, rate } over an arbitrary set of entries.
+const coverageOf = (entries) =>
+  Object.fromEntries(COVERAGE_FIELDS.map(([k, pred]) => {
+    let n = 0;
+    for (const e of entries) if (pred(e)) n++;
+    return [k, { filled: n, rate: round4(n, entries.length) }];
+  }));
 const stats = {
   version: root.version,
   lastUpdated: root.lastUpdated,
@@ -212,20 +232,26 @@ const stats = {
   byOutputModality: ranked(tally(flat.flatMap((e) => (e.modalities && e.modalities.output) || []))),
   coverage: {
     total: flat.length,
-    fields: {
-      contextWindow: filled((e) => e.contextWindow != null),
-      maxOutputTokens: filled((e) => e.maxOutputTokens != null),
-      embeddingDimensions: filled((e) => e.embeddingDimensions != null),
-      capabilities: filled((e) => (e.capabilities || []).length > 0),
-      modalities: filled((e) => e.modalities != null),
-      knowledgeCutoff: filled((e) => e.knowledgeCutoff != null),
-      releaseDate: filled((e) => e.releaseDate != null),
-      aliases: filled((e) => (e.aliases || []).length > 0),
-      status: filled((e) => e.status != null),
-      sources: filled((e) => (e.sources || []).length > 0),
-      lastVerified: filled((e) => e.lastVerified != null),
-    },
+    fields: coverageOf(flat),
   },
+};
+
+// Coverage & gaps transparency (T29): the same per-field fill definition as
+// stats.json, but broken down per vendor — "context window known for 82% of
+// vendor X". Trust grows when gaps are visible, not hidden: every low cell is an
+// explicit, low-friction invitation to contribute (via the T28 propose flow).
+// Vendors ranked by descending model count then name, so the file is deterministic.
+const coverage = {
+  version: root.version,
+  lastUpdated: root.lastUpdated,
+  source: SOURCE_URL,
+  fields: COVERAGE_FIELDS.map(([k]) => k),
+  overall: { total: flat.length, fields: coverageOf(flat) },
+  byVendor: Object.fromEntries(
+    Object.entries(vendors)
+      .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
+      .map(([v, es]) => [v, { total: es.length, fields: coverageOf(es) }]),
+  ),
 };
 
 // Embeddable status badge (T27): a shields.io endpoint-shaped `badge.json`
@@ -554,6 +580,7 @@ writeFileSync(resolve(OUT_DIR, `catalog-v${root.version}.json`), json, "utf8"); 
 writeFileSync(resolve(OUT_DIR, "catalog.schema.json"), readFileSync(SCHEMA_SRC, "utf8"), "utf8");
 write("index.json", index); // compact
 write("stats.json", stats); // aggregate metrics (T24)
+write("coverage.json", coverage); // per-vendor field coverage (T29)
 write("badge.json", badge); // shields.io endpoint badge (T27)
 write("changes.json", changes); // change feed (T22)
 writeFileSync(resolve(OUT_DIR, "feed.xml"), feedXml, "utf8"); // Atom feed (T22)
@@ -573,7 +600,7 @@ for (const [rel, content] of geoPages) {
 write("endpoints.json", endpoints); // discovery manifest
 
 console.log(
-  `emit-model-catalog: wrote catalog.json + catalog-v${root.version}.json + schema + index.json + stats.json + ` +
+  `emit-model-catalog: wrote catalog.json + catalog-v${root.version}.json + schema + index.json + stats.json + coverage.json + ` +
     `changes.json + feed.xml + catalog.csv + catalog.ndjson + aliases.json + ${presentKinds.length} by-kind + ${Object.keys(byVendor).length} by-vendor + ` +
     `${presentCaps.length} by-capability + ${presentModalities.length} by-modality slices + endpoints.json ` +
     `(${Object.keys(vendors).length} vendors, ${count} models) to ${OUT_DIR}`,

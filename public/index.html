@@ -563,6 +563,27 @@
       .c-v { fill: var(--text); font-size: 11px; font-weight: 600; font-family: var(--mono); }
       .c-t { fill: var(--bg-alt); stroke: var(--border); stroke-width: .5; }
       .chart-note { margin: .6rem 0 0; color: var(--muted); font-size: .78rem; }
+
+      /* ── Coverage & gaps (T29) ─────────────────────── */
+      .cov-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 1rem; background: var(--card); box-shadow: var(--shadow-card); }
+      table.cov { border-collapse: collapse; width: 100%; font-size: .82rem; }
+      table.cov th, table.cov td { padding: .45rem .4rem; text-align: center; white-space: nowrap; }
+      table.cov thead th { color: var(--muted); font-weight: 700; font-family: var(--sans); font-size: .68rem;
+        text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid var(--border); }
+      table.cov .cov-vendor { text-align: left; position: sticky; left: 0; background: var(--card); z-index: 1;
+        font-family: var(--sans); font-weight: 600; color: var(--text); }
+      table.cov thead .cov-vendor { color: var(--muted); }
+      table.cov tbody tr.cov-overall th, table.cov tbody tr.cov-overall td { border-bottom: 2px solid var(--border-strong); }
+      table.cov tbody tr:hover .cov-vendor { color: var(--brand-3); }
+      .cov-cell { display: inline-flex; align-items: center; justify-content: center; min-width: 2.7rem;
+        padding: .3rem .3rem; border-radius: .4rem; color: var(--text); font-family: var(--mono); font-weight: 600; font-size: .78rem; }
+      a.cov-cell { cursor: pointer; }
+      a.cov-cell:hover { outline: 2px solid var(--brand); outline-offset: 1px; text-decoration: none; }
+      .cov-cell.gap { color: var(--muted); border: 1px dashed var(--border-strong); }
+      .cov-legend { display: flex; gap: 1.2rem; align-items: center; margin: 1rem 0 0; color: var(--muted);
+        font-size: .78rem; flex-wrap: wrap; }
+      .cov-legend .sw { display: inline-block; width: 1rem; height: 1rem; border-radius: .25rem;
+        vertical-align: middle; margin-right: .35rem; }
     </style>
   </head>
   <body>
@@ -575,6 +596,7 @@
         </a>
         <div class="nav-links">
           <a href="#insights" class="nav-hide-sm">Insights</a>
+          <a href="#coverage" class="nav-hide-sm">Coverage</a>
           <a href="#browse" class="nav-hide-sm">Browse</a>
           <a href="#api" class="nav-hide-sm">API</a>
           <a href="#sdks" class="nav-hide-sm">SDKs</a>
@@ -658,6 +680,18 @@
       </div>
     </section>
 
+    <!-- ── Coverage & gaps (T29) ───────────────────────── -->
+    <section class="block alt" id="coverage" hidden>
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">Transparency</div>
+          <h2>Coverage &amp; gaps</h2>
+          <p>Per-vendor field fill rate from <a href="./coverage.json"><code>coverage.json</code></a>. We show what's incomplete on purpose — every faint or empty cell is an open invitation to <a href="#contribute">propose a correction</a>. Click one to open a pre-filled proposal for that vendor.</p>
+        </div>
+        <div class="cov-wrap" id="cov-wrap"></div>
+      </div>
+    </section>
+
     <!-- ── Browse / Explorer ───────────────────────────── -->
     <section class="block alt" id="browse">
       <div class="wrap">
@@ -700,6 +734,7 @@
                 <tr><td><a href="./catalog-v1.json"><code>catalog-v1.json</code></a></td><td>Same, pinned to schema <strong>v1</strong> — safe for consumers to lock onto.</td></tr>
                 <tr><td><a href="./index.json"><code>index.json</code></a></td><td>Compact index — each model trimmed to <code>{ vendor, id, label, kind }</code>. ~70% smaller; ideal for model-pickers that lazy-load the full record.</td></tr>
                 <tr><td><a href="./stats.json"><code>stats.json</code></a></td><td>Aggregate metrics — counts per vendor / kind / capability / modality, field-fill coverage and totals. One number instead of re-aggregating the catalog.</td></tr>
+                <tr><td><a href="./coverage.json"><code>coverage.json</code></a></td><td>Per-vendor field fill rate — <code>{ filled, rate }</code> per field, per vendor, plus overall. Makes gaps visible so they become an open invitation to contribute.</td></tr>
                 <tr><td><a href="./changes.json"><code>changes.json</code></a> · <a href="./feed.xml"><code>feed.xml</code></a></td><td>Change feed — what was added / removed / lifecycle-changed at the last publish, as JSON and a subscribable Atom feed.</td></tr>
                 <tr><td><a href="./catalog.csv"><code>catalog.csv</code></a> · <a href="./catalog.ndjson"><code>catalog.ndjson</code></a></td><td>Flat exports — one row / one JSON line per model. For spreadsheets, <code>jq -c</code>, <code>grep</code> and data pipelines that don't want nested JSON.</td></tr>
                 <tr><td><code>by-kind/&lt;KIND&gt;.json</code></td><td>Filtered to one kind — e.g. <a href="./by-kind/EMBEDDING.json"><code>EMBEDDING</code></a>, <a href="./by-kind/CHAT.json"><code>CHAT</code></a>.</td></tr>
@@ -1413,6 +1448,54 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         document.getElementById("insights").hidden = false;
       }
 
+      /* ── Coverage & gaps (T29) ─────────────────────── */
+      // Short column headers for the coverage matrix (coverage.json field keys).
+      const COV_LABEL = {
+        contextWindow: "Context", maxOutputTokens: "Max out", embeddingDimensions: "Embed dims",
+        capabilities: "Capabilities", modalities: "Modalities", knowledgeCutoff: "Cutoff",
+        releaseDate: "Released", aliases: "Aliases", status: "Status", sources: "Sources", lastVerified: "Verified",
+      };
+      // A gap → a pre-filled proposal for that vendor (change-type = correction). T28 tie-in.
+      function coverageGapUrl(vendor) {
+        const p = new URLSearchParams({
+          template: "propose-model.yml",
+          "change-type": "Correct a field on an existing model",
+          vendor,
+        });
+        return `${ISSUE_NEW}?${p.toString()}`;
+      }
+      function renderCoverage(cov) {
+        const pct = (r) => Math.round((r || 0) * 100);
+        const cell = (vendor, field, o) => {
+          const c = o.fields[field] || { filled: 0, rate: 0 };
+          const bg = `color-mix(in srgb, var(--brand) ${pct(c.rate)}%, transparent)`;
+          const gap = c.rate === 0 ? " gap" : "";
+          const who = vendor ? vendorLabel(vendor) : "all models";
+          const title = `${COV_LABEL[field] || field}: ${pct(c.rate)}% of ${who} (${c.filled}/${o.total})`;
+          // A vendor cell that isn't fully covered links to a pre-filled proposal; the
+          // overall row and full cells are static.
+          if (vendor && c.rate < 1) {
+            return `<td><a class="cov-cell${gap}" style="background:${bg}" href="${coverageGapUrl(vendor)}" target="_blank" rel="noopener" title="${title} — propose a fix">${pct(c.rate)}%</a></td>`;
+          }
+          return `<td><span class="cov-cell${gap}" style="background:${bg}" title="${title}">${pct(c.rate)}%</span></td>`;
+        };
+        const head = `<tr><th class="cov-vendor">Vendor</th>${cov.fields.map((f) => `<th title="${f}">${COV_LABEL[f] || f}</th>`).join("")}</tr>`;
+        const rowFor = (vendor, o, cls) =>
+          `<tr class="${cls}"><th class="cov-vendor">${vendor ? vendorLabel(vendor) : "All vendors"} <span class="lbl">${o.total}</span></th>${cov.fields.map((f) => cell(vendor, f, o)).join("")}</tr>`;
+        const body = rowFor(null, cov.overall, "cov-overall") +
+          Object.entries(cov.byVendor).map(([v, o]) => rowFor(v, o, "")).join("");
+        document.getElementById("cov-wrap").innerHTML =
+          `<table class="cov"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+        const legend = document.createElement("p");
+        legend.className = "cov-legend";
+        legend.innerHTML =
+          `<span><span class="sw" style="background:color-mix(in srgb,var(--brand) 92%,transparent)"></span>well covered</span>` +
+          `<span><span class="sw" style="background:color-mix(in srgb,var(--brand) 22%,transparent)"></span>sparse</span>` +
+          `<span><span class="sw" style="border:1px dashed var(--border-strong)"></span>none — <a href="#contribute">help fill it in</a></span>`;
+        document.getElementById("cov-wrap").after(legend);
+        document.getElementById("coverage").hidden = false;
+      }
+
       function buildFilters() {
         const f = document.getElementById("filters");
         const present = new Set(Object.values(catalog.vendors).flat().map((m) => m.kind));
@@ -1549,6 +1632,12 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           fetch("./stats.json")
             .then((r) => (r.ok ? r.json() : null))
             .then((s) => { if (s) renderDashboard(s); })
+            .catch(() => {});
+          // Coverage & gaps (T29): per-vendor field fill from coverage.json.
+          // Missing/old coverage.json → the section stays hidden.
+          fetch("./coverage.json")
+            .then((r) => (r.ok ? r.json() : null))
+            .then((c) => { if (c) renderCoverage(c); })
             .catch(() => {});
         })
         .catch((e) => {

@@ -28,6 +28,7 @@ capability* — **not pricing** (see [STRATEGY.md](../STRATEGY.md) §I).
 | `…/catalog-v1.json` | Pinned to schema **v1** — safe for external consumers to lock. |
 | `…/index.json` | **Compact index** — the same envelope, each entry trimmed to `{ vendor, id, label, kind }`. A fraction of the payload for model-pickers that only render a grouped list; lazy-load the full record from `catalog.json` on selection. |
 | `…/stats.json` | **Aggregate metrics** — pre-computed counts (models per vendor / kind / capability / input+output modality), per-field fill **coverage**, and grand `totals`. Read one number instead of re-aggregating the full catalog. Its own envelope (not a `vendors` map). |
+| `…/coverage.json` | **Per-vendor coverage** — the same per-field fill definition as `stats.json`, broken down **per vendor** (`{ filled, rate }` per field) plus an `overall`. Makes gaps explicit — "context window known for 82% of vendor X". Its own envelope (not a `vendors` map). |
 | `…/changes.json` | **Change feed** — what changed vs. the previously published catalog: `added` / `removed` / lifecycle-`changed` ids for this publish, with `counts`. Its own envelope (not a `vendors` map). |
 | `…/feed.xml` | **Atom feed** — the same adds / removals / lifecycle transitions as `changes.json`, subscribable in any feed reader. |
 | `…/catalog.csv` | **Flat CSV export** — one row per model, RFC-4180 quoted (array fields `;`-joined). For spreadsheets / BI. |
@@ -139,6 +140,29 @@ descending count; `coverage.fields.<field>` is `{ filled, rate }` over all model
   "coverage": {
     "total": 194,
     "fields": { "contextWindow": { "filled": 180, "rate": 0.9278 }, /* … */ }
+  }
+}
+```
+
+## Per-vendor coverage (`coverage.json`)
+
+Trust grows when gaps are visible, not hidden. `coverage.json` breaks the same per-field
+fill definition as `stats.json` down **per vendor**, so you can see exactly where the
+catalog is thin — "context window known for 82% of vendor X". Every low cell is an
+explicit, low-friction invitation to [contribute](../../CONTRIBUTING.md). Its own envelope
+(not a `vendors` map); `fields` lists the tracked fields in order; each `fields.<field>` is
+`{ filled, rate }` (rate ∈ [0,1]); `byVendor` is ordered by descending model count.
+
+```jsonc
+{
+  "version": 1,
+  "lastUpdated": "2026-07-21",
+  "source": "https://openviglet.github.io/model-catalog",
+  "fields": ["contextWindow", "maxOutputTokens", "embeddingDimensions", /* … */],
+  "overall": { "total": 194, "fields": { "contextWindow": { "filled": 165, "rate": 0.8505 }, /* … */ } },
+  "byVendor": {
+    "openai": { "total": 129, "fields": { "contextWindow": { "filled": 120, "rate": 0.9302 }, /* … */ } }
+    /* … */
   }
 }
 ```
