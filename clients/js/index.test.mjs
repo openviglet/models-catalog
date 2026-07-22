@@ -59,6 +59,13 @@ const COVERAGE = {
   overall: { total: 3, fields: { pricing: { filled: 1, rate: 0.3333 } } },
   byVendor: { openai: { total: 2, fields: { pricing: { filled: 1, rate: 0.5 } } } },
 };
+const LEADERBOARDS = {
+  version: 1,
+  leaderboards: [
+    { id: "cheapest-chat", label: "Cheapest chat", metric: "pricing.inputPer1M", unit: "$ / 1M in", order: "asc",
+      total: 2, population: 1, entries: [{ vendor: "openai", id: "gpt-4o", label: "GPT-4o", kind: "CHAT", value: 2.5 }] },
+  ],
+};
 const PROVIDERS = {
   version: 1,
   providers: [{ id: "openai", name: "OpenAI", category: "model-creator", catalogVendor: "openai" }],
@@ -101,6 +108,7 @@ function fakeFetch() {
     [`${BASE}/endpoints.json`]: ENDPOINTS,
     [`${BASE}/stats.json`]: STATS,
     [`${BASE}/coverage.json`]: COVERAGE,
+    [`${BASE}/leaderboards.json`]: LEADERBOARDS,
     [`${BASE}/providers.json`]: PROVIDERS,
     [`${BASE}/plans.json`]: PLANS,
     [`${BASE}/aliases.json`]: ALIASES,
@@ -237,6 +245,11 @@ test("aggregate & registry accessors hit their own paths and return the publishe
   const aliases = await c.aliases();
   assert.equal(fetch.calls[4], `${BASE}/aliases.json`);
   assert.deepEqual(aliases.aliases["gpt-4o-latest"], { vendor: "openai", id: "gpt-4o" });
+
+  const leaderboards = await c.leaderboards();
+  assert.equal(fetch.calls[5], `${BASE}/leaderboards.json`);
+  assert.equal(leaderboards.leaderboards[0].id, "cheapest-chat");
+  assert.equal(leaderboards.leaderboards[0].population, 1);
 });
 
 test("capability/modality slice loaders + change feed hit their own paths", async () => {

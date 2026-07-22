@@ -77,16 +77,6 @@ Dense facts drive the defaults; sparse facts are opt-in overlays that always pri
 the provenance-first bet. All views keep the existing framing: tier is a *price proxy, not a quality
 verdict*; every benchmark/speed number is *cited — verify at the source*.
 
-### §L5 — T54 · Decision views: frontier + leaderboards
-The flagship "which model" visuals, scoped honestly to the population that supports them: a
-hand-rolled inline-SVG **price × intelligence** scatter (log price axis, Pareto front highlighted,
-dot → drawer) over the ~32 chat models that carry both, plus precomputed **`leaderboards.json`**
-(emit-time, beside `stats.json`) — cheapest per kind, best intelligence-per-dollar, biggest context,
-fastest — each list carrying `{ metric, kind, population, total }` so the denominator ships with the
-data. Precomputed because they are *answers* a consumer (or a citing assistant) wants in one fetch,
-and derived-at-emit so they can't drift. Exploratory (💭): the exact chart/interaction design and
-which leaderboards ship first want a design pass.
-
 ### §L6 — T55 · IA re-layout (orient / explore / cite)
 Stop the hyper-page slide: home becomes **orient only** (hero + a tight "what's inside" strip + a
 prominent Explore entry + API / SDKs / Contribute); the analytics bands (Insights charts, Coverage

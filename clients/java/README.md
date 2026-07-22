@@ -117,6 +117,7 @@ ModelCatalogClient.builder()
 | `changes()` | The change feed (`changes.json`, raw map) — added / removed / lifecycle-changed at the last publish. |
 | `stats()` | Aggregate metrics (`stats.json`) — totals, per-facet counts, coverage (raw map). |
 | `coverage()` | Per-vendor field-coverage breakdown (`coverage.json`, raw map). |
+| `leaderboards()` | Decision leaderboards (`leaderboards.json`, raw map) — cheapest per kind, best intelligence-per-$, biggest context, fastest (each with its population/total). |
 | `providers()` | The provider pricing-source registry (`providers.json`, raw map). |
 | `plans()` | The consumer subscription-plans dataset (`plans.json`, raw map — indicative US list prices). |
 | `aliases()` | The alias resolution map (`aliases.json`, raw map) — alias id → `{vendor, id}`. |

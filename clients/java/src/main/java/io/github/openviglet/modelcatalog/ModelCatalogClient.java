@@ -202,6 +202,11 @@ public final class ModelCatalogClient {
         return Json.parseObject(fetch("coverage.json"));
     }
 
+    /** Decision leaderboards ({@code leaderboards.json}) — cheapest per kind, best intelligence-per-$, biggest context, fastest; each with its population/total. */
+    public Map<String, Object> leaderboards() {
+        return Json.parseObject(fetch("leaderboards.json"));
+    }
+
     /** The provider pricing-source registry ({@code providers.json}) — official pricing pages. */
     public Map<String, Object> providers() {
         return Json.parseObject(fetch("providers.json"));

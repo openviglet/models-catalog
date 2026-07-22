@@ -249,6 +249,7 @@ const endpoints = {
   index: `${SOURCE_URL}/index.json`,
   stats: `${SOURCE_URL}/stats.json`,
   coverage: `${SOURCE_URL}/coverage.json`,
+  leaderboards: `${SOURCE_URL}/leaderboards.json`,
   changes: `${SOURCE_URL}/changes.json`,
   feed: `${SOURCE_URL}/feed.xml`,
   csv: `${SOURCE_URL}/catalog.csv`,
@@ -339,6 +340,55 @@ const coverage = {
       .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
       .map(([v, es]) => [v, { total: es.length, fields: coverageOf(es) }]),
   ),
+};
+
+// ── Decision leaderboards (T54) ───────────────────────────────────────────
+// Pre-computed "which model" answers a consumer (or a citing assistant) wants in
+// one fetch — cheapest per kind, best intelligence-per-dollar, biggest context,
+// fastest — instead of downloading the whole catalog and ranking it. Each board
+// carries `{ population, total }` so the denominator ships with the data (honest
+// about the sparse fields), and every ranked figure stays *cited/indicative* —
+// derived at emit from the same flat entries, so it can never drift.
+const LEADERBOARD_TOP = 10;
+const inputPrice = (e) => (e.pricing ? e.pricing.inputPer1M : null);
+const intelIndex = (e) => (e.benchmarks ? e.benchmarks.intelligenceIndex : null);
+const throughput = (e) => (e.performance ? e.performance.throughputTps : null);
+const roundVal = (n) => Math.round(n * 1e4) / 1e4;
+const makeBoard = (id, label, metric, unit, order, scope, valueOf) => {
+  const pool = flat.filter(scope);
+  const withVal = pool
+    .map((e) => [e, valueOf(e)])
+    .filter(([, v]) => v != null && Number.isFinite(v));
+  withVal.sort((a, b) => (order === "asc" ? a[1] - b[1] : b[1] - a[1]));
+  return {
+    id, label, metric, unit, order,
+    total: pool.length,
+    population: withVal.length,
+    entries: withVal.slice(0, LEADERBOARD_TOP).map(([e, v]) => ({
+      vendor: e.vendor, id: e.id, label: e.label, kind: e.kind, value: roundVal(v),
+    })),
+  };
+};
+const leaderboardDefs = [
+  // Cheapest per kind — only for kinds that actually have priced models.
+  ...presentKinds
+    .filter((k) => flat.some((e) => e.kind === k && inputPrice(e) != null))
+    .map((k) => makeBoard(`cheapest-${k.toLowerCase()}`, `Cheapest ${k.toLowerCase()}`,
+      "pricing.inputPer1M", "$ / 1M in", "asc", (e) => e.kind === k, inputPrice)),
+  makeBoard("intelligence-per-dollar", "Best intelligence per $",
+    "benchmarks.intelligenceIndex / pricing.inputPer1M", "index pts per $/1M in", "desc",
+    () => true, (e) => (intelIndex(e) != null && inputPrice(e) > 0 ? intelIndex(e) / inputPrice(e) : null)),
+  makeBoard("biggest-context", "Biggest context window",
+    "contextWindow", "tokens", "desc", () => true, (e) => e.contextWindow),
+  makeBoard("fastest", "Fastest throughput",
+    "performance.throughputTps", "tok / s", "desc", () => true, throughput),
+];
+const leaderboards = {
+  version: root.version,
+  lastUpdated: root.lastUpdated,
+  source: SOURCE_URL,
+  disclaimer: "Derived from the catalog's indicative/cited figures — a reference only, verify at the source. Each board reports its population (models with the metric) over its total.",
+  leaderboards: leaderboardDefs.filter((b) => b.population > 0),
 };
 
 // Embeddable status badge (T27): a shields.io endpoint-shaped `badge.json`
@@ -716,6 +766,7 @@ const llmsTxt = `# Model Catalog
 - [Full catalog (JSON)](${SOURCE_URL}/catalog.json): every vendor, every field
 - [Compact index](${SOURCE_URL}/index.json): { vendor, id, label, kind } per entry
 - [Aggregate stats](${SOURCE_URL}/stats.json): counts per vendor/kind/capability + field coverage
+- [Decision leaderboards](${SOURCE_URL}/leaderboards.json): cheapest per kind, best intelligence-per-$, biggest context, fastest (each with its population/total)
 - [Change feed](${SOURCE_URL}/changes.json): what changed at the last publish${plansPublished ? `
 - [Consumer plans](${SOURCE_URL}/plans.json): vendor subscription tiers with an indicative US list price (a reference — verify with the vendor)` : ""}${providersPublished ? `
 - [Pricing sources](${SOURCE_URL}/providers.json): official vendor pricing pages to verify the catalog's indicative prices against` : ""}
@@ -769,6 +820,7 @@ writeFileSync(resolve(OUT_DIR, "catalog.schema.json"), readFileSync(SCHEMA_SRC, 
 write("index.json", index); // compact
 write("stats.json", stats); // aggregate metrics (T24)
 write("coverage.json", coverage); // per-vendor field coverage (T29)
+write("leaderboards.json", leaderboards); // decision leaderboards (T54)
 write("badge.json", badge); // shields.io endpoint badge (T27)
 write("changes.json", changes); // change feed (T22)
 writeFileSync(resolve(OUT_DIR, "feed.xml"), feedXml, "utf8"); // Atom feed (T22)
@@ -804,6 +856,7 @@ console.log(
 console.log(`emit-model-catalog: GEO pages — llms.txt + ${geoPages.length - 2} vendor/model pages under models/`);
 console.log("emit-model-catalog: sdk/model-catalog-client.js — self-hosted JS SDK for the page (T50)");
 if (droppedCsvCols.length) console.log(`emit-model-catalog: catalog.csv dropped ${droppedCsvCols.length} always-empty column(s): ${droppedCsvCols.join(", ")} (T53)`);
+console.log(`emit-model-catalog: leaderboards.json — ${leaderboards.leaderboards.length} boards (${leaderboards.leaderboards.map((b) => `${b.id}:${b.population}/${b.total}`).join(", ")}) (T54)`);
 console.log(`emit-model-catalog: badge.json — "${badge.label}: ${badge.message}"`);
 if (plansPublished) console.log(`emit-model-catalog: plans.json — ${plansCount} consumer plans across ${Object.keys(plansPublished.plans).length} vendors (indicative US list)`);
 if (providersPublished) console.log(`emit-model-catalog: providers.json — ${providersCount} provider pricing sources`);

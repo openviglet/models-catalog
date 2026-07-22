@@ -70,6 +70,14 @@ COVERAGE = {
     "overall": {"total": 3, "fields": {"pricing": {"filled": 1, "rate": 0.3333}}},
     "byVendor": {"openai": {"total": 2, "fields": {"pricing": {"filled": 1, "rate": 0.5}}}},
 }
+LEADERBOARDS = {
+    "version": 1,
+    "leaderboards": [
+        {"id": "cheapest-chat", "label": "Cheapest chat", "metric": "pricing.inputPer1M", "unit": "$ / 1M in",
+         "order": "asc", "total": 2, "population": 1,
+         "entries": [{"vendor": "openai", "id": "gpt-4o", "label": "GPT-4o", "kind": "CHAT", "value": 2.5}]},
+    ],
+}
 PROVIDERS = {
     "version": 1,
     "providers": [{"id": "openai", "name": "OpenAI", "category": "model-creator", "catalogVendor": "openai"}],
@@ -113,6 +121,7 @@ def make_fetch():
         BASE + "/endpoints.json": ENDPOINTS,
         BASE + "/stats.json": STATS,
         BASE + "/coverage.json": COVERAGE,
+        BASE + "/leaderboards.json": LEADERBOARDS,
         BASE + "/providers.json": PROVIDERS,
         BASE + "/plans.json": PLANS,
         BASE + "/aliases.json": ALIASES,
@@ -239,6 +248,11 @@ class ClientTest(unittest.TestCase):
         aliases = c.aliases()
         self.assertEqual(fetch.calls[4], BASE + "/aliases.json")
         self.assertEqual(aliases["aliases"]["gpt-4o-latest"], {"vendor": "openai", "id": "gpt-4o"})
+
+        leaderboards = c.leaderboards()
+        self.assertEqual(fetch.calls[5], BASE + "/leaderboards.json")
+        self.assertEqual(leaderboards["leaderboards"][0]["id"], "cheapest-chat")
+        self.assertEqual(leaderboards["leaderboards"][0]["population"], 1)
 
     def test_capability_modality_slices_and_change_feed(self):
         fetch = make_fetch()

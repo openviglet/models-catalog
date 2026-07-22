@@ -603,6 +603,17 @@
       .c-t { fill: var(--bg-alt); stroke: var(--border); stroke-width: .5; }
       .chart-note { margin: .6rem 0 0; color: var(--muted); font-size: .78rem; }
 
+      /* ── Decide: frontier scatter + leaderboards (T54) ── */
+      .dot { cursor: pointer; transition: opacity .12s; }
+      .dot:hover { stroke: var(--text); stroke-width: 1.5; opacity: 1 !important; }
+      table.lb { width: 100%; border-collapse: collapse; }
+      table.lb td { padding: .4rem .55rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+      table.lb tr:last-child td { border-bottom: none; }
+      table.lb tbody tr { cursor: pointer; }
+      table.lb tbody tr:hover td { background: color-mix(in srgb, var(--brand) 5%, transparent); }
+      table.lb .lb-rank { color: var(--muted); font-weight: 700; width: 1.4rem; text-align: right; font-family: var(--mono); font-size: .8rem; }
+      table.lb .mid { font-family: var(--mono); font-size: .82rem; }
+
       /* ── Coverage & gaps (T29) ─────────────────────── */
       .cov-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 1rem; background: var(--card); box-shadow: var(--shadow-card); }
       table.cov { border-collapse: collapse; width: 100%; font-size: .82rem; }
@@ -646,6 +657,7 @@
           <a href="#insights" class="nav-hide-sm">Insights</a>
           <a href="#coverage" class="nav-hide-sm">Coverage</a>
           <a href="#plans" class="nav-hide-sm">Plans</a>
+          <a href="#decide" class="nav-hide-sm">Decide</a>
           <a href="#browse" class="nav-hide-sm">Browse</a>
           <a href="#api" class="nav-hide-sm">API</a>
           <a href="#sdks" class="nav-hide-sm">SDKs</a>
@@ -765,6 +777,23 @@
       </div>
     </section>
 
+    <!-- ── Decide: frontier + leaderboards (T54) ───────── -->
+    <section class="block" id="decide" hidden>
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">Decide</div>
+          <h2>Which model?</h2>
+          <p>Cross-vendor decision views derived from the catalog's <strong>indicative</strong> prices and <strong>cited</strong> benchmarks — a reference only, verify at the source. The scatter plots every chat model carrying <em>both</em> a price and a cited intelligence index; each leaderboard shows its population over the total.</p>
+        </div>
+        <div class="feat chart-card" style="margin-bottom:1.2rem">
+          <h3>Price × intelligence <span class="lbl" id="frontier-denom"></span></h3>
+          <div class="chart" id="frontier"></div>
+          <p class="chart-note">Log price axis. The dashed line is the <strong>price/intelligence frontier</strong> — models where nothing cheaper is also smarter. Click a dot for the full record. Intelligence is a cited third-party index, not our verdict.</p>
+        </div>
+        <div class="grid grid-2" id="leaderboards"></div>
+      </div>
+    </section>
+
     <!-- ── Browse / Explorer ───────────────────────────── -->
     <section class="block alt" id="browse">
       <div class="wrap">
@@ -814,6 +843,7 @@
                 <tr><td><a href="./index.json"><code>index.json</code></a></td><td>Compact index — each model trimmed to <code>{ vendor, id, label, kind }</code>. ~70% smaller; ideal for model-pickers that lazy-load the full record.</td></tr>
                 <tr><td><a href="./stats.json"><code>stats.json</code></a></td><td>Aggregate metrics — counts per vendor / kind / capability / modality, field-fill coverage and totals. One number instead of re-aggregating the catalog.</td></tr>
                 <tr><td><a href="./coverage.json"><code>coverage.json</code></a></td><td>Per-vendor field fill rate — <code>{ filled, rate }</code> per field, per vendor, plus overall. Makes gaps visible so they become an open invitation to contribute.</td></tr>
+                <tr><td><a href="./leaderboards.json"><code>leaderboards.json</code></a></td><td>Decision leaderboards — cheapest per kind, best intelligence-per-$, biggest context, fastest. Each carries its <code>population</code>/<code>total</code>. Derived from indicative/cited figures — a reference, verify at the source.</td></tr>
                 <tr><td><a href="./changes.json"><code>changes.json</code></a> · <a href="./feed.xml"><code>feed.xml</code></a></td><td>Change feed — what was added / removed / lifecycle-changed at the last publish, as JSON and a subscribable Atom feed.</td></tr>
                 <tr><td><a href="./catalog.csv"><code>catalog.csv</code></a> · <a href="./catalog.ndjson"><code>catalog.ndjson</code></a></td><td>Flat exports — one row / one JSON line per model. For spreadsheets, <code>jq -c</code>, <code>grep</code> and data pipelines that don't want nested JSON.</td></tr>
                 <tr><td><code>by-kind/&lt;KIND&gt;.json</code></td><td>Filtered to one kind — e.g. <a href="./by-kind/EMBEDDING.json"><code>EMBEDDING</code></a>, <a href="./by-kind/CHAT.json"><code>CHAT</code></a>.</td></tr>
@@ -1779,6 +1809,79 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         document.getElementById("insights").hidden = false;
       }
 
+      /* ── Decide: price × intelligence frontier (T54) ───
+         A hand-rolled inline-SVG scatter over the chat models that carry BOTH an
+         indicative price and a cited intelligence index — the flagship "which model"
+         view. The dashed line is the Pareto frontier (nothing cheaper is also smarter).
+         Derived from the in-memory catalog so dots can open the drawer; honest about
+         its population (the denominator is printed). Returns true if it drew. */
+      function renderFrontier() {
+        const chat = Object.values(catalog.vendors).flat().filter((m) => m.kind === "CHAT");
+        const pts = chat
+          .filter((m) => m.pricing && m.pricing.inputPer1M != null && m.benchmarks && m.benchmarks.intelligenceIndex != null)
+          .map((m) => ({ key: m.vendor + "/" + m.id, x: m.pricing.inputPer1M, y: m.benchmarks.intelligenceIndex,
+            label: m.label && m.label !== m.id ? m.label : m.id, vendor: m.vendor }));
+        document.getElementById("frontier-denom").textContent = `${pts.length} of ${chat.length} chat models with both`;
+        const host = document.getElementById("frontier");
+        if (pts.length < 3) {
+          host.innerHTML = `<p class="chart-note">Not enough chat models carry both a price and a cited intelligence index yet — <a href="#contribute">help fill it in</a>.</p>`;
+          return false;
+        }
+        const xs = pts.map((p) => p.x), ys = pts.map((p) => p.y);
+        const minP = Math.min(...xs), maxP = Math.max(...xs), minI = Math.min(...ys), maxI = Math.max(...ys);
+        const W = 680, H = 380, ML = 52, MR = 16, MT = 16, MB = 46;
+        const plotW = W - ML - MR, plotH = H - MT - MB;
+        const lg = Math.log10, lgMin = lg(minP), lgMax = lg(maxP);
+        const xPix = (v) => ML + (lgMax === lgMin ? 0.5 : (lg(v) - lgMin) / (lgMax - lgMin)) * plotW;
+        const yPad = (maxI - minI) * 0.08 || 1, y0 = minI - yPad, y1 = maxI + yPad;
+        const yPix = (v) => MT + (1 - (v - y0) / (y1 - y0)) * plotH;
+        // Pareto frontier: cheapest-first, keep those strictly smarter than all cheaper.
+        const front = new Set();
+        [...pts].sort((a, b) => a.x - b.x || b.y - a.y).reduce((best, p) => {
+          if (p.y > best) { front.add(p.key); return p.y; } return best;
+        }, -Infinity);
+        const fmtP = (v) => "$" + (v >= 1000 ? v / 1000 + "k" : v);
+        const decades = [];
+        for (let e = Math.floor(lgMin); e <= Math.ceil(lgMax); e++) decades.push(Math.pow(10, e));
+        const xAxis = decades.filter((v) => lg(v) >= lgMin - 1e-3 && lg(v) <= lgMax + 1e-3).map((v) =>
+          `<line x1="${xPix(v).toFixed(1)}" y1="${MT}" x2="${xPix(v).toFixed(1)}" y2="${MT + plotH}" stroke="var(--border)" stroke-width=".5"/>`
+          + `<text class="c-l" x="${xPix(v).toFixed(1)}" y="${H - MB + 15}" text-anchor="middle">${fmtP(v)}</text>`).join("");
+        let yAxis = "";
+        for (let i = 0; i <= 4; i++) { const v = y0 + (y1 - y0) * i / 4, yy = yPix(v).toFixed(1);
+          yAxis += `<line x1="${ML}" y1="${yy}" x2="${ML + plotW}" y2="${yy}" stroke="var(--border)" stroke-width=".5"/><text class="c-l" x="${ML - 8}" y="${yy}" text-anchor="end">${Math.round(v)}</text>`; }
+        const frontPts = pts.filter((p) => front.has(p.key)).sort((a, b) => a.x - b.x);
+        const frontLine = frontPts.length > 1
+          ? `<polyline points="${frontPts.map((p) => xPix(p.x).toFixed(1) + "," + yPix(p.y).toFixed(1)).join(" ")}" fill="none" stroke="var(--brand)" stroke-width="1.5" stroke-dasharray="4 3" opacity=".7"/>` : "";
+        const dots = pts.map((p) => {
+          const on = front.has(p.key);
+          return `<circle class="dot" data-key="${p.key}" cx="${xPix(p.x).toFixed(1)}" cy="${yPix(p.y).toFixed(1)}" r="${on ? 5 : 3.5}" style="fill:${on ? "var(--brand)" : vendorColor(p.vendor)};opacity:${on ? 1 : 0.5}"><title>${p.label} — $${p.x}/1M in · intelligence ${p.y}${on ? " · on the frontier" : ""}</title></circle>`;
+        }).join("");
+        const labels = `<text class="c-l" x="${ML + plotW / 2}" y="${H - 4}" text-anchor="middle">Input price (US list, $/1M) — log scale</text>`
+          + `<text class="c-l" x="13" y="${MT + plotH / 2}" text-anchor="middle" transform="rotate(-90 13 ${MT + plotH / 2})">Intelligence index (cited)</text>`;
+        host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Price versus cited intelligence scatter of chat models">${yAxis}${xAxis}${frontLine}${dots}${labels}</svg>`;
+        return true;
+      }
+
+      /* ── Decide: leaderboards (T54) ────────────────────
+         Renders the precomputed leaderboards.json (fetched through the SDK) — each
+         board with its population/total denominator and rows that open the drawer. */
+      function lbValue(b, v) {
+        if (b.metric.includes("contextWindow")) return fmtTokens(v);
+        if (b.metric.includes("inputPer1M")) return "$" + v;
+        return v >= 100 ? Math.round(v) : v;
+      }
+      function renderLeaderboards(data) {
+        if (!data || !Array.isArray(data.leaderboards) || !data.leaderboards.length) return false;
+        document.getElementById("leaderboards").innerHTML = data.leaderboards.map((b) => {
+          const rows = b.entries.map((e, i) =>
+            `<tr data-key="${e.vendor}/${e.id}"><td class="lb-rank">${i + 1}</td><td><span class="mid">${e.id}</span><div class="lbl">${vendorLabel(e.vendor)}</div></td><td class="col-num"><span class="chip num">${lbValue(b, e.value)}</span></td></tr>`).join("");
+          return `<div class="feat chart-card"><h3>${b.label} <span class="lbl">${b.population}/${b.total}</span></h3>
+            <div class="table-scroll"><table class="lb"><tbody>${rows}</tbody></table></div>
+            <p class="chart-note">${b.unit} · ${b.order === "asc" ? "lower is better" : "higher is better"} — indicative/cited, verify at the source</p></div>`;
+        }).join("");
+        return true;
+      }
+
       /* ── Consumer plans (Block F / T33) ────────────── */
       const PLAN_VENDOR_LABEL = { anthropic: "Anthropic", openai: "OpenAI", google: "Google", zai: "Z.ai" };
       function renderPlans(data) {
@@ -2121,6 +2224,14 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           client.coverage().then((c) => { if (c) renderCoverage(c); }).catch(() => {});
           client.plans().then((p) => { if (p) renderPlans(p); }).catch(() => {});
           client.providers().then((p) => { if (p) renderSources(p); }).catch(() => {});
+          // Decide views (T54): the frontier scatter is derived from the loaded catalog;
+          // the leaderboards come from the precomputed leaderboards.json via the SDK.
+          if (renderFrontier()) document.getElementById("decide").hidden = false;
+          client.leaderboards().then((l) => { if (renderLeaderboards(l)) document.getElementById("decide").hidden = false; }).catch(() => {});
+          // A dot or leaderboard row opens the model's drawer via its permalink.
+          const toDrawer = (e) => { const el = e.target.closest("[data-key]"); if (el) location.hash = "#" + encodeURI(el.dataset.key); };
+          document.getElementById("frontier").addEventListener("click", toDrawer);
+          document.getElementById("leaderboards").addEventListener("click", toDrawer);
         })
         .catch((e) => {
           document.getElementById("status").innerHTML =

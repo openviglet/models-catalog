@@ -188,6 +188,43 @@ export interface Coverage {
   [key: string]: unknown;
 }
 
+/** One ranked entry within a decision leaderboard (`leaderboards.json`). */
+export interface LeaderboardEntry {
+  vendor: string;
+  id: string;
+  label: string;
+  kind: Kind;
+  /** The metric value that ranked this entry (indicative/cited — verify at the source). */
+  value: number;
+  [key: string]: unknown;
+}
+
+/** A single decision leaderboard (`leaderboards.json`) with its honest denominator. */
+export interface Leaderboard {
+  id: string;
+  label: string;
+  /** The metric expression this board ranks by, e.g. `"pricing.inputPer1M"`. */
+  metric: string;
+  unit: string;
+  order: "asc" | "desc";
+  /** Models in this board's scope (e.g. all CHAT models). */
+  total: number;
+  /** Models in scope that actually carry the metric — the ranked population. */
+  population: number;
+  entries: LeaderboardEntry[];
+  [key: string]: unknown;
+}
+
+/** Pre-computed decision leaderboards (`leaderboards.json`), derived at emit. */
+export interface Leaderboards {
+  version: number;
+  lastUpdated: string;
+  source: string;
+  disclaimer?: string;
+  leaderboards: Leaderboard[];
+  [key: string]: unknown;
+}
+
 /** A provider pricing-source registry entry (`providers.json`). URLs only — no prices. */
 export interface Provider {
   id: string;
@@ -370,6 +407,8 @@ export declare class ModelCatalogClient {
   stats(): Promise<Stats>;
   /** Per-vendor field-coverage breakdown (`coverage.json`). */
   coverage(): Promise<Coverage>;
+  /** Pre-computed decision leaderboards (`leaderboards.json`) — cheapest per kind, best intelligence-per-$, biggest context, fastest. */
+  leaderboards(): Promise<Leaderboards>;
   /** The provider pricing-source registry (`providers.json`). */
   providers(): Promise<ProvidersRegistry>;
   /** The consumer subscription-plans dataset (`plans.json`). */

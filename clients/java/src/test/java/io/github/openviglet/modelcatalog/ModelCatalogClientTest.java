@@ -81,6 +81,13 @@ class ModelCatalogClientTest {
               "byVendor": { "openai": { "total": 2, "fields": { "pricing": { "filled": 1, "rate": 0.5 } } } } }
             """;
 
+    private static final String LEADERBOARDS = """
+            { "version": 1, "leaderboards": [
+              { "id": "cheapest-chat", "label": "Cheapest chat", "metric": "pricing.inputPer1M",
+                "unit": "$ / 1M in", "order": "asc", "total": 2, "population": 1,
+                "entries": [ { "vendor": "openai", "id": "gpt-4o", "label": "GPT-4o", "kind": "CHAT", "value": 2.5 } ] } ] }
+            """;
+
     private static final String PROVIDERS = """
             { "version": 1, "providers": [
               { "id": "openai", "name": "OpenAI", "category": "model-creator", "catalogVendor": "openai" } ] }
@@ -127,6 +134,7 @@ class ModelCatalogClientTest {
             routes.put(BASE + "/endpoints.json", ENDPOINTS);
             routes.put(BASE + "/stats.json", STATS);
             routes.put(BASE + "/coverage.json", COVERAGE);
+            routes.put(BASE + "/leaderboards.json", LEADERBOARDS);
             routes.put(BASE + "/providers.json", PROVIDERS);
             routes.put(BASE + "/plans.json", PLANS);
             routes.put(BASE + "/aliases.json", ALIASES);
@@ -297,6 +305,11 @@ class ModelCatalogClientTest {
         Map<String, Object> target = (Map<String, Object>) ((Map<String, Object>) aliases.get("aliases")).get("gpt-4o-latest");
         assertEquals("openai", target.get("vendor"));
         assertEquals("gpt-4o", target.get("id"));
+
+        Map<String, Object> leaderboards = c.leaderboards();
+        assertEquals(BASE + "/leaderboards.json", fetcher.calls.get(5));
+        List<Object> boards = (List<Object>) leaderboards.get("leaderboards");
+        assertEquals("cheapest-chat", ((Map<String, Object>) boards.get(0)).get("id"));
     }
 
     @Test

@@ -259,6 +259,11 @@ export class ModelCatalogClient {
     return this.#fetchJson("coverage.json");
   }
 
+  /** Pre-computed decision leaderboards (`leaderboards.json`) — cheapest per kind, best intelligence-per-$, biggest context, fastest. Each board carries its `population`/`total`. */
+  async leaderboards() {
+    return this.#fetchJson("leaderboards.json");
+  }
+
   /** The provider pricing-source registry (`providers.json`) — official pricing pages, URLs only. */
   async providers() {
     return this.#fetchJson("providers.json");

@@ -183,6 +183,10 @@ class ModelCatalogClient:
         """Per-vendor field-coverage breakdown (``coverage.json``) — where the data has gaps."""
         return self._fetch_json("coverage.json")
 
+    def leaderboards(self) -> Dict[str, Any]:
+        """Decision leaderboards (``leaderboards.json``) — cheapest per kind, best intelligence-per-$, biggest context, fastest; each with its population/total."""
+        return self._fetch_json("leaderboards.json")
+
     def providers(self) -> Dict[str, Any]:
         """The provider pricing-source registry (``providers.json``) — official pricing pages."""
         return self._fetch_json("providers.json")

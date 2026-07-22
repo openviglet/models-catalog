@@ -98,6 +98,7 @@ ModelCatalogClient(
 | `changes()` | The change feed (`changes.json`) — models added / removed / lifecycle-changed at the last publish. |
 | `stats()` | Aggregate metrics (`stats.json`) — totals, per-facet counts, field coverage. |
 | `coverage()` | Per-vendor field-coverage breakdown (`coverage.json`). |
+| `leaderboards()` | Decision leaderboards (`leaderboards.json`) — cheapest per kind, best intelligence-per-$, biggest context, fastest (each with its population/total). |
 | `providers()` | The provider pricing-source registry (`providers.json`). |
 | `plans()` | The consumer subscription-plans dataset (`plans.json`, indicative US list prices). |
 | `aliases()` | The alias resolution map (`aliases.json`) — alias id → `{vendor, id}`. |
