@@ -44,9 +44,35 @@ ones, so it can't be a universal intelligence proxy, but it's useful where known
 curated/anchored and omitted rather than guessed. They feed the T38 classification (an
 open-weight badge, a size hint).
 
-### §I3 — T40 · Cited intelligence / benchmark index
+### §I3 — T40 · Cited intelligence / benchmark index (field + shape)
 The honest way to signal "how capable" is not our opinion but a **cited third-party number** —
 an Artificial Analysis Intelligence Index, LMArena Elo, or similar — carried like `pricing`:
-`indicative` + `source` + `lastVerified`, never invented, "verify at the source". Exploratory
-(💭): needs a data source the pipeline can ingest and a verification/licensing story before
-it's more than an idea. Would let the tier axis rest on measured capability instead of price.
+`indicative` + `source` + `lastVerified`, never invented, "verify at the source". This task is
+just the *contract* (the `benchmarks` shape); the data comes from T41. Exploratory (💭) because
+the shape depends on which source we can ingest under an acceptable licence.
+
+### §I4 — T41 · Benchmark source adapter (populate T40)
+T40 is inert without a data path. Add a `SourceAdapter` (same contract as the vendor/LiteLLM
+sources) that reads a public, citable leaderboard from a refreshed snapshot and maps its scores
+onto catalog ids, stamping `source` + `lastVerified`. Opt-in, offline-replayable, propose-and-
+review — a bad or stale fetch can never silently publish, exactly like every other source. The
+matching (leaderboard name → catalog vendor/id) is the real work and must fail safe (omit rather
+than mis-attribute).
+
+### §I5 — T42 · Per-domain benchmark scores
+A single "intelligence" number hides that models are uneven — great at code, weak at math, etc.
+Extend `benchmarks` to a few **cited per-domain** scores (general reasoning, coding/SWE-bench,
+math) so a reader compares on the axis that matches their use-case. Same provenance discipline;
+each score keeps its own source. Honest > tidy.
+
+### §I6 — T43 · Speed & cost-efficiency axis
+Capability isn't only "smart" — it's also "fast/cheap enough". Carry cited **throughput**
+(tokens/s) and **latency** (time-to-first-token) so the catalog exposes a second axis, and pair
+it with the list price for a derived cost-per-capability view. Cited + indicative like pricing;
+needs its own data source (often the same leaderboard as T41).
+
+### §I7 — T44 · Filter & sort by tier + use-case
+The T38 classification is display-only; make it a discovery tool. Add filter chips (use-case
+tags, tier bands) and sorting on the browsable page, reusing the T20 capability/modality filter
+machinery and serializing the state into the URL hash (T16), so "show me Frontier reasoning
+models" is one click and a shareable link. Page-only, zero-dep, derived from facts already loaded.

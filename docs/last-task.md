@@ -1,7 +1,7 @@
-# Last task number — `T40` · next block letter — `J`
+# Last task number — `T44` · next block letter — `J`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T41`; after assigning it, bump the number above and the log line below.
+> `T45`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,10 @@
 
 ## Log (most recent first)
 
+- **T44 CREATED** (📋, Block I §I7 — filter & sort by tier + use-case on the page: interactive chips/sort reusing T20 filters + T16 hash; page-only; deps — [T38 shipped]) — 2026-07-22.
+- **T43 CREATED** (💭, Block I §I6 — speed & cost-efficiency axis: cited throughput (tok/s) + latency (TTFT) + cost-per-capability; needs a source) — 2026-07-22.
+- **T42 CREATED** (📋, Block I §I5 — per-domain benchmark scores (reasoning/coding/math) extending benchmarks; deps T40) — 2026-07-22.
+- **T41 CREATED** (📋, Block I §I4 — benchmark source adapter populating T40 from a citable leaderboard snapshot (Artificial Analysis/LMArena), provenance-stamped, opt-in/offline/propose-review; deps T40) — 2026-07-22.
 - **T40 CREATED** (💭, Block I §I3 — cited intelligence/benchmark index (Artificial Analysis/LMArena) as a pricing-style field: indicative+source+lastVerified, never invented; needs a data source/licensing story) — 2026-07-22.
 - **T39 CREATED** (📋, Block I §I2 — factual fields openWeights (open vs proprietary) + parameters (disclosed only), provenance-gated, feeds page classification) — 2026-07-22.
 - **T38 SHIPPED** (Block I §I1 — at-a-glance classification on the page: client-side classify() → use-case tags (kind/capabilities/modalities) + price-bucketed tier (Frontier/High/Mid/Light, market proxy not benchmark); tier badge by Kind + use-case chips in row/drawer/compare + legend; derived-only, no schema/canonical change, no invented verdict) — 2026-07-22.
