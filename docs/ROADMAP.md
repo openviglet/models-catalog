@@ -63,6 +63,15 @@
 
 - **T34** 📋 **More static landing pages + sitemap** — extend `scripts/emit.mjs` (the T26 page generator) with per-capability / per-modality / per-kind static landing pages and a `sitemap.xml` (+ `robots.txt`) so segmented content is individually indexable by search engines and assistants. Zero-dep, derived-at-emit, no framework. deps: — (T26 shipped) → §G1
 
+## Block J — Live benchmark & performance ingestion
+
+> T41 populates the cited `benchmarks`/`performance` fields from a hand-curated snapshot
+> (`pipeline/benchmarks.json`). This block **automates that refresh** — fetch a public,
+> citable leaderboard directly so the numbers stay current without manual editing,
+> subject to a workable source + licence. Design rationale → §J.
+
+- **T45** 💭 **Live benchmark/performance source (auto-refresh T41)** — extend the T41 benchmark adapter to fetch a public, citable capability/speed leaderboard (e.g. Artificial Analysis / LMArena) over the network into the `benchmarks` + `performance` fields, matched to catalog ids, cached as an offline-replayable snapshot and provenance-stamped — replacing manual snapshot edits with a dynamic refresh. Gated on a source with an acceptable licence + stable shape; fail-safe matching (omit, never mis-attribute) + propose-and-review like every source. deps: T41 → §J1
+
 > The endpoint intentionally stays on its public GitHub Pages URL
 > (`openviglet.github.io/model-catalog`) — an unbranded, community-owned home signals
 > it is a public resource, not a brand asset.

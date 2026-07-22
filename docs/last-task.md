@@ -1,7 +1,7 @@
-# Last task number — `T44` · next block letter — `J`
+# Last task number — `T45` · next block letter — `K`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T45`; after assigning it, bump the number above and the log line below.
+> `T46`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T45 CREATED** (💭, Block J §J1 — live benchmark/performance source: auto-refresh T41 by fetching a public citable leaderboard (Artificial Analysis/LMArena) over the network into benchmarks+performance, offline-cached, provenance-stamped, fail-safe matching; gated on source licence/shape; deps T41) — 2026-07-22.
 - **T44 SHIPPED** (Block I §I7 — page filter/sort by tier + use-case: Use case (tags, AND) + Tier (bands, OR) chip groups in the T20 facet bar, Kind header cycles into a tier sort (tierRank), state in T16 hash (tag/tier/sort); classify()-driven so chips match table; page-only zero-dep. **Block I shipped in full.**) — 2026-07-22.
 - **T43 SHIPPED** (Block I §I6 — speed & cost-efficiency axis: cited `performance` object {throughputTps?, latencyTtftSec?, indicative, source, lastVerified}; shared citedCoreErrors() validator + OBJECT_FIELDS merge loop; adapter emits performance from snapshot; emit coverage/CSV/facts; page Speed row + DERIVED cost-per-capability (index÷price); 2 tests) — 2026-07-22.
 - **T42 SHIPPED** (Block I §I5 — per-domain cited scores: benchmarks.scores map {domain:{value,source?,lastVerified?}} recommended reasoning/coding/math; schema/validate/adapter(scoresFrom)/emit(line+3 CSV cols)/page cell; merge unchanged (atomic object); 2 tests) — 2026-07-22.
