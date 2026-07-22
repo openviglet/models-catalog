@@ -8,6 +8,7 @@ public/catalog-v1.json
 public/catalog.schema.json
 public/index.json
 public/endpoints.json
+public/stats.json
 public/by-kind/
 public/by-vendor/
 

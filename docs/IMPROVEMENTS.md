@@ -43,12 +43,6 @@ serves spreadsheets and BI tools; `catalog.ndjson` serves streaming/`jq -c`/data
 pipelines and `grep`. Both are trivially emitted from the same flattened entries, no
 schema implications. Kept an *idea* pending confirmation of the exact CSV column set.
 
-### §D3 — T24 · `stats.json` aggregate metrics
-A tiny emitted artifact of pre-computed counts — models per vendor, per kind, per
-capability/modality, field-fill coverage, grand totals. It is the shared data source for
-the site dashboard (T21), the badge (T27) and the coverage view (T29), and spares every
-consumer from re-aggregating the full catalog. Low effort, unblocks three other tasks.
-
 ### §D4 — T25 · Extended faceting + alias resolution
 Round out the faceting story: `by-capability/<cap>.json` and `by-modality/<m>.json`
 mirror the existing by-kind/by-vendor slices, and `aliases.json` publishes an alias→

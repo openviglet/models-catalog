@@ -126,9 +126,56 @@ const endpoints = {
   latest: `${SOURCE_URL}/catalog.json`,
   pinned: { [String(root.version)]: `${SOURCE_URL}/catalog-v${root.version}.json` },
   index: `${SOURCE_URL}/index.json`,
+  stats: `${SOURCE_URL}/stats.json`,
   schema: `${SOURCE_URL}/catalog.schema.json`,
   byKind: Object.fromEntries(presentKinds.map((k) => [k, `${SOURCE_URL}/by-kind/${k}.json`])),
   byVendor: Object.fromEntries(Object.keys(vendors).map((v) => [v, `${SOURCE_URL}/by-vendor/${v}.json`])),
+};
+
+// Aggregate metrics (T24): a tiny pre-computed rollup — counts per vendor / kind /
+// capability / modality, plus field-fill coverage and grand totals — so the site
+// dashboard, the badge and coverage views read one number instead of re-aggregating
+// the full catalog. Derived here at emit, so it can never drift from the artifact.
+const flat = Object.values(vendors).flat();
+const tally = (values) => { const m = {}; for (const k of values) { m[k] = (m[k] || 0) + 1; } return m; };
+// Sort count maps by descending count then key, so the artifact is deterministic + diff-friendly.
+const ranked = (map) => Object.fromEntries(Object.entries(map).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])));
+const filled = (pred) => {
+  let n = 0;
+  for (const e of flat) if (pred(e)) n++;
+  return { filled: n, rate: flat.length ? Math.round((n / flat.length) * 1e4) / 1e4 : 0 };
+};
+const stats = {
+  version: root.version,
+  lastUpdated: root.lastUpdated,
+  source: SOURCE_URL,
+  totals: {
+    models: flat.length,
+    vendors: Object.keys(vendors).length,
+    kinds: presentKinds.length,
+    capabilities: new Set(flat.flatMap((e) => e.capabilities || [])).size,
+  },
+  byVendor: ranked(tally(flat.map((e) => e.vendor))),
+  byKind: Object.fromEntries(presentKinds.map((k) => [k, flat.filter((e) => e.kind === k).length])),
+  byCapability: ranked(tally(flat.flatMap((e) => e.capabilities || []))),
+  byInputModality: ranked(tally(flat.flatMap((e) => (e.modalities && e.modalities.input) || []))),
+  byOutputModality: ranked(tally(flat.flatMap((e) => (e.modalities && e.modalities.output) || []))),
+  coverage: {
+    total: flat.length,
+    fields: {
+      contextWindow: filled((e) => e.contextWindow != null),
+      maxOutputTokens: filled((e) => e.maxOutputTokens != null),
+      embeddingDimensions: filled((e) => e.embeddingDimensions != null),
+      capabilities: filled((e) => (e.capabilities || []).length > 0),
+      modalities: filled((e) => e.modalities != null),
+      knowledgeCutoff: filled((e) => e.knowledgeCutoff != null),
+      releaseDate: filled((e) => e.releaseDate != null),
+      aliases: filled((e) => (e.aliases || []).length > 0),
+      status: filled((e) => e.status != null),
+      sources: filled((e) => (e.sources || []).length > 0),
+      lastVerified: filled((e) => e.lastVerified != null),
+    },
+  },
 };
 
 mkdirSync(OUT_DIR, { recursive: true });
@@ -144,12 +191,13 @@ writeFileSync(resolve(OUT_DIR, "catalog.json"), json, "utf8"); // rolling latest
 writeFileSync(resolve(OUT_DIR, `catalog-v${root.version}.json`), json, "utf8"); // pinned
 writeFileSync(resolve(OUT_DIR, "catalog.schema.json"), readFileSync(SCHEMA_SRC, "utf8"), "utf8");
 write("index.json", index); // compact
+write("stats.json", stats); // aggregate metrics (T24)
 for (const [k, v] of Object.entries(byKind)) write(`by-kind/${k}.json`, v);
 for (const [k, v] of Object.entries(byVendor)) write(`by-vendor/${k}.json`, v);
 write("endpoints.json", endpoints); // discovery manifest
 
 console.log(
-  `emit-model-catalog: wrote catalog.json + catalog-v${root.version}.json + schema + index.json + ` +
+  `emit-model-catalog: wrote catalog.json + catalog-v${root.version}.json + schema + index.json + stats.json + ` +
     `${presentKinds.length} by-kind + ${Object.keys(byVendor).length} by-vendor slices + endpoints.json ` +
     `(${Object.keys(vendors).length} vendors, ${count} models) to ${OUT_DIR}`,
 );

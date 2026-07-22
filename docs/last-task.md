@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T24 SHIPPED** (Block D §D3 — stats.json aggregate metrics emitted by emit.mjs: totals + byVendor/byKind/byCapability/byInput/byOutputModality ranked count maps + per-field coverage {filled,rate}; advertised in endpoints.json/api.md/page table; unblocks T21) — 2026-07-22.
 - **T20 SHIPPED** (Block C §C5 — capability + input/output-modality filter chips derived from the catalog (AND semantics) + click/keyboard sortable columns within each vendor group (id/kind, Details cycles context/output); filters+sort serialized into the T16 hash cap/in/out/sort) — 2026-07-22.
 - **T19 SHIPPED** (Block C §C4 — command palette ⌘K/Ctrl-K: subsequence-fuzzy quick-switcher over models/vendors/kinds from a one-pass index, ↑↓/↵/esc + click, nav ⌘K button; picks reuse existing state — model→permalink/drawer, kind→filter, vendor→scroll) — 2026-07-22.
 - **T18 SHIPPED** (Block C §C3 — comparison view: pin 2–4 via row ⇄ / drawer action into a bottom tray, side-by-side attributes×models modal, shareable `#compare=v/id,v/id` deep link through the T16 router, per-column remove + Esc/backdrop close) — 2026-07-22.

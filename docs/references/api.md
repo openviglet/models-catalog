@@ -27,9 +27,10 @@ capability* — **not pricing** (see [STRATEGY.md](../STRATEGY.md) §I).
 | `…/catalog.json` | Rolling latest — the current schema version. |
 | `…/catalog-v1.json` | Pinned to schema **v1** — safe for external consumers to lock. |
 | `…/index.json` | **Compact index** — the same envelope, each entry trimmed to `{ vendor, id, label, kind }`. A fraction of the payload for model-pickers that only render a grouped list; lazy-load the full record from `catalog.json` on selection. |
+| `…/stats.json` | **Aggregate metrics** — pre-computed counts (models per vendor / kind / capability / input+output modality), per-field fill **coverage**, and grand `totals`. Read one number instead of re-aggregating the full catalog. Its own envelope (not a `vendors` map). |
 | `…/by-kind/<KIND>.json` | **Faceted slice** — the full catalog filtered to one `kind` (e.g. `by-kind/EMBEDDING.json`). Same envelope, plus a `kind` field. Fetch one facet instead of downloading everything and filtering client-side. |
 | `…/by-vendor/<vendor>.json` | **Faceted slice** — the full catalog filtered to one vendor (e.g. `by-vendor/openai.json`). Same envelope, plus a `vendor` field. |
-| `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `schema`, and the available `byKind` / `byVendor` slice keys. Read this to discover the surface rather than hard-coding paths. |
+| `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `stats`, `schema`, and the available `byKind` / `byVendor` slice keys. Read this to discover the surface rather than hard-coding paths. |
 | `…/catalog.schema.json` | The JSON Schema (Draft 2020-12) describing the envelope + entry. |
 | `…/` (repo Pages root) | Human-browsable reference page (`public/index.html`). |
 
@@ -105,6 +106,31 @@ const { vendors } = await (await fetch(
 )).json()
 const all = Object.values(vendors).flat()
 const kindOf = (id) => all.find((m) => m.id === id)?.kind ?? "UNKNOWN"
+```
+
+## Aggregate metrics (`stats.json`)
+
+A small, separately-shaped artifact (not a `vendors` map) with everything pre-counted,
+so a dashboard, a README badge or a coverage view reads one number instead of walking
+the whole catalog. Regenerated at emit, so it never drifts. Count maps are ordered by
+descending count; `coverage.fields.<field>` is `{ filled, rate }` over all models.
+
+```jsonc
+{
+  "version": 1,
+  "lastUpdated": "2026-07-21",
+  "source": "https://openviglet.github.io/model-catalog",
+  "totals": { "models": 194, "vendors": 14, "kinds": 8, "capabilities": 4 },
+  "byVendor":         { "openai": 129, "gemini": 8, /* … */ },
+  "byKind":           { "CHAT": 136, "SPEECH": 22, /* … */ },
+  "byCapability":     { "tools": 136, "vision": 101, /* … */ },
+  "byInputModality":  { "text": 174, "image": 103, /* … */ },
+  "byOutputModality": { "text": 78, "embedding": 15, /* … */ },
+  "coverage": {
+    "total": 194,
+    "fields": { "contextWindow": { "filled": 180, "rate": 0.9278 }, /* … */ }
+  }
+}
 ```
 
 ## How consumers use it
