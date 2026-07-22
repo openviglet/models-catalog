@@ -1,7 +1,7 @@
-# Last task number — `T49` · next block letter — `L`
+# Last task number — `T58` · next block letter — `M`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T50`; after assigning it, bump the number above and the log line below.
+> `T59`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,16 @@
 
 ## Log (most recent first)
 
+- **T58 CREATED** (📋, Block G §G2 — first-class per-model page: promote emitted T26 page to a scannable reference styled to SPA tokens — header + at-a-glance stat tiles + populated-only cited sections + always-on provenance + derived related models; omit empty sections; drawer "Open full page ↗"; deps — [T26 shipped]) — 2026-07-22.
+- **T57 CREATED** (💭, Block L §L8 — mobile & render perf: restore mobile nav (compact menu) + card view <720px + debounce keystroke re-render; deps T51) — 2026-07-22.
+- **T56 CREATED** (💭, Block L §L7 — facet rail + shareable presets: grouped/collapsible rail w/ per-chip counts + clear-all + labelled AND/OR; copy-this-view + curated preset links; deps T51,T52) — 2026-07-22.
+- **T55 CREATED** (📋, Block L §L6 — IA re-layout orient/explore/cite: home=orient-only + Explore entry; move Insights/Coverage/Plans/Sources off critical path into one tabbed analytics home; trim nav; pure IA; deps —) — 2026-07-22.
+- **T54 CREATED** (💭, Block L §L5 — decision views: inline-SVG price×intelligence Pareto scatter over ~32 chat models + precomputed leaderboards.json (cheapest per kind / intelligence-per-$ / biggest context / fastest) each w/ population+total; deps T51,T53) — 2026-07-22.
+- **T53 CREATED** (📋, Block L §L4 — honest sparsity + data hygiene: has-price/benchmark/speed filters, denominators everywhere, dimmed empty cells + contribute deep-link, empty-states; stop advertising 0%-filled fields (drop empty CSV cols/hide all-zero coverage cols/remove reasoning+arenaElo scaffolding; add COV_LABEL); deps T51) — 2026-07-22.
+- **T52 CREATED** (📋, Block L §L3 — decision columns + column chooser: promote price/context/benchmark/speed/tags out of Details cell into aligned sortable kind-aware columns, URL-persisted chooser; deps T51) — 2026-07-22.
+- **T51 CREATED** (📋, Block L §L2 — global flat sort + optional group-by (None/Vendor/Kind/Tier): flat pass sorted once globally so cross-vendor ranking works; highest-leverage fix; deps T50) — 2026-07-22.
+- **T50 CREATED** (📋, Block L §L1 — SDK-backed page: migrate index.html off raw fetch to @openviglet/model-catalog-client ESM (emit copies clients/js → public/sdk/, page imports; no build/CDN, zero-dep); foundational + SDK acceptance test feeding Block K; deps T46) — 2026-07-22.
+- **T34 REFRAMED** (📋, Block G §G1 — from "more landing pages" to real per-segment HUBS (leaderboard tables, not link lists) + sitemap/robots; becomes the cite backbone of §L IA; not a new number) — 2026-07-22.
 - **T46 SHIPPED** (Block K §K1 — typed new ModelEntry fields across all three SDKs: pricing/benchmarks+scores/performance/openWeights/parameters as JS d.ts interfaces + Python dataclass fields (+_FIELD_MAP, nested=dicts) + Java records (Pricing/BenchmarkScore/Benchmarks/Performance) with parameters as Long (int32 overflow) + lng()/dbl() parsers; unknown-field tolerance intact; READMEs + fixture test each (JS 11/Python 11/Java 12 green)) — 2026-07-22.
 - **T45 SHIPPED** (Block J §J1 — live Artificial Analysis benchmark source auto-refreshing T41: new artificial-analysis adapter fetches the AA leaderboard API → same benchmarks+performance shape via exported benchmarkDraft(); envKey ARTIFICIAL_ANALYSIS_API_KEY (opt-in) + offline-replayable snapshot; non-anchoring, curated slug→id table artificial-analysis-map.json (unmapped dropped, never mis-attributed); merge priority 26 (above snapshot 25, below overrides); map ships empty so catalog unchanged; 3 tests. **Block J shipped in full.**) — 2026-07-22.
 - **T49 CREATED** (💭, Block K §K4 — shared use-case-tag + price-tier classifier: port the page's T38 classify() into each SDK as an optional derived helper; derived-only, no schema change; deps T46) — 2026-07-22.

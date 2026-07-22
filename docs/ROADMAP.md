@@ -66,7 +66,8 @@
 > and **rejected** — it would break the foundational zero-dependency bet to solve a
 > problem `emit.mjs` already solves. Design rationale → §G.
 
-- **T34** 📋 **More static landing pages + sitemap** — extend `scripts/emit.mjs` (the T26 page generator) with per-capability / per-modality / per-kind static landing pages and a `sitemap.xml` (+ `robots.txt`) so segmented content is individually indexable by search engines and assistants. Zero-dep, derived-at-emit, no framework. deps: — (T26 shipped) → §G1
+- **T34** 📋 **Per-segment hubs + sitemap** — evolve the T26 page generator in `scripts/emit.mjs` into real per-capability / per-modality / per-kind (+ per-tier) **hubs**: each a compact static leaderboard (top models pre-sorted, cross-linked to per-model pages) + prose intro + links to the JSON slice and to Explore pre-filtered — *not* a bare link list — plus `sitemap.xml` + `robots.txt`. Serves humans and crawlers; zero-dep, derived-at-emit, no framework. deps: — (T26 shipped) → §G1
+- **T58** 📋 **First-class per-model page** — promote the emitted per-model page (T26) from a bare table into a scannable reference styled to the SPA design tokens: header + at-a-glance stat tiles + populated-only cited sections + always-on provenance + derived related models; omit empty sections (not "—"); the drawer gains an "Open full page ↗" link. Unifies the SPA↔static visual system. deps: — (T26 shipped) → §G2
 
 ## Block K — Client SDK modernization
 
@@ -86,6 +87,26 @@
 > The endpoint intentionally stays on its public GitHub Pages URL
 > (`openviglet.github.io/model-catalog`) — an unbranded, community-owned home signals
 > it is a public resource, not a brand asset.
+
+## Block L — Explore & decide: catalog data experience
+
+> Rich per-model data (pricing, cited benchmarks + scores, speed, open-weights, classification)
+> across ~240 models now outgrows a vendor-grouped list that can only sort *within* a vendor — the
+> cross-vendor questions ("cheapest chat overall", "best intelligence-per-$") are impossible, and
+> the home page is accreting analytics bands. This block turns the site from an inventory into a
+> **decision tool** across three jobs — orient / explore / cite (the cite surface is Block G) —
+> without one hyper-page. **Foundational bet:** the site becomes the reference consumer of the JS
+> SDK — gaps found here are fixed in the SDK (feeding Block K), never worked around in the page.
+> Sparse data stays honest (denominators, opt-in overlays, never invented). Design rationale → §L.
+
+- **T50** 📋 **SDK-backed page (dogfood the JS client)** — migrate `public/index.html` off raw `fetch("./catalog.json")` to consume `@openviglet/model-catalog-client` as a static ESM module (emit copies `clients/js/*.mjs` → `public/sdk/`, page imports it; no build, no CDN, still zero-dep). Foundational + the SDK's real-world acceptance test; gaps filed against Block K. deps: T46 → §L1
+- **T51** 📋 **Global flat sort + optional group-by** — rework Browse from per-vendor sorting to a flat, globally-sorted table with vendor as one optional group-by (None/Vendor/Kind/Tier); the highest-leverage fix — makes cross-vendor ranking possible. deps: T50 → §L2
+- **T52** 📋 **Decision columns + column chooser** — promote price/context/benchmark/speed/tags out of the crammed Details cell into aligned, sortable, kind-aware columns with a URL-persisted column chooser (lean default). deps: T51 → §L3
+- **T53** 📋 **Honest sparsity + data hygiene** — "has price/benchmark/speed" filters, denominators on every ranked/plot view, dimmed empty cells + contribute deep-link, contribute empty-states; and stop advertising 0%-filled fields (drop empty CSV cols / hide all-zero coverage cols / remove reasoning+arenaElo scaffolding; add missing COV_LABEL). deps: T51 → §L4
+- **T54** 💭 **Decision views: frontier + leaderboards** — hand-rolled inline-SVG price×intelligence Pareto scatter (over the ~32 chat models with both) + precomputed `leaderboards.json` (cheapest per kind, best intelligence-per-$, biggest context, fastest), each carrying its population/total. deps: T51, T53 → §L5
+- **T55** 📋 **IA re-layout (orient/explore/cite)** — home becomes orient-only (+ prominent Explore entry); move Insights/Coverage/Plans/Sources off the critical path into one tabbed analytics home; trim the nav toward four bands. Pure IA, no new data. deps: — → §L6
+- **T56** 💭 **Facet rail + shareable presets** — grouped/collapsible facet rail with per-chip match counts + "clear all" + labelled AND/OR; "copy link to this view" + curated preset links. deps: T51, T52 → §L7
+- **T57** 💭 **Mobile & render performance** — restore mobile nav (compact menu), card view < 720px, debounce the keystroke re-render. deps: T51 → §L8
 
 ## Non-goals
 
