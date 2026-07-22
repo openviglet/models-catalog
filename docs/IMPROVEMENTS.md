@@ -18,14 +18,6 @@ filtering. For a *reference*, shareability and depth are the whole point — you
 reference by linking to it. This block makes the page linkable, deep, and pleasant to
 explore, without adding a single dependency.
 
-### §C1 — T16 · URL-addressable state + model permalinks
-Today reloading loses your search and filter, and you can't send someone "the embedding
-models". Serialize the explorer state to the URL hash (`#q=…&kind=…&vendor=…`) and give
-each row a stable anchor (`#<vendor>/<id>`) that scrolls-to and highlights on load. This
-is the single highest-leverage change: it makes the catalog *citable*, which is the GEO
-thesis at the UI level, and it's a prerequisite for the command palette (T19) and any
-shared deep link.
-
 ### §C2 — T17 · Model detail drawer
 The schema carries `modalities`, `knowledgeCutoff`, `releaseDate`, `aliases`, `status`
 and first-class provenance (`sources` / `lastVerified`) — none of it is visible in the

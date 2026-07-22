@@ -30,7 +30,6 @@
 > link to. Every item is inline, zero-dep, static-hosting-safe (no build step, no runtime).
 > Design rationale → [IMPROVEMENTS.md](IMPROVEMENTS.md) §C.
 
-- **T16** 📋 **URL-addressable state + model permalinks** — reflect search/kind/vendor filters into the hash (`#q=…&kind=EMBEDDING&vendor=openai`) and give every model a stable anchor (`#openai/gpt-4o`) so any view or single model is a shareable, deep-linkable URL. deps: — → §C1
 - **T17** 📋 **Model detail drawer** — click a row to open a panel showing the *full* record (every field: modalities, knowledgeCutoff, releaseDate, aliases, status, `sources`/`lastVerified` provenance), with copy-as-JSON and a copy-the-id action. The table only shows 3 columns today; the richest data is invisible. deps: — → §C2
 - **T18** 📋 **Model comparison view** — select 2–4 models and see them side-by-side (context/output windows, modalities, capabilities, lifecycle) to answer "gpt-4o vs claude vs gemini" without leaving the page. deps: T17 → §C3
 - **T19** 💭 **Command palette (⌘K / Ctrl-K)** — fuzzy quick-jump to any model, vendor or kind; keyboard-first navigation the developer audience expects. deps: T16 → §C4

@@ -353,6 +353,28 @@
       .skeleton { height: 4.5rem; border-radius: 1rem; background: linear-gradient(90deg, var(--bg-alt), var(--card), var(--bg-alt));
         background-size: 200% 100%; animation: shimmer 1.3s infinite; margin-bottom: 1.1rem; }
       @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+      /* ── Permalinks · row highlight · toast (T16) ────── */
+      td .model-cell { display: flex; align-items: baseline; gap: .5rem; }
+      .permalink {
+        opacity: 0; font-family: var(--mono); font-weight: 700; color: var(--muted);
+        text-decoration: none; padding: 0 .3rem; border-radius: .35rem; line-height: 1;
+        transition: opacity .12s, color .12s, background .12s;
+      }
+      tbody tr:hover .permalink, .permalink:focus-visible { opacity: 1; }
+      .permalink:hover { color: var(--brand-3); background: var(--brand-wash); text-decoration: none; }
+      @keyframes rowFlash {
+        0%, 12% { background: color-mix(in srgb, var(--brand) 28%, transparent); }
+        100%    { background: transparent; }
+      }
+      tbody tr.row-hl > td { animation: rowFlash 2.4s ease-out; }
+      #toast {
+        position: fixed; left: 50%; bottom: 1.6rem; transform: translateX(-50%) translateY(1.4rem);
+        background: var(--text); color: var(--bg); font-size: .86rem; font-weight: 600;
+        padding: .55rem 1rem; border-radius: .6rem; box-shadow: var(--shadow-hover);
+        opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease; z-index: 200;
+      }
+      #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
   </head>
   <body>
@@ -593,6 +615,8 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
       </div>
     </footer>
 
+    <output id="toast" aria-live="polite"></output>
+
     <script>
       /* ── Theme ─────────────────────────────────────── */
       (function () {
@@ -679,8 +703,12 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
             const out = m.maxOutputTokens ? `${fmtTokens(m.maxOutputTokens)} out` : "";
             const nums = [ctx, out, dim].filter(Boolean).map((x) => `<span class="chip num">${x}</span>`).join("");
             const kc = KIND_COLOR[m.kind] || KIND_COLOR.UNKNOWN;
-            return `<tr>
-              <td><div class="mid">${m.id}</div>${m.label && m.label !== m.id ? `<div class="lbl">${m.label}</div>` : ""}</td>
+            const key = vendor + "/" + m.id;
+            return `<tr data-key="${key}">
+              <td>
+                <div class="model-cell"><span class="mid">${m.id}</span><a class="permalink" href="#${encodeURI(key)}" title="Copy permalink" aria-label="Permalink to ${m.id}">#</a></div>
+                ${m.label && m.label !== m.id ? `<div class="lbl">${m.label}</div>` : ""}
+              </td>
               <td><span class="badge" style="--kc:${kc}">${KIND_LABEL[m.kind] || m.kind}</span></td>
               <td>${nums}${caps || (nums ? "" : '<span class="lbl">—</span>')}</td>
             </tr>`;
@@ -706,6 +734,48 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           : "No models match your search.";
       }
 
+      /* ── URL-addressable state + permalinks (T16) ──── */
+      function writeCurrentState() {
+        const q = document.getElementById("q").value.trim();
+        const p = new URLSearchParams();
+        if (q) p.set("q", q);
+        if (activeKind) p.set("kind", activeKind);
+        const hash = p.toString();
+        // replaceState: no history entry per keystroke, and never re-fires hashchange
+        history.replaceState(null, "", hash ? "#" + hash : location.pathname + location.search);
+      }
+      function focusModel(key) {
+        const slash = key.indexOf("/");
+        if (slash < 0) return;
+        // reveal the row: drop filters/search that could hide it, expand its vendor
+        activeKind = null;
+        document.getElementById("q").value = "";
+        collapsed.delete(key.slice(0, slash));
+        buildFilters();
+        render();
+        const el = document.querySelector(`tr[data-key="${CSS.escape(key)}"]`);
+        if (!el) return;
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.remove("row-hl"); el.getBoundingClientRect(); el.classList.add("row-hl");
+      }
+      // Route the hash: explorer state (#q=…&kind=…), model permalink (#vendor/id),
+      // or a bare section anchor (#browse) / empty → baseline view + native scroll.
+      function applyHash() {
+        const rawEnc = location.hash.slice(1);
+        if (rawEnc.includes("=")) {
+          const p = new URLSearchParams(rawEnc);
+          document.getElementById("q").value = p.get("q") || "";
+          const kind = p.get("kind");
+          activeKind = KINDS.includes(kind) ? kind : null;
+          buildFilters(); render();
+          return;
+        }
+        const raw = decodeURIComponent(rawEnc);
+        if (raw.includes("/")) { focusModel(raw); return; }
+        document.getElementById("q").value = ""; activeKind = null;
+        buildFilters(); render();
+      }
+
       function buildFilters() {
         const f = document.getElementById("filters");
         const present = new Set(Object.values(catalog.vendors).flat().map((m) => m.kind));
@@ -713,7 +783,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           const b = document.createElement("button");
           b.textContent = label;
           b.setAttribute("aria-pressed", String(activeKind === kind));
-          b.onclick = () => { activeKind = activeKind === kind ? null : kind; buildFilters(); render(); };
+          b.onclick = () => { activeKind = activeKind === kind ? null : kind; buildFilters(); render(); writeCurrentState(); };
           return b;
         };
         f.innerHTML = "";
@@ -744,9 +814,9 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           document.querySelector('[data-stat="version"]').textContent = "v" + data.version;
           document.getElementById("footmeta").textContent =
             ` · schema v${data.version} · updated ${data.lastUpdated} · ${all.length} models`;
-          buildFilters();
-          render();
-          document.getElementById("q").addEventListener("input", render);
+          document.getElementById("q").addEventListener("input", () => { render(); writeCurrentState(); });
+          window.addEventListener("hashchange", applyHash);
+          applyHash(); // build filters + render, honoring any deep-linked state/permalink
         })
         .catch((e) => {
           document.getElementById("status").innerHTML =
@@ -777,6 +847,23 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           btn.textContent = "Copied ✓";
           setTimeout(() => (btn.textContent = old), 1400);
         });
+      });
+
+      /* ── Toast + permalink copy (T16) ──────────────── */
+      let toastTimer;
+      function toast(msg) {
+        const el = document.getElementById("toast");
+        el.textContent = msg;
+        el.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove("show"), 1600);
+      }
+      // A permalink click both navigates (→ hashchange → scroll+highlight) and copies the citable URL.
+      document.addEventListener("click", (e) => {
+        const pl = e.target.closest(".permalink");
+        if (!pl) return;
+        const url = location.origin + location.pathname + location.search + pl.getAttribute("href");
+        if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => toast("Permalink copied ✓")).catch(() => {});
       });
     </script>
   </body>
