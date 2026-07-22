@@ -28,6 +28,8 @@ capability* — **not pricing** (see [STRATEGY.md](../STRATEGY.md) §I).
 | `…/catalog-v1.json` | Pinned to schema **v1** — safe for external consumers to lock. |
 | `…/index.json` | **Compact index** — the same envelope, each entry trimmed to `{ vendor, id, label, kind }`. A fraction of the payload for model-pickers that only render a grouped list; lazy-load the full record from `catalog.json` on selection. |
 | `…/stats.json` | **Aggregate metrics** — pre-computed counts (models per vendor / kind / capability / input+output modality), per-field fill **coverage**, and grand `totals`. Read one number instead of re-aggregating the full catalog. Its own envelope (not a `vendors` map). |
+| `…/changes.json` | **Change feed** — what changed vs. the previously published catalog: `added` / `removed` / lifecycle-`changed` ids for this publish, with `counts`. Its own envelope (not a `vendors` map). |
+| `…/feed.xml` | **Atom feed** — the same adds / removals / lifecycle transitions as `changes.json`, subscribable in any feed reader. |
 | `…/by-kind/<KIND>.json` | **Faceted slice** — the full catalog filtered to one `kind` (e.g. `by-kind/EMBEDDING.json`). Same envelope, plus a `kind` field. Fetch one facet instead of downloading everything and filtering client-side. |
 | `…/by-vendor/<vendor>.json` | **Faceted slice** — the full catalog filtered to one vendor (e.g. `by-vendor/openai.json`). Same envelope, plus a `vendor` field. |
 | `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `stats`, `schema`, and the available `byKind` / `byVendor` slice keys. Read this to discover the surface rather than hard-coding paths. |
@@ -130,6 +132,30 @@ descending count; `coverage.fields.<field>` is `{ filled, rate }` over all model
     "total": 194,
     "fields": { "contextWindow": { "filled": 180, "rate": 0.9278 }, /* … */ }
   }
+}
+```
+
+## Change feed (`changes.json` + `feed.xml`)
+
+Knowing *what changed* is a reference's defining value. At every publish, the freshly
+built catalog is diffed against the previously published one and the delta is emitted as
+`changes.json` (structured) plus an Atom `feed.xml` (subscribable). Diff-at-emit, so it
+never drifts from the artifact it describes. The baseline is the prior on-disk build if
+present, else the live published `catalog.json` (best-effort — offline/first-publish
+degrades to an empty diff, flagged by `"baseline": "none"`). Lifecycle `changed` compares
+each id's effective status (`status`, falling back to `deprecated → DEPRECATED`).
+
+```jsonc
+{
+  "version": 1,
+  "lastUpdated": "2026-07-21",
+  "source": "https://openviglet.github.io/model-catalog",
+  "previousLastUpdated": "2026-07-14",       // null on first publish
+  "baseline": "present",                      // "present" | "none"
+  "counts": { "added": 2, "removed": 0, "changed": 1 },
+  "added":   [ { "vendor": "openai", "id": "…", "kind": "CHAT", "label": "…" } ],
+  "removed": [ /* same shape */ ],
+  "changed": [ { "vendor": "…", "id": "…", "kind": "…", "label": "…", "from": "PREVIEW", "to": "GA" } ]
 }
 ```
 

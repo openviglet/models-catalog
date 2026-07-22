@@ -16,13 +16,6 @@ The canonical file is the single source of truth; the published surface is whate
 can *derive* from it deterministically at emit time. Everything here is another such
 derivation — same guarantee as `index.json` and the faceted slices, no new moving parts.
 
-### §D1 — T22 · Catalog change feed
-The defining value of a reference is knowing *what changed*. At emit, diff the freshly
-built catalog against the last published `catalog.json` (fetched or from the prior build)
-and write `changes.json` (added / removed / lifecycle-changed ids, per run) plus an
-Atom/RSS `feed.xml`. Consumers can subscribe; the site (T21 / a "What's new" strip) can
-render it. Diff-at-emit keeps it zero-runtime and always consistent with the artifact.
-
 ### §D2 — T23 · Alternate export formats
 Not every consumer wants nested JSON. `catalog.csv` (one row per model, flat columns)
 serves spreadsheets and BI tools; `catalog.ndjson` serves streaming/`jq -c`/data

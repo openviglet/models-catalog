@@ -11,7 +11,7 @@
  *
  *   node scripts/emit.mjs
  */
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -127,6 +127,8 @@ const endpoints = {
   pinned: { [String(root.version)]: `${SOURCE_URL}/catalog-v${root.version}.json` },
   index: `${SOURCE_URL}/index.json`,
   stats: `${SOURCE_URL}/stats.json`,
+  changes: `${SOURCE_URL}/changes.json`,
+  feed: `${SOURCE_URL}/feed.xml`,
   schema: `${SOURCE_URL}/catalog.schema.json`,
   byKind: Object.fromEntries(presentKinds.map((k) => [k, `${SOURCE_URL}/by-kind/${k}.json`])),
   byVendor: Object.fromEntries(Object.keys(vendors).map((v) => [v, `${SOURCE_URL}/by-vendor/${v}.json`])),
@@ -178,6 +180,106 @@ const stats = {
   },
 };
 
+// ── Catalog change feed (T22) ─────────────────────────────────────────────
+// The defining value of a reference is knowing *what changed*. Diff the freshly
+// built catalog against the previously published one and emit `changes.json`
+// (added / removed / lifecycle-changed ids for this run) plus an Atom `feed.xml`
+// consumers can subscribe to. "Previous" resolves in order: the prior on-disk
+// build if present (local iterative emits) → the live published catalog (CI
+// fresh checkout — best-effort over the network, never fatal) → none (first
+// publish, empty diff). Diff-at-emit keeps it zero-runtime and always consistent
+// with the artifact it describes; the baseline lookup degrades cleanly offline.
+const xmlEsc = (s) =>
+  String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[c]));
+
+async function loadPrevious() {
+  const prior = resolve(OUT_DIR, "catalog.json");
+  if (existsSync(prior)) {
+    try { return JSON.parse(readFileSync(prior, "utf8")); } catch { /* unreadable → try network */ }
+  }
+  if (process.env.CATALOG_EMIT_NO_FETCH) return null; // offline/deterministic emit
+  try {
+    const r = await fetch(`${SOURCE_URL}/catalog.json`, { signal: AbortSignal.timeout(8000) });
+    if (r.ok) return await r.json();
+  } catch { /* offline / first publish / slow host — no baseline */ }
+  return null;
+}
+
+const previous = await loadPrevious();
+const prevFlat = previous && previous.vendors && typeof previous.vendors === "object"
+  ? Object.entries(previous.vendors).flatMap(([vendor, es]) =>
+      (Array.isArray(es) ? es : []).map((e) => ({ ...e, vendor })))
+  : [];
+const idKey = (e) => `${e.vendor}/${e.id}`;
+const lifecycle = (e) => e.status ?? (e.deprecated ? "DEPRECATED" : null);
+const newById = new Map(flat.map((e) => [idKey(e), e]));
+const oldById = new Map(prevFlat.map((e) => [idKey(e), e]));
+const brief = (e) => ({ vendor: e.vendor, id: e.id, kind: e.kind, label: e.label });
+const added = [];
+const removed = [];
+const changed = [];
+for (const [k, e] of newById) if (!oldById.has(k)) added.push(brief(e));
+for (const [k, e] of oldById) if (!newById.has(k)) removed.push(brief(e));
+for (const [k, e] of newById) {
+  const o = oldById.get(k);
+  if (!o) continue;
+  const from = lifecycle(o);
+  const to = lifecycle(e);
+  if (from !== to) changed.push({ ...brief(e), from, to });
+}
+const byId = (a, b) => a.vendor.localeCompare(b.vendor) || a.id.localeCompare(b.id);
+added.sort(byId);
+removed.sort(byId);
+changed.sort(byId);
+
+const changes = {
+  version: root.version,
+  lastUpdated: root.lastUpdated,
+  source: SOURCE_URL,
+  previousLastUpdated: previous ? previous.lastUpdated ?? null : null,
+  baseline: previous ? "present" : "none", // "none" ⇒ first publish, diff is empty by definition
+  counts: { added: added.length, removed: removed.length, changed: changed.length },
+  added,
+  removed,
+  changed,
+};
+
+// Atom 1.0 feed — one <entry> per change in this run. Timestamps derive from
+// `lastUpdated` (no wall-clock read) so the feed is deterministic and diff-friendly.
+const stamp = `${root.lastUpdated}T00:00:00Z`;
+const feedEntry = (type, e) => {
+  const title = type === "changed"
+    ? `Lifecycle: ${e.vendor}/${e.id} · ${e.from ?? "unset"} → ${e.to ?? "unset"}`
+    : `${type === "added" ? "Added" : "Removed"}: ${e.vendor}/${e.id}`;
+  const summary = type === "changed"
+    ? `${e.label} (${e.kind}) status ${e.from ?? "unset"} → ${e.to ?? "unset"}.`
+    : `${e.label} (${e.kind}) ${type === "added" ? "added to" : "removed from"} the catalog.`;
+  return `  <entry>
+    <title>${xmlEsc(title)}</title>
+    <id>${xmlEsc(`${SOURCE_URL}/feed.xml#${root.lastUpdated}-${type}-${e.vendor}-${e.id}`)}</id>
+    <updated>${stamp}</updated>
+    <link href="${xmlEsc(`${SOURCE_URL}/#${e.vendor}/${e.id}`)}"/>
+    <category term="${xmlEsc(type)}"/>
+    <summary>${xmlEsc(summary)}</summary>
+  </entry>`;
+};
+const feedEntries = [
+  ...added.map((e) => feedEntry("added", e)),
+  ...removed.map((e) => feedEntry("removed", e)),
+  ...changed.map((e) => feedEntry("changed", e)),
+];
+const feedXml = `<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Model Catalog — changes</title>
+  <subtitle>Model additions, removals and lifecycle transitions, per publish.</subtitle>
+  <id>${xmlEsc(`${SOURCE_URL}/feed.xml`)}</id>
+  <link rel="self" href="${xmlEsc(`${SOURCE_URL}/feed.xml`)}"/>
+  <link href="${xmlEsc(`${SOURCE_URL}/`)}"/>
+  <updated>${stamp}</updated>
+  <author><name>Model Catalog</name></author>
+${feedEntries.length ? feedEntries.join("\n") + "\n" : ""}</feed>
+`;
+
 mkdirSync(OUT_DIR, { recursive: true });
 // Rewrite the slice dirs from scratch so a removed kind/vendor leaves no stale file.
 for (const dir of ["by-kind", "by-vendor"]) {
@@ -192,12 +294,18 @@ writeFileSync(resolve(OUT_DIR, `catalog-v${root.version}.json`), json, "utf8"); 
 writeFileSync(resolve(OUT_DIR, "catalog.schema.json"), readFileSync(SCHEMA_SRC, "utf8"), "utf8");
 write("index.json", index); // compact
 write("stats.json", stats); // aggregate metrics (T24)
+write("changes.json", changes); // change feed (T22)
+writeFileSync(resolve(OUT_DIR, "feed.xml"), feedXml, "utf8"); // Atom feed (T22)
 for (const [k, v] of Object.entries(byKind)) write(`by-kind/${k}.json`, v);
 for (const [k, v] of Object.entries(byVendor)) write(`by-vendor/${k}.json`, v);
 write("endpoints.json", endpoints); // discovery manifest
 
 console.log(
   `emit-model-catalog: wrote catalog.json + catalog-v${root.version}.json + schema + index.json + stats.json + ` +
-    `${presentKinds.length} by-kind + ${Object.keys(byVendor).length} by-vendor slices + endpoints.json ` +
+    `changes.json + feed.xml + ${presentKinds.length} by-kind + ${Object.keys(byVendor).length} by-vendor slices + endpoints.json ` +
     `(${Object.keys(vendors).length} vendors, ${count} models) to ${OUT_DIR}`,
+);
+console.log(
+  `emit-model-catalog: change feed (baseline: ${changes.baseline}) — ` +
+    `${added.length} added, ${removed.length} removed, ${changed.length} lifecycle`,
 );
