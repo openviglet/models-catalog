@@ -34,7 +34,10 @@ capability* — **not pricing** (see [STRATEGY.md](../STRATEGY.md) §I).
 | `…/catalog.ndjson` | **NDJSON export** — one flattened model per line. For streaming, `jq -c` and `grep`. |
 | `…/by-kind/<KIND>.json` | **Faceted slice** — the full catalog filtered to one `kind` (e.g. `by-kind/EMBEDDING.json`). Same envelope, plus a `kind` field. Fetch one facet instead of downloading everything and filtering client-side. |
 | `…/by-vendor/<vendor>.json` | **Faceted slice** — the full catalog filtered to one vendor (e.g. `by-vendor/openai.json`). Same envelope, plus a `vendor` field. |
-| `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `stats`, `schema`, and the available `byKind` / `byVendor` slice keys. Read this to discover the surface rather than hard-coding paths. |
+| `…/by-capability/<cap>.json` | **Faceted slice** — filtered to one capability (e.g. `by-capability/reasoning.json`). Same envelope, plus a `capability` field. |
+| `…/by-modality/<m>.json` | **Faceted slice** — filtered to one modality present on **input or output** (e.g. `by-modality/image.json`). Same envelope, plus a `modality` field. |
+| `…/aliases.json` | **Alias resolution map** — `alias id → { vendor, id }` of the canonical entry, so a consumer can resolve a `-latest`/dated-snapshot alias without scanning every entry. Its own envelope. |
+| `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `stats`, `changes`, `feed`, `csv`, `ndjson`, `aliases`, `schema`, and the available `byKind` / `byVendor` / `byCapability` / `byModality` slice keys. Read this to discover the surface rather than hard-coding paths. |
 | `…/catalog.schema.json` | The JSON Schema (Draft 2020-12) describing the envelope + entry. |
 | `…/` (repo Pages root) | Human-browsable reference page (`public/index.html`). |
 

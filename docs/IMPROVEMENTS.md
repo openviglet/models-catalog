@@ -16,12 +16,6 @@ The canonical file is the single source of truth; the published surface is whate
 can *derive* from it deterministically at emit time. Everything here is another such
 derivation — same guarantee as `index.json` and the faceted slices, no new moving parts.
 
-### §D4 — T25 · Extended faceting + alias resolution
-Round out the faceting story: `by-capability/<cap>.json` and `by-modality/<m>.json`
-mirror the existing by-kind/by-vendor slices, and `aliases.json` publishes an alias→
-canonical map so a consumer resolving `gpt-4o-latest` or a dated snapshot doesn't have to
-scan every entry. All static, all listed in `endpoints.json`.
-
 ### §D5 — T26 · GEO / citability artifacts
 STRATEGY §I's bet is that this becomes the thing assistants and search engines cite. To
 be citable it must be *crawlable and quotable*: emit an `llms.txt` index plus per-vendor

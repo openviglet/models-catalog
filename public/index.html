@@ -702,6 +702,9 @@
                 <tr><td><a href="./catalog.csv"><code>catalog.csv</code></a> · <a href="./catalog.ndjson"><code>catalog.ndjson</code></a></td><td>Flat exports — one row / one JSON line per model. For spreadsheets, <code>jq -c</code>, <code>grep</code> and data pipelines that don't want nested JSON.</td></tr>
                 <tr><td><code>by-kind/&lt;KIND&gt;.json</code></td><td>Filtered to one kind — e.g. <a href="./by-kind/EMBEDDING.json"><code>EMBEDDING</code></a>, <a href="./by-kind/CHAT.json"><code>CHAT</code></a>.</td></tr>
                 <tr><td><code>by-vendor/&lt;vendor&gt;.json</code></td><td>Filtered to one vendor — e.g. <a href="./by-vendor/openai.json"><code>openai</code></a>.</td></tr>
+                <tr><td><code>by-capability/&lt;cap&gt;.json</code></td><td>Filtered to one capability — e.g. <a href="./by-capability/reasoning.json"><code>reasoning</code></a>, <a href="./by-capability/vision.json"><code>vision</code></a>.</td></tr>
+                <tr><td><code>by-modality/&lt;m&gt;.json</code></td><td>Filtered to one input/output modality — e.g. <a href="./by-modality/image.json"><code>image</code></a>, <a href="./by-modality/audio.json"><code>audio</code></a>.</td></tr>
+                <tr><td><a href="./aliases.json"><code>aliases.json</code></a></td><td>Alias resolution map — <code>alias id → { vendor, id }</code> of the canonical entry. Resolve <code>-latest</code> / dated snapshots without walking the catalog.</td></tr>
                 <tr><td><a href="./endpoints.json"><code>endpoints.json</code></a></td><td>Discovery manifest — absolute URLs for every path, plus the available <code>byKind</code>/<code>byVendor</code> keys. Read this instead of hard-coding paths.</td></tr>
                 <tr><td><a href="./catalog.schema.json"><code>catalog.schema.json</code></a></td><td>JSON Schema (Draft 2020-12) describing the envelope + entry.</td></tr>
               </tbody>

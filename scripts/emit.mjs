@@ -107,6 +107,8 @@ const slice = (extra, pick) => ({
   ),
 });
 
+const flat = Object.values(vendors).flat();
+
 const presentKinds = [...KINDS].filter((k) =>
   Object.values(vendors).some((entries) => entries.some((e) => e.kind === k)),
 );
@@ -116,6 +118,45 @@ const byKind = Object.fromEntries(
 const byVendor = Object.fromEntries(
   Object.keys(vendors).map((v) => [v, slice({ vendor: v }, (e) => e.vendor === v)]),
 );
+
+// Extended faceting (T25): capability + modality slices mirror the by-kind/by-vendor
+// shape, so a consumer wanting "every reasoning model" or "every model that handles
+// images" fetches one pre-filtered file instead of walking the catalog. A model is in
+// `by-modality/<m>` when <m> is one of its input OR output modalities (coarse and
+// direction-agnostic — the exact per-direction split lives in stats.json). Derived from
+// the same flattened entries; each slice keeps the shared envelope + a narrowing key.
+const modalitiesOf = (e) =>
+  [...new Set([...((e.modalities && e.modalities.input) || []), ...((e.modalities && e.modalities.output) || [])])];
+const presentCaps = [...new Set(flat.flatMap((e) => e.capabilities || []))].sort();
+const presentModalities = [...new Set(flat.flatMap(modalitiesOf))].sort();
+const byCapability = Object.fromEntries(
+  presentCaps.map((c) => [c, slice({ capability: c }, (e) => (e.capabilities || []).includes(c))]),
+);
+const byModality = Object.fromEntries(
+  presentModalities.map((m) => [m, slice({ modality: m }, (e) => modalitiesOf(e).includes(m))]),
+);
+
+// Alias resolution map (T25): alias id → its canonical { vendor, id }, so a consumer
+// resolving a `-latest`/dated-snapshot alias needn't scan every entry. Empty until
+// entries carry `aliases`; populated automatically at emit when they do.
+const aliasIndex = {};
+for (const e of flat) {
+  for (const a of e.aliases || []) {
+    const prior = aliasIndex[a];
+    if (prior && (prior.vendor !== e.vendor || prior.id !== e.id)) {
+      console.warn(`emit-model-catalog: alias "${a}" claimed by ${prior.vendor}/${prior.id} and ${e.vendor}/${e.id}; keeping the first`);
+      continue;
+    }
+    aliasIndex[a] = { vendor: e.vendor, id: e.id };
+  }
+}
+const aliases = {
+  version: root.version,
+  lastUpdated: root.lastUpdated,
+  source: SOURCE_URL,
+  count: Object.keys(aliasIndex).length,
+  aliases: Object.fromEntries(Object.keys(aliasIndex).sort().map((k) => [k, aliasIndex[k]])),
+};
 
 // Discovery manifest (T8): a machine-readable index of every published path (absolute
 // URLs off SOURCE_URL) so consumers discover the surface instead of hard-coding it.
@@ -131,16 +172,18 @@ const endpoints = {
   feed: `${SOURCE_URL}/feed.xml`,
   csv: `${SOURCE_URL}/catalog.csv`,
   ndjson: `${SOURCE_URL}/catalog.ndjson`,
+  aliases: `${SOURCE_URL}/aliases.json`,
   schema: `${SOURCE_URL}/catalog.schema.json`,
   byKind: Object.fromEntries(presentKinds.map((k) => [k, `${SOURCE_URL}/by-kind/${k}.json`])),
   byVendor: Object.fromEntries(Object.keys(vendors).map((v) => [v, `${SOURCE_URL}/by-vendor/${v}.json`])),
+  byCapability: Object.fromEntries(presentCaps.map((c) => [c, `${SOURCE_URL}/by-capability/${c}.json`])),
+  byModality: Object.fromEntries(presentModalities.map((m) => [m, `${SOURCE_URL}/by-modality/${m}.json`])),
 };
 
 // Aggregate metrics (T24): a tiny pre-computed rollup — counts per vendor / kind /
 // capability / modality, plus field-fill coverage and grand totals — so the site
 // dashboard, the badge and coverage views read one number instead of re-aggregating
 // the full catalog. Derived here at emit, so it can never drift from the artifact.
-const flat = Object.values(vendors).flat();
 const tally = (values) => { const m = {}; for (const k of values) { m[k] = (m[k] || 0) + 1; } return m; };
 // Sort count maps by descending count then key, so the artifact is deterministic + diff-friendly.
 const ranked = (map) => Object.fromEntries(Object.entries(map).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])));
@@ -309,7 +352,7 @@ const catalogNdjson = flat.map((e) => JSON.stringify(e)).join("\n") + "\n";
 
 mkdirSync(OUT_DIR, { recursive: true });
 // Rewrite the slice dirs from scratch so a removed kind/vendor leaves no stale file.
-for (const dir of ["by-kind", "by-vendor"]) {
+for (const dir of ["by-kind", "by-vendor", "by-capability", "by-modality"]) {
   rmSync(resolve(OUT_DIR, dir), { recursive: true, force: true });
   mkdirSync(resolve(OUT_DIR, dir), { recursive: true });
 }
@@ -325,13 +368,17 @@ write("changes.json", changes); // change feed (T22)
 writeFileSync(resolve(OUT_DIR, "feed.xml"), feedXml, "utf8"); // Atom feed (T22)
 writeFileSync(resolve(OUT_DIR, "catalog.csv"), catalogCsv, "utf8"); // flat export (T23)
 writeFileSync(resolve(OUT_DIR, "catalog.ndjson"), catalogNdjson, "utf8"); // streaming export (T23)
+write("aliases.json", aliases); // alias → canonical map (T25)
 for (const [k, v] of Object.entries(byKind)) write(`by-kind/${k}.json`, v);
 for (const [k, v] of Object.entries(byVendor)) write(`by-vendor/${k}.json`, v);
+for (const [k, v] of Object.entries(byCapability)) write(`by-capability/${k}.json`, v);
+for (const [k, v] of Object.entries(byModality)) write(`by-modality/${k}.json`, v);
 write("endpoints.json", endpoints); // discovery manifest
 
 console.log(
   `emit-model-catalog: wrote catalog.json + catalog-v${root.version}.json + schema + index.json + stats.json + ` +
-    `changes.json + feed.xml + catalog.csv + catalog.ndjson + ${presentKinds.length} by-kind + ${Object.keys(byVendor).length} by-vendor slices + endpoints.json ` +
+    `changes.json + feed.xml + catalog.csv + catalog.ndjson + aliases.json + ${presentKinds.length} by-kind + ${Object.keys(byVendor).length} by-vendor + ` +
+    `${presentCaps.length} by-capability + ${presentModalities.length} by-modality slices + endpoints.json ` +
     `(${Object.keys(vendors).length} vendors, ${count} models) to ${OUT_DIR}`,
 );
 console.log(

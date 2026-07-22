@@ -13,8 +13,11 @@ public/changes.json
 public/feed.xml
 public/catalog.csv
 public/catalog.ndjson
+public/aliases.json
 public/by-kind/
 public/by-vendor/
+public/by-capability/
+public/by-modality/
 
 # Pipeline working dirs are handled by their own .gitignore:
 #   pipeline/sources/  (raw per-source snapshot cache)
