@@ -16,13 +16,6 @@ The canonical file is the single source of truth; the published surface is whate
 can *derive* from it deterministically at emit time. Everything here is another such
 derivation — same guarantee as `index.json` and the faceted slices, no new moving parts.
 
-### §D5 — T26 · GEO / citability artifacts
-STRATEGY §I's bet is that this becomes the thing assistants and search engines cite. To
-be citable it must be *crawlable and quotable*: emit an `llms.txt` index plus per-vendor
-and per-model static pages (Markdown + minimal HTML) so each model has a real,
-indexable URL with its facts in prose. This is the machine-readable complement to the
-human permalinks in T16.
-
 ### §D6 — T27 · Embeddable status badge
 A `badge.json` in the shields.io endpoint shape (`{schemaVersion,label,message,color}`)
 lets any project drop a live "Model Catalog · N models · M vendors" badge into its

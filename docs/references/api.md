@@ -38,6 +38,8 @@ capability* — **not pricing** (see [STRATEGY.md](../STRATEGY.md) §I).
 | `…/by-modality/<m>.json` | **Faceted slice** — filtered to one modality present on **input or output** (e.g. `by-modality/image.json`). Same envelope, plus a `modality` field. |
 | `…/aliases.json` | **Alias resolution map** — `alias id → { vendor, id }` of the canonical entry, so a consumer can resolve a `-latest`/dated-snapshot alias without scanning every entry. Its own envelope. |
 | `…/endpoints.json` | **Discovery manifest** — a machine-readable map of every published path (absolute URLs): `latest`, `pinned`, `index`, `stats`, `changes`, `feed`, `csv`, `ndjson`, `aliases`, `schema`, and the available `byKind` / `byVendor` / `byCapability` / `byModality` slice keys. Read this to discover the surface rather than hard-coding paths. |
+| `…/llms.txt` | **`llms.txt` index** — the [llms.txt](https://llmstxt.org) convention: a titled, linked map of the catalog data + every vendor / model page, for assistants and crawlers. |
+| `…/models/` | **Per-vendor / per-model pages** — an indexable, quotable URL per model (`models/<vendor>/<slug>.md` + `.html`) and per vendor (`models/<vendor>/`), with the facts in prose. |
 | `…/catalog.schema.json` | The JSON Schema (Draft 2020-12) describing the envelope + entry. |
 | `…/` (repo Pages root) | Human-browsable reference page (`public/index.html`). |
 
@@ -181,6 +183,24 @@ curl -s https://openviglet.github.io/model-catalog/catalog.csv \
 curl -s https://openviglet.github.io/model-catalog/catalog.ndjson \
   | jq -c 'select(.kind=="EMBEDDING") | {id, embeddingDimensions}'
 ```
+
+## Citability pages (`llms.txt` + `models/`)
+
+For the catalog to be *cited* — by assistants and search engines — its facts must be
+crawlable and quotable, not locked inside a JSON blob. So each publish also emits, from the
+same flattened entries:
+
+- **`llms.txt`** — an [llms.txt](https://llmstxt.org)-convention index at the site root: a
+  title, a one-line summary, then linked sections for the catalog data, every vendor, and
+  every model.
+- **`models/<vendor>/<slug>.md` + `.html`** — a page per model with a prose summary and a
+  facts table (context window, modalities, capabilities, provenance…). Model ids are slugged
+  to safe file names (`:`/`/` → `-`), memoized so links and files agree.
+- **`models/<vendor>/`** (index) and **`models/`** — vendor and all-vendor index pages.
+
+The Markdown pages are the quotable primary artifact; the HTML pages give each a crawlable,
+canonical, meta-described rendering. All derived at emit, so a page can never state a fact
+the catalog doesn't.
 
 ## How consumers use it
 

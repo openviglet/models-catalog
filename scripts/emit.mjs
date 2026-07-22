@@ -173,6 +173,8 @@ const endpoints = {
   csv: `${SOURCE_URL}/catalog.csv`,
   ndjson: `${SOURCE_URL}/catalog.ndjson`,
   aliases: `${SOURCE_URL}/aliases.json`,
+  llms: `${SOURCE_URL}/llms.txt`,
+  pages: `${SOURCE_URL}/models/`,
   schema: `${SOURCE_URL}/catalog.schema.json`,
   byKind: Object.fromEntries(presentKinds.map((k) => [k, `${SOURCE_URL}/by-kind/${k}.json`])),
   byVendor: Object.fromEntries(Object.keys(vendors).map((v) => [v, `${SOURCE_URL}/by-vendor/${v}.json`])),
@@ -350,12 +352,186 @@ const csvRow = (e) => CSV_COLUMNS.map((c) => {
 const catalogCsv = [CSV_COLUMNS.join(","), ...flat.map(csvRow)].join("\r\n") + "\r\n";
 const catalogNdjson = flat.map((e) => JSON.stringify(e)).join("\n") + "\n";
 
+// ── GEO / citability artifacts (T26) ──────────────────────────────────────
+// To be *cited* by search engines and assistants, the catalog must be crawlable
+// and quotable — not just a JSON blob. Emit an `llms.txt` index (the emerging
+// convention for "what's here, as links") plus a real, indexable URL per vendor
+// and per model: a Markdown page (quotable prose + a facts table) and a minimal
+// self-contained HTML page (meta description + canonical) for each. Every page's
+// facts are derived from the same flattened entries, so they match the artifact.
+const htmlEsc = xmlEsc; // the same entity escaping is safe for HTML text + attributes
+const comma = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const humanCtx = (n) => {
+  if (n == null) return null;
+  if (n >= 1e6) return `${n % 1e6 === 0 ? n / 1e6 : (n / 1e6).toFixed(1)}M`;
+  if (n >= 1e3) return `${n % 1e3 === 0 ? n / 1e3 : (n / 1e3).toFixed(1)}K`;
+  return String(n);
+};
+// Model ids carry `/` and `:` (bedrock/ollama/hf) — slug them to safe, unique,
+// lower-case file names, memoized per id so links and files always agree.
+const slugsByVendor = {};
+const slugFor = (e) => {
+  const used = (slugsByVendor[e.vendor] ||= new Map());
+  if (used.has(e.id)) return used.get(e.id);
+  const base = e.id.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") || "model";
+  const taken = new Set(used.values());
+  let slug = base;
+  let i = 2;
+  while (taken.has(slug)) slug = `${base}-${i++}`;
+  used.set(e.id, slug);
+  return slug;
+};
+const vendorUrl = (v) => `${SOURCE_URL}/models/${v}/`;
+const modelHtmlUrl = (e) => `${SOURCE_URL}/models/${e.vendor}/${slugFor(e)}.html`;
+const modelMdUrl = (e) => `${SOURCE_URL}/models/${e.vendor}/${slugFor(e)}.md`;
+const inMods = (e) => (e.modalities && e.modalities.input) || [];
+const outMods = (e) => (e.modalities && e.modalities.output) || [];
+
+const proseText = (e) => {
+  let s = `${e.label} (${e.id}) is a ${e.kind.toLowerCase()} model from ${e.vendor}`;
+  if (e.contextWindow != null) s += ` with a ${humanCtx(e.contextWindow)}-token context window`;
+  const extra = [];
+  if (e.embeddingDimensions != null) extra.push(`${comma(e.embeddingDimensions)}-dimensional embeddings`);
+  if ((e.capabilities || []).length) extra.push(`capabilities ${e.capabilities.join(", ")}`);
+  if (inMods(e).length) extra.push(`input ${inMods(e).join(", ")}`);
+  if (outMods(e).length) extra.push(`output ${outMods(e).join(", ")}`);
+  if (extra.length) s += `; ${extra.join("; ")}`;
+  return s + ".";
+};
+const factRows = (e) => [
+  ["Vendor", e.vendor],
+  ["Kind", e.kind],
+  ["Context window", e.contextWindow != null ? `${comma(e.contextWindow)} tokens` : null],
+  ["Max output tokens", e.maxOutputTokens != null ? `${comma(e.maxOutputTokens)} tokens` : null],
+  ["Embedding dimensions", e.embeddingDimensions != null ? comma(e.embeddingDimensions) : null],
+  ["Input modalities", inMods(e).join(", ") || null],
+  ["Output modalities", outMods(e).join(", ") || null],
+  ["Capabilities", (e.capabilities || []).join(", ") || null],
+  ["Status", e.status || (e.deprecated ? "DEPRECATED" : null)],
+  ["Knowledge cutoff", e.knowledgeCutoff || null],
+  ["Release date", e.releaseDate || null],
+  ["Aliases", (e.aliases || []).join(", ") || null],
+  ["Sources", (e.sources || []).join(", ") || null],
+  ["Last verified", e.lastVerified || null],
+].filter(([, v]) => v != null && v !== "");
+
+const pageHtml = (title, desc, canonical, inner) => `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${htmlEsc(title)}</title>
+<meta name="description" content="${htmlEsc(desc)}">
+<link rel="canonical" href="${htmlEsc(canonical)}">
+<meta property="og:title" content="${htmlEsc(title)}">
+<meta property="og:description" content="${htmlEsc(desc)}">
+<style>body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;max-width:48rem;margin:2rem auto;padding:0 1.2rem;color:#1a1512;background:#fff}code{font-family:ui-monospace,Menlo,Consolas,monospace;background:#f5f2ef;padding:.1em .35em;border-radius:.3em;word-break:break-all}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{text-align:left;padding:.4rem .6rem;border-bottom:1px solid #ececec;vertical-align:top}th{color:#7a6f66;font-weight:600;white-space:nowrap}a{color:#c2410c}h1{line-height:1.2}.crumbs{color:#7a6f66;font-size:.9rem}@media(prefers-color-scheme:dark){body{background:#100c0a;color:#f3ece7}code{background:#1b1512}th,td{border-color:#2a201a}a{color:#fb923c}}</style>
+</head>
+<body>
+${inner}
+</body>
+</html>
+`;
+
+const modelMd = (e) => {
+  const table = ["| Field | Value |", "| --- | --- |", ...factRows(e).map(([k, v]) => `| ${k} | ${v} |`)].join("\n");
+  return `# ${e.label}
+
+\`${e.id}\` — **${e.vendor}** · ${e.kind}
+
+> ${proseText(e)}
+
+${table}
+
+*Part of the [Model Catalog](${SOURCE_URL}/) — [${e.vendor} models](${vendorUrl(e.vendor)}) · [Vendor JSON](${SOURCE_URL}/by-vendor/${e.vendor}.json) · [HTML](${modelHtmlUrl(e)})*
+`;
+};
+const modelHtml = (e) => {
+  const table = `<table><tbody>${factRows(e).map(([k, v]) => `<tr><th>${htmlEsc(k)}</th><td>${htmlEsc(v)}</td></tr>`).join("")}</tbody></table>`;
+  const inner = `<p class="crumbs"><a href="${SOURCE_URL}/">Model Catalog</a> › <a href="${htmlEsc(vendorUrl(e.vendor))}">${htmlEsc(e.vendor)}</a></p>
+<h1>${htmlEsc(e.label)}</h1>
+<p><code>${htmlEsc(e.id)}</code> — ${htmlEsc(e.vendor)} · ${htmlEsc(e.kind)}</p>
+<p>${htmlEsc(proseText(e))}</p>
+${table}
+<p><a href="${htmlEsc(modelMdUrl(e))}">Markdown</a> · <a href="${SOURCE_URL}/by-vendor/${e.vendor}.json">Vendor JSON</a> · <a href="${SOURCE_URL}/catalog.json">Full catalog</a></p>`;
+  return pageHtml(`${e.label} · ${e.vendor} — Model Catalog`, proseText(e), modelHtmlUrl(e), inner);
+};
+
+const vendorNames = Object.keys(vendors);
+const vendorMd = (v, es) => {
+  const rows = es.map((e) => `| [${e.label}](${slugFor(e)}.md) | \`${e.id}\` | ${e.kind} | ${e.contextWindow != null ? comma(e.contextWindow) : "—"} |`);
+  return `# ${v} models
+
+> ${es.length} model${es.length === 1 ? "" : "s"} from ${v} in the Model Catalog — a vendor-neutral, kind-aware reference. Free, unauthenticated JSON; no pricing.
+
+| Model | id | Kind | Context |
+| --- | --- | --- | --- |
+${rows.join("\n")}
+
+*[All vendors](${SOURCE_URL}/models/) · [Catalog home](${SOURCE_URL}/) · [${v} JSON](${SOURCE_URL}/by-vendor/${v}.json)*
+`;
+};
+const vendorHtml = (v, es) => {
+  const rows = es.map((e) => `<tr><td><a href="${htmlEsc(slugFor(e))}.html">${htmlEsc(e.label)}</a></td><td><code>${htmlEsc(e.id)}</code></td><td>${htmlEsc(e.kind)}</td><td>${e.contextWindow != null ? comma(e.contextWindow) : "—"}</td></tr>`).join("");
+  const inner = `<p class="crumbs"><a href="${SOURCE_URL}/">Model Catalog</a> › ${htmlEsc(v)}</p>
+<h1>${htmlEsc(v)} models</h1>
+<p>${es.length} model${es.length === 1 ? "" : "s"} from ${htmlEsc(v)}. <a href="${SOURCE_URL}/by-vendor/${v}.json">Vendor JSON</a> · <a href="${SOURCE_URL}/models/">All vendors</a></p>
+<table><thead><tr><th>Model</th><th>id</th><th>Kind</th><th>Context</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return pageHtml(`${v} models — Model Catalog`, `${es.length} ${v} models in the Model Catalog: ids, kinds, context windows and capabilities. Free, unauthenticated JSON.`, vendorUrl(v), inner);
+};
+const modelsIndexHtml = () => {
+  const rows = vendorNames.map((v) => `<li><a href="${htmlEsc(v)}/">${htmlEsc(v)}</a> — ${vendors[v].length} model${vendors[v].length === 1 ? "" : "s"}</li>`).join("");
+  const inner = `<p class="crumbs"><a href="${SOURCE_URL}/">Model Catalog</a> › models</p>
+<h1>Model Catalog — models by vendor</h1>
+<p>${flat.length} models across ${vendorNames.length} vendors. Each has an indexable page with its facts in prose.</p>
+<ul>${rows}</ul>
+<p><a href="${SOURCE_URL}/llms.txt">llms.txt</a> · <a href="${SOURCE_URL}/catalog.json">Full catalog JSON</a></p>`;
+  return pageHtml("Models by vendor — Model Catalog", `Browse ${flat.length} AI models across ${vendorNames.length} vendors — one indexable page per model with kind, context window, modalities and capabilities.`, `${SOURCE_URL}/models/`, inner);
+};
+
+const llmsTxt = `# Model Catalog
+
+> A vendor-neutral, kind-aware catalog of ${flat.length} LLM / embedding / rerank / media models across ${vendorNames.length} vendors. Free, unauthenticated, versioned JSON — which model ids exist per vendor and, for each, its kind, context window, modalities and capabilities. No pricing.
+
+## Catalog data
+- [Full catalog (JSON)](${SOURCE_URL}/catalog.json): every vendor, every field
+- [Compact index](${SOURCE_URL}/index.json): { vendor, id, label, kind } per entry
+- [Aggregate stats](${SOURCE_URL}/stats.json): counts per vendor/kind/capability + field coverage
+- [Change feed](${SOURCE_URL}/changes.json): what changed at the last publish
+- [JSON Schema](${SOURCE_URL}/catalog.schema.json): the envelope + entry contract
+- [Discovery manifest](${SOURCE_URL}/endpoints.json): every published path as an absolute URL
+
+## Vendors
+${vendorNames.map((v) => `- [${v}](${vendorUrl(v)}): ${vendors[v].length} model${vendors[v].length === 1 ? "" : "s"}`).join("\n")}
+
+## Models
+${flat.map((e) => `- [${e.label}](${modelMdUrl(e)}): ${e.vendor} · ${e.kind}${e.contextWindow != null ? ` · ${humanCtx(e.contextWindow)} ctx` : ""}`).join("\n")}
+`;
+
+// Assemble every GEO file with its repo-relative path, ready to write.
+const geoPages = [
+  ["llms.txt", llmsTxt],
+  ["models/index.html", modelsIndexHtml()],
+];
+for (const v of vendorNames) {
+  const es = vendors[v];
+  geoPages.push([`models/${v}/index.md`, vendorMd(v, es)]);
+  geoPages.push([`models/${v}/index.html`, vendorHtml(v, es)]);
+  for (const e of es) {
+    const slug = slugFor(e);
+    geoPages.push([`models/${v}/${slug}.md`, modelMd(e)]);
+    geoPages.push([`models/${v}/${slug}.html`, modelHtml(e)]);
+  }
+}
+
 mkdirSync(OUT_DIR, { recursive: true });
 // Rewrite the slice dirs from scratch so a removed kind/vendor leaves no stale file.
 for (const dir of ["by-kind", "by-vendor", "by-capability", "by-modality"]) {
   rmSync(resolve(OUT_DIR, dir), { recursive: true, force: true });
   mkdirSync(resolve(OUT_DIR, dir), { recursive: true });
 }
+// Rewrite the GEO page tree from scratch so a removed vendor/model leaves no stale page.
+rmSync(resolve(OUT_DIR, "models"), { recursive: true, force: true });
 const write = (rel, obj) => writeFileSync(resolve(OUT_DIR, rel), JSON.stringify(obj, null, 2) + "\n", "utf8");
 
 const json = JSON.stringify(published, null, 2) + "\n";
@@ -373,6 +549,12 @@ for (const [k, v] of Object.entries(byKind)) write(`by-kind/${k}.json`, v);
 for (const [k, v] of Object.entries(byVendor)) write(`by-vendor/${k}.json`, v);
 for (const [k, v] of Object.entries(byCapability)) write(`by-capability/${k}.json`, v);
 for (const [k, v] of Object.entries(byModality)) write(`by-modality/${k}.json`, v);
+// GEO / citability pages (T26) — llms.txt + per-vendor / per-model Markdown + HTML.
+for (const [rel, content] of geoPages) {
+  const abs = resolve(OUT_DIR, rel);
+  mkdirSync(dirname(abs), { recursive: true });
+  writeFileSync(abs, content, "utf8");
+}
 write("endpoints.json", endpoints); // discovery manifest
 
 console.log(
@@ -381,6 +563,7 @@ console.log(
     `${presentCaps.length} by-capability + ${presentModalities.length} by-modality slices + endpoints.json ` +
     `(${Object.keys(vendors).length} vendors, ${count} models) to ${OUT_DIR}`,
 );
+console.log(`emit-model-catalog: GEO pages — llms.txt + ${geoPages.length - 2} vendor/model pages under models/`);
 console.log(
   `emit-model-catalog: change feed (baseline: ${changes.baseline}) — ` +
     `${added.length} added, ${removed.length} removed, ${changed.length} lifecycle`,
