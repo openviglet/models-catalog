@@ -36,6 +36,11 @@ const PRIORITY = {
   "cohere-api": LIVE_PRIORITY,
   "mistral-api": LIVE_PRIORITY,
   overrides: 30,
+  // Cited-benchmark snapshot (T41): a deliberate curated source that must UPDATE a
+  // benchmark as the leaderboard changes, so it sits ABOVE the committed catalog
+  // (freshness matters more than stability here, unlike pricing) yet below overrides
+  // so a pin can still correct it. It only ever supplies the `benchmarks` object.
+  benchmarks: 25,
   "ollama-api": AGGREGATOR_PRIORITY,
   "bedrock-api": AGGREGATOR_PRIORITY,
   "huggingface-api": AGGREGATOR_PRIORITY,

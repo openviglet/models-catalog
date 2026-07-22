@@ -63,7 +63,6 @@
 > page classification (T38) shipped; the next tasks add the *factual* inputs that make
 > a stronger, non-opinionated capability signal possible. Design rationale → §I.
 
-- **T41** 📋 **Benchmark source adapter (populate T40)** — a pipeline `SourceAdapter` that ingests a public, citable capability leaderboard (Artificial Analysis / LMArena) from a periodically-refreshed snapshot into the `benchmarks` field, provenance-stamped (`source` + `lastVerified`), matched to catalog ids. The concrete data path that turns T40 from a shape into real data; opt-in + offline-replayable + propose-and-review like every source. deps: T40 → §I4
 - **T42** 📋 **Per-domain benchmark scores** — extend `benchmarks` from one opaque index to a small set of cited per-domain scores (general reasoning, coding/SWE-bench, math), so the capability signal is honest and comparable per use-case rather than a single number. deps: T40 → §I5
 - **T43** 💭 **Speed & cost-efficiency axis** — carry cited throughput (tokens/s) + latency (TTFT) from a source, giving a second axis ("fast vs capable") and a derived cost-per-capability view alongside the price tier. Needs a data source; complements T40/T41. deps: — → §I6
 - **T44** 📋 **Filter & sort by tier + use-case** — turn the T38 derived classification into interactive discovery: filter chips (use-case tags, tier bands) and sort, mirroring the existing capability/modality filters (T20), serialized into the URL hash. Page-only, factual, zero-dep. deps: — (T38 shipped) → §I7

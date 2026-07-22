@@ -53,7 +53,8 @@ npm test                      # pipeline unit tests
 | `ollama-api` | ollama | `GET /api/tags` on `$OLLAMA_HOST` | `OLLAMA_HOST` | Self-hosted; locally-pulled refs, heuristic kind. **`partial`** (see below). |
 | `bedrock-api` | bedrock | `ListFoundationModels` | `AWS_ACCESS_KEY_ID` (+`AWS_SECRET_ACCESS_KEY`, `AWS_REGION`) | SigV4-signed (hand-rolled, zero-dep); modalities → kind, `modelName` label, lifecycle → status. **`partial`** (region-scoped). |
 | `huggingface-api` | huggingface | Hub `GET /api/models` (sentence-transformers) | `HUGGINGFACE_API_TOKEN` | Local ONNX embedding models; `pipeline_tag` → kind. **`partial`** (bounded query). |
-| `litellm` | all | LiteLLM `model_prices_and_context_window.json` | _(none — public)_ | Vendor-agnostic enrichment. **Non-pricing fields only** (STRATEGY §I). |
+| `litellm` | all | LiteLLM `model_prices_and_context_window.json` | _(none — public)_ | Vendor-agnostic enrichment (metadata + indicative pricing). |
+| `benchmarks` | all | `pipeline/benchmarks.json` (curated snapshot) | _(local)_ | Cited third-party capability index (T40 `benchmarks`). Enrichment only — never introduces an id; a leaderboard model not already in the catalog is dropped. |
 | `overrides` | any | `pipeline/overrides.json` | _(local)_ | Human-curated pins. |
 
 The self-hosted / aggregator sources (`ollama-api`, `bedrock-api`, `huggingface-api`)
@@ -73,7 +74,7 @@ source that supplies a value wins; provenance is recorded per field and
 disagreements are flagged as conflicts in the report.
 
 ```
-pinned override (100) > live vendor API (50) > override (30) > self-hosted/aggregator (20) > committed catalog (15) > LiteLLM (10)
+pinned override (100) > live vendor API (50) > override (30) > cited benchmarks (25) > self-hosted/aggregator (20) > committed catalog (15) > LiteLLM (10)
 ```
 
 - **Scalar fields** (`kind`, `contextWindow`, `maxOutputTokens`, `label`, …) →

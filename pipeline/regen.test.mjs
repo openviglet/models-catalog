@@ -10,6 +10,7 @@ import assert from "node:assert/strict";
 import { merge } from "./lib/merge.mjs";
 import { validateEnvelope, diffReport } from "./lib/validate.mjs";
 import litellm from "./adapters/litellm.mjs";
+import benchmarks from "./adapters/benchmarks.mjs";
 import ollama from "./adapters/ollama.mjs";
 import bedrock from "./adapters/bedrock.mjs";
 import huggingface from "./adapters/huggingface.mjs";
@@ -350,6 +351,55 @@ test("merge benchmarks: highest-wins object, lastVerified stamped, committed the
   e = m.vendors.openai[0];
   assert.equal(e.benchmarks.intelligenceIndex, 60, "committed benchmark wins over a lower-priority source");
   assert.equal(e.benchmarks.lastVerified, "2026-01-01", "carried-forward benchmark keeps its own lastVerified");
+});
+
+test("benchmarks normalize: maps snapshot → cited drafts, stamps provenance, drops junk (Block I / T41)", () => {
+  assert.equal(benchmarks.vendor, null, "multi-vendor enrichment — never introduces an id");
+  assert.equal(benchmarks.envKey, null, "curated local snapshot, no auth");
+  const drafts = benchmarks.normalize({
+    source: "Artificial Analysis",
+    lastVerified: "2026-07-22",
+    models: [
+      { vendor: "openai", id: "gpt-5", intelligenceIndex: 69 },
+      { vendor: "deepseek", id: "deepseek-reasoner", arenaElo: 1400, source: "LMArena", lastVerified: "2026-07-01" },
+      { vendor: "x", id: "no-source", intelligenceIndex: 10, source: "" }, // dropped: falls back to top source ✓ (kept)
+      { vendor: "y", id: "no-numbers" }, // dropped: nothing to say
+      { id: "no-vendor", intelligenceIndex: 5 }, // dropped: no vendor
+    ],
+  });
+  const byId = Object.fromEntries(drafts.map((d) => [`${d.vendor}/${d.id}`, d]));
+  assert.equal(drafts.length, 3, "no-numbers + no-vendor dropped; empty per-model source falls back to top-level");
+  assert.deepEqual(byId["openai/gpt-5"].benchmarks, {
+    intelligenceIndex: 69, indicative: true,
+    note: "Cited third-party benchmark — verify at the source.",
+    source: "Artificial Analysis", lastVerified: "2026-07-22",
+  });
+  assert.equal(byId["deepseek/deepseek-reasoner"].benchmarks.source, "LMArena", "per-model source overrides top-level");
+  assert.equal(byId["deepseek/deepseek-reasoner"].benchmarks.lastVerified, "2026-07-01");
+  assert.equal(byId["deepseek/deepseek-reasoner"].benchmarks.intelligenceIndex, undefined);
+});
+
+test("benchmarks normalize: an un-sourced snapshot entry is dropped (never invented)", () => {
+  const drafts = benchmarks.normalize({ models: [{ vendor: "openai", id: "x", intelligenceIndex: 50 }] });
+  assert.equal(drafts.length, 0, "no top-level or per-model source → omitted");
+});
+
+test("merge benchmarks source: enriches an existing id, drops one not in the catalog (fail safe, Block I / T41)", () => {
+  const { vendors, skipped, meta } = merge({
+    sources: [{ sourceId: "benchmarks", drafts: [
+      { vendor: "openai", id: "gpt", benchmarks: { intelligenceIndex: 69, indicative: true, source: "Artificial Analysis", lastVerified: WHEN } },
+      { vendor: "openai", id: "not-in-catalog", benchmarks: { intelligenceIndex: 42, indicative: true, source: "Artificial Analysis", lastVerified: WHEN } },
+    ] }],
+    overrides: [],
+    existing: { version: 1, vendors: { openai: [{ id: "gpt", label: "GPT", kind: "CHAT" }] } },
+    anchoringSources: ANCHORS, // note: "benchmarks" is NOT an anchoring source
+    liveIdsByVendor: new Map(),
+    when: WHEN,
+  });
+  assert.equal(vendors.openai.length, 1, "only the pre-existing id survives");
+  assert.equal(vendors.openai[0].benchmarks.intelligenceIndex, 69, "existing id enriched with the cited number");
+  assert.equal(meta["openai::gpt"].fieldProvenance.benchmarks, "benchmarks");
+  assert.ok(skipped.some((s) => s.id === "not-in-catalog"), "a leaderboard model absent from the catalog is dropped, never introduced");
 });
 
 test("diffReport: counts add/remove/change", () => {

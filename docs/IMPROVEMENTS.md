@@ -36,14 +36,6 @@ opinion, decay fast, and erode trust). T38 (shipped) delivered a purely *derived
 transparent market proxy, honestly labelled). The remaining tasks add the *factual inputs*
 that a stronger, still-non-opinionated signal needs.
 
-### §I4 — T41 · Benchmark source adapter (populate T40)
-T40 is inert without a data path. Add a `SourceAdapter` (same contract as the vendor/LiteLLM
-sources) that reads a public, citable leaderboard from a refreshed snapshot and maps its scores
-onto catalog ids, stamping `source` + `lastVerified`. Opt-in, offline-replayable, propose-and-
-review — a bad or stale fetch can never silently publish, exactly like every other source. The
-matching (leaderboard name → catalog vendor/id) is the real work and must fail safe (omit rather
-than mis-attribute).
-
 ### §I5 — T42 · Per-domain benchmark scores
 A single "intelligence" number hides that models are uneven — great at code, weak at math, etc.
 Extend `benchmarks` to a few **cited per-domain** scores (general reasoning, coding/SWE-bench,

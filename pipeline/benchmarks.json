@@ -1,0 +1,13 @@
+{
+  "_comment": "Curated snapshot of CITED third-party capability benchmarks for the model-catalog pipeline (Block I / T41). The benchmarks adapter (pipeline/adapters/benchmarks.mjs) reads this file and enriches the T40 `benchmarks` field. This file IS the matching table: each `models[]` entry maps a public, citable leaderboard score to a catalog (vendor, id). RULES: (1) numbers are a REFERENCE to `source`, never invented — refresh them from the leaderboard and bump `lastVerified`; (2) the adapter only enriches ids ALREADY in the catalog — a (vendor, id) not in the catalog is silently dropped (fail safe, never mis-attributed, never introduced); (3) every emitted benchmark is provenance-stamped (indicative + source + lastVerified). `models` ships EMPTY: populate it only with figures you have verified against the source. `_exampleModels` shows the entry shape and is NOT read by the adapter.",
+  "source": "Artificial Analysis",
+  "sourceUrl": "https://artificialanalysis.ai/models",
+  "lastVerified": "2026-07-22",
+  "note": "Cited third-party capability index — a reference, not our verdict. Verify at the source.",
+  "models": [],
+  "_exampleModels": [
+    { "vendor": "openai", "id": "gpt-5", "intelligenceIndex": 69 },
+    { "vendor": "anthropic", "id": "claude-opus-4-1", "intelligenceIndex": 64, "arenaElo": 1451 },
+    { "vendor": "deepseek", "id": "deepseek-reasoner", "intelligenceIndex": 60, "source": "LMArena", "lastVerified": "2026-07-22" }
+  ]
+}

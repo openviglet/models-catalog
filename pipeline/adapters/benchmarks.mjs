@@ -1,0 +1,64 @@
+/**
+ * Cited-benchmark source (Block I / T41) — the data path that populates the T40
+ * `benchmarks` field. Unlike the vendor/LiteLLM sources it fetches nothing over the
+ * network: it reads a CURATED, committed snapshot (`pipeline/benchmarks.json`) that
+ * maps a public, citable leaderboard (Artificial Analysis / LMArena) onto catalog
+ * (vendor, id) pairs. That snapshot IS the matching table — the maintainer refreshes
+ * it from the source and bumps `lastVerified`, so nothing is scraped or invented.
+ *
+ * Fail-safe by construction:
+ *  - `vendor: null` → a multi-vendor **enrichment** source: it is NOT an anchoring
+ *    source, so a leaderboard model absent from the catalog is simply dropped (the
+ *    merge anchoring rule bars it), never introduced and never mis-attributed.
+ *  - every emitted `benchmarks` object is provenance-stamped (`indicative: true` +
+ *    `source` + `lastVerified`); an entry with no numbers or no source is skipped.
+ *
+ * Opt-in + offline-replayable: no snapshot file → skipped (never a failure); the
+ * file is local so `--offline` and online runs behave identically. Propose-and-
+ * review like every source — a bad snapshot lands in the diff, never auto-published.
+ *
+ * @since 2026.3.4 (T41)
+ */
+import { existsSync } from "node:fs";
+import { BENCHMARKS_FILE, compact, readJson } from "../lib/util.mjs";
+
+const num = (v) => (typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : undefined);
+
+export default {
+  id: "benchmarks",
+  vendor: null, // multi-vendor enrichment source — never introduces an id
+  envKey: null, // curated local snapshot, no auth / no network
+  label: "Cited capability benchmarks (curated snapshot)",
+
+  // Read the committed snapshot; absent → skipped (opt-in), same online or offline.
+  async fetch(_env, _ctx) {
+    if (!existsSync(BENCHMARKS_FILE)) return null;
+    return { raw: readJson(BENCHMARKS_FILE), fromCache: true };
+  },
+
+  // Snapshot shape: { source, sourceUrl?, lastVerified, models: [ { vendor, id,
+  // intelligenceIndex?, arenaElo?, source?, lastVerified?, note? } ] }. Per-model
+  // `source`/`lastVerified` override the top-level default (a model may be cited
+  // from a different leaderboard). Numbers are a reference to the source, not ours.
+  normalize(raw) {
+    if (!raw || typeof raw !== "object") return [];
+    const models = Array.isArray(raw.models) ? raw.models : [];
+    const drafts = [];
+    for (const m of models) {
+      if (!m || typeof m !== "object" || !m.vendor || !m.id) continue;
+      const source = m.source || raw.source;
+      if (!source) continue; // never emit an un-sourced benchmark
+      const benchmarks = compact({
+        intelligenceIndex: num(m.intelligenceIndex),
+        arenaElo: num(m.arenaElo),
+        indicative: true,
+        note: m.note || raw.note || "Cited third-party benchmark — verify at the source.",
+        source,
+        lastVerified: m.lastVerified || raw.lastVerified,
+      });
+      if (benchmarks.intelligenceIndex === undefined && benchmarks.arenaElo === undefined) continue;
+      drafts.push({ vendor: String(m.vendor), id: String(m.id), benchmarks });
+    }
+    return drafts;
+  },
+};

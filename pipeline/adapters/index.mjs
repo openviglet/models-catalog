@@ -19,5 +19,6 @@ import ollama from "./ollama.mjs";
 import bedrock from "./bedrock.mjs";
 import huggingface from "./huggingface.mjs";
 import litellm from "./litellm.mjs";
+import benchmarks from "./benchmarks.mjs";
 
-export const ADAPTERS = [openai, anthropic, gemini, cohere, mistral, ollama, bedrock, huggingface, litellm];
+export const ADAPTERS = [openai, anthropic, gemini, cohere, mistral, ollama, bedrock, huggingface, litellm, benchmarks];
