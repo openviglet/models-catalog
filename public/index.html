@@ -113,10 +113,14 @@
       /* Compact mobile menu (T57) — the hamburger + dropdown appear only < 720px. */
       .nav-only-sm { display: none; }
       @media (max-width: 720px) { .nav-only-sm { display: grid; } }
+      /* Default hidden (the `hidden` attr alone loses to an author `display` rule);
+         shown only when toggled open, and never on desktop where the ☰ button is gone. */
       .nav-menu {
-        display: flex; flex-direction: column; padding: .4rem 1.5rem 1rem;
+        display: none; flex-direction: column; padding: .4rem 1.5rem 1rem;
         border-top: 1px solid var(--border); background: var(--bg);
       }
+      .nav-menu:not([hidden]) { display: flex; }
+      @media (min-width: 721px) { .nav-menu { display: none !important; } }
       .nav-menu a { color: var(--text); font-weight: 600; font-size: .95rem; padding: .6rem .2rem; border-bottom: 1px solid var(--border); }
       .nav-menu a:last-child { border-bottom: none; }
       .nav-menu a:hover { color: var(--brand-3); text-decoration: none; }
