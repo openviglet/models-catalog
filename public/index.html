@@ -537,6 +537,18 @@
         font-family: var(--mono); font-size: .72rem; background: var(--bg-alt); border: 1px solid var(--border-strong);
         border-radius: .3rem; padding: .05rem .3rem;
       }
+
+      /* ── Capability/modality facets + sortable columns (T20) ── */
+      .facets { display: flex; flex-direction: column; gap: .5rem; margin: -.4rem 0 1.4rem; }
+      .facet-group { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+      .facet-label {
+        font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted);
+        font-weight: 700; min-width: 5.2rem; padding-top: .1rem;
+      }
+      th.sortable { cursor: pointer; -webkit-user-select: none; user-select: none; white-space: nowrap; }
+      th.sortable:hover { color: var(--brand-3); }
+      th.sortable:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+      th[aria-sort="ascending"], th[aria-sort="descending"] { color: var(--brand-3); }
     </style>
   </head>
   <body>
@@ -624,7 +636,7 @@
         <div class="sec-head">
           <div class="kicker">Explore</div>
           <h2>Browse the catalog</h2>
-          <p>Search across every vendor and id, or filter by kind. Grouped by vendor — click a header to collapse.</p>
+          <p>Search, filter by kind, capability or modality, and click a column header to sort. Grouped by vendor — click a vendor row to collapse it, or press <kbd>⌘K</kbd> to jump anywhere.</p>
         </div>
         <div class="controls">
           <div class="search-wrap">
@@ -633,6 +645,7 @@
           </div>
           <div class="filters" id="filters"></div>
         </div>
+        <div class="facets" id="facets"></div>
         <p id="status" class="status">
           <span class="skeleton" style="display:block"></span>
           <span class="skeleton" style="display:block"></span>
@@ -886,6 +899,10 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
       let drawerModel = null;              // record currently shown in the detail drawer
       const collapsed = new Set();
       const pinned = new Set();            // "vendor/id" keys pinned for comparison (max 4) — T18
+      const activeCaps = new Set();        // capability filter chips (AND) — T20
+      const activeInMods = new Set();      // input-modality filter chips (AND) — T20
+      const activeOutMods = new Set();     // output-modality filter chips (AND) — T20
+      let sortKey = null, sortDir = 1;     // within-vendor column sort — T20
 
       function render() {
         const q = document.getElementById("q").value.trim().toLowerCase();
@@ -893,12 +910,19 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         list.innerHTML = "";
         let shown = 0;
         for (const vendor of Object.keys(catalog.vendors).sort()) {
-          const rows = catalog.vendors[vendor].filter((m) => {
+          let rows = catalog.vendors[vendor].filter((m) => {
             if (activeKind && m.kind !== activeKind) return false;
+            const mc = m.capabilities || [];
+            for (const c of activeCaps) if (!mc.includes(c)) return false;
+            const im = (m.modalities && m.modalities.input) || [];
+            for (const x of activeInMods) if (!im.includes(x)) return false;
+            const om = (m.modalities && m.modalities.output) || [];
+            for (const x of activeOutMods) if (!om.includes(x)) return false;
             if (!q) return true;
             return (m.id + " " + (m.label || "") + " " + vendor).toLowerCase().includes(q);
           });
           if (!rows.length) continue;
+          rows = sortRows(rows);
           shown += rows.length;
           const isCol = collapsed.has(vendor);
           const sec = document.createElement("section");
@@ -928,7 +952,7 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
                <span class="chev">▾</span>
              </div>
              <div class="table-scroll">
-               <table><thead><tr><th>Model</th><th>Kind</th><th>Details</th></tr></thead><tbody>${body}</tbody></table>
+               <table><thead><tr>${sortTh("model")}${sortTh("kind")}${sortTh("details")}</tr></thead><tbody>${body}</tbody></table>
              </div>`;
           sec.querySelector(".vendor-head").onclick = () => {
             collapsed.has(vendor) ? collapsed.delete(vendor) : collapsed.add(vendor);
@@ -941,22 +965,32 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           : "No models match your search.";
       }
 
-      /* ── URL-addressable state + permalinks (T16) ──── */
+      /* ── URL-addressable state + permalinks (T16 · extended T20) ──── */
       function writeCurrentState() {
         const q = document.getElementById("q").value.trim();
         const p = new URLSearchParams();
         if (q) p.set("q", q);
         if (activeKind) p.set("kind", activeKind);
+        if (activeCaps.size) p.set("cap", [...activeCaps].join(","));
+        if (activeInMods.size) p.set("in", [...activeInMods].join(","));
+        if (activeOutMods.size) p.set("out", [...activeOutMods].join(","));
+        if (sortKey) p.set("sort", sortKey + ":" + sortDir);
         const hash = p.toString();
         // replaceState: no history entry per keystroke, and never re-fires hashchange
         history.replaceState(null, "", hash ? "#" + hash : location.pathname + location.search);
       }
-      // Route the hash: explorer state (#q=…&kind=…), model permalink (#vendor/id),
-      // or a bare section anchor (#browse) / empty → baseline view + native scroll.
+      function setFromParam(set, str) { set.clear(); (str || "").split(",").filter(Boolean).forEach((x) => set.add(x)); }
+      function resetFilters() {
+        document.getElementById("q").value = ""; activeKind = null;
+        activeCaps.clear(); activeInMods.clear(); activeOutMods.clear();
+        sortKey = null; sortDir = 1;
+      }
+      // Route the hash: explorer state (#q=…&kind=…&cap=…&in=…&out=…&sort=…),
+      // model permalink (#vendor/id), or a bare section anchor / empty → baseline.
       function applyHash() {
         const rawEnc = location.hash.slice(1);
         if (rawEnc.startsWith("compare=")) {   // shareable comparison #compare=v/id,v/id
-          if (!document.getElementById("list").children.length) { buildFilters(); render(); }
+          if (!document.getElementById("list").children.length) { buildFilters(); buildFacets(); render(); }
           openCompare(rawEnc.slice(8).split(",").map((s) => decodeURIComponent(s)).filter(Boolean));
           return;
         }
@@ -966,20 +1000,25 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           document.getElementById("q").value = p.get("q") || "";
           const kind = p.get("kind");
           activeKind = KINDS.includes(kind) ? kind : null;
-          buildFilters(); render();
+          setFromParam(activeCaps, p.get("cap"));
+          setFromParam(activeInMods, p.get("in"));
+          setFromParam(activeOutMods, p.get("out"));
+          const srt = p.get("sort");
+          if (srt) { const [k, d] = srt.split(":"); sortKey = k; sortDir = +d || 1; } else { sortKey = null; sortDir = 1; }
+          buildFilters(); buildFacets(); render();
           return;
         }
         const raw = decodeURIComponent(rawEnc);
         if (raw.includes("/")) {
           // model permalink → make sure the table exists to scroll to, then open the drawer
           hideCompare();
-          if (!document.getElementById("list").children.length) { buildFilters(); render(); }
+          if (!document.getElementById("list").children.length) { buildFilters(); buildFacets(); render(); }
           openModel(raw);
           return;
         }
         hideDrawer(); hideCompare();
-        document.getElementById("q").value = ""; activeKind = null;
-        buildFilters(); render();
+        resetFilters();
+        buildFilters(); buildFacets(); render();
       }
 
       /* ── Detail drawer (T17) ───────────────────────── */
@@ -1239,6 +1278,80 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         for (const k of KINDS) if (present.has(k)) f.appendChild(mk(k, KIND_LABEL[k]));
       }
 
+      /* ── Capability & modality facets (T20) ────────── */
+      function buildFacets() {
+        const all = Object.values(catalog.vendors).flat();
+        const caps = [...new Set(all.flatMap((m) => m.capabilities || []))].sort();
+        const insM = [...new Set(all.flatMap((m) => (m.modalities && m.modalities.input) || []))].sort();
+        const outM = [...new Set(all.flatMap((m) => (m.modalities && m.modalities.output) || []))].sort();
+        const chip = (set, value) => {
+          const b = document.createElement("button");
+          b.type = "button"; b.textContent = value;
+          b.setAttribute("aria-pressed", String(set.has(value)));
+          b.onclick = () => { set.has(value) ? set.delete(value) : set.add(value); buildFacets(); render(); writeCurrentState(); };
+          return b;
+        };
+        const group = (label, values, set) => {
+          if (!values.length) return null;
+          const g = document.createElement("div"); g.className = "facet-group";
+          const l = document.createElement("span"); l.className = "facet-label"; l.textContent = label; g.appendChild(l);
+          const wrap = document.createElement("div"); wrap.className = "filters";
+          for (const v of values) wrap.appendChild(chip(set, v));
+          g.appendChild(wrap); return g;
+        };
+        const host = document.getElementById("facets");
+        host.innerHTML = "";
+        [group("Capability", caps, activeCaps), group("Input", insM, activeInMods), group("Output", outM, activeOutMods)]
+          .forEach((g) => { if (g) host.appendChild(g); });
+      }
+
+      /* ── Within-vendor column sort (T20) ───────────── */
+      function sortRows(rows) {
+        if (!sortKey) return rows;
+        const val = (m) =>
+          sortKey === "id" ? m.id.toLowerCase()
+          : sortKey === "kind" ? (KIND_LABEL[m.kind] || m.kind).toLowerCase()
+          : sortKey === "context" ? (m.contextWindow || 0)
+          : sortKey === "output" ? (m.maxOutputTokens || 0)
+          : 0;
+        return [...rows].sort((a, b) => {
+          const va = val(a), vb = val(b);
+          if (va < vb) return -sortDir;
+          if (va > vb) return sortDir;
+          return a.id.localeCompare(b.id);   // stable tiebreak
+        });
+      }
+      function headLabel(col) {
+        const arrow = sortDir === 1 ? " ▲" : " ▼";
+        if (col === "model") return "Model" + (sortKey === "id" ? arrow : "");
+        if (col === "kind") return "Kind" + (sortKey === "kind" ? arrow : "");
+        if (sortKey === "context") return "Context" + arrow;
+        if (sortKey === "output") return "Max output" + arrow;
+        return "Details";
+      }
+      function sortTh(col) {
+        const active = (col === "model" && sortKey === "id")
+          || (col === "kind" && sortKey === "kind")
+          || (col === "details" && (sortKey === "context" || sortKey === "output"));
+        const aria = active ? (sortDir === 1 ? "ascending" : "descending") : "none";
+        const title = col === "details" ? ' title="Sort by context window / max output"' : "";
+        return `<th class="sortable" data-col="${col}" role="button" tabindex="0" aria-sort="${aria}"${title}>${headLabel(col)}</th>`;
+      }
+      // Cycle a column's sort states (last state clears the sort).
+      function stepSort(cycle) {
+        const cur = sortKey ? sortKey + ":" + sortDir : null;
+        const i = cycle.indexOf(cur);
+        const next = i < 0 ? cycle[0] : (i + 1 < cycle.length ? cycle[i + 1] : null);
+        if (!next) { sortKey = null; sortDir = 1; }
+        else { const [k, d] = next.split(":"); sortKey = k; sortDir = +d; }
+        render(); writeCurrentState();
+      }
+      function headerClick(col) {
+        if (col === "model") stepSort(["id:1", "id:-1"]);
+        else if (col === "kind") stepSort(["kind:1", "kind:-1"]);
+        else stepSort(["context:-1", "context:1", "output:-1", "output:1"]);
+      }
+
       function countUp(el, target) {
         if (!isFinite(target)) { el.textContent = target; return; }
         const dur = 900, t0 = performance.now();
@@ -1270,9 +1383,15 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
           // Row click → navigate to the model permalink (hashchange opens the drawer).
           // Skip clicks on the permalink anchor (handled separately) and vendor headers.
           document.getElementById("list").addEventListener("click", (e) => {
+            const th = e.target.closest("th[data-col]");
+            if (th) { headerClick(th.dataset.col); return; }
             if (e.target.closest(".permalink") || e.target.closest("[data-pin]") || e.target.closest(".vendor-head")) return;
             const tr = e.target.closest("tr[data-key]");
             if (tr) location.hash = "#" + encodeURI(tr.dataset.key);
+          });
+          document.getElementById("list").addEventListener("keydown", (e) => {
+            const th = e.target.closest("th[data-col]");
+            if (th && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); headerClick(th.dataset.col); }
           });
           applyHash(); // build filters + render, honoring any deep-linked state/permalink
         })

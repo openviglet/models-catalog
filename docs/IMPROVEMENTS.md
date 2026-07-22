@@ -18,12 +18,6 @@ filtering. For a *reference*, shareability and depth are the whole point — you
 reference by linking to it. This block makes the page linkable, deep, and pleasant to
 explore, without adding a single dependency.
 
-### §C5 — T20 · Capability & modality filters + sortable columns
-Kind is one axis; "show me everything with `vision` and image input, sorted by context
-window" is the query people actually have. Add capability/modality filter chips (derived
-from the data, so they stay in sync) and clickable column sorts. Pure client-side over
-the already-loaded catalog — no API change.
-
 ### §C6 — T21 · Insights dashboard
 An at-a-glance, inline-SVG (zero-dep) panel — models per vendor, context-window
 distribution, kind & modality coverage — reading from the emitted `stats.json` (T24) so
