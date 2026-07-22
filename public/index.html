@@ -724,6 +724,7 @@
           <div class="kicker">Explore</div>
           <h2>Browse the catalog</h2>
           <p>Search, filter by kind, capability or modality, and click a column header to sort. Grouped by vendor — click a vendor row to collapse it, or press <kbd>⌘K</kbd> to jump anywhere.</p>
+          <p class="lbl">Each model shows a <strong>use-case</strong> tag (derived from its kind, capabilities and modalities) and, when priced, a coloured <strong>tier</strong> — <span class="chip" style="background:#c2410c;color:#fff;border-color:transparent">Frontier</span> <span class="chip" style="background:#ea580c;color:#fff;border-color:transparent">High</span> <span class="chip" style="background:#64748b;color:#fff;border-color:transparent">Mid</span> <span class="chip" style="background:#0891b2;color:#fff;border-color:transparent">Light</span> — bucketed from the vendor's US list price as a market proxy for capability (not a benchmark or quality score).</p>
         </div>
         <div class="controls">
           <div class="search-wrap">
@@ -1077,14 +1078,15 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
             const out = m.maxOutputTokens ? `${fmtTokens(m.maxOutputTokens)} out` : "";
             const nums = [ctx, out, dim].filter(Boolean).map((x) => `<span class="chip num">${x}</span>`).join("") + priceChip(m.pricing);
             const kc = KIND_COLOR[m.kind] || KIND_COLOR.UNKNOWN;
+            const cl = classify(m);
             const key = vendor + "/" + m.id;
             return `<tr data-key="${key}">
               <td>
                 <div class="model-cell"><span class="mid">${m.id}</span><a class="permalink" href="#${encodeURI(key)}" title="Copy permalink" aria-label="Permalink to ${m.id}">#</a><button type="button" class="pin" data-pin aria-pressed="${pinned.has(key)}" title="Add to compare" aria-label="Add ${m.id} to compare">⇄</button></div>
                 ${m.label && m.label !== m.id ? `<div class="lbl">${m.label}</div>` : ""}
               </td>
-              <td><span class="badge" style="--kc:${kc}">${KIND_LABEL[m.kind] || m.kind}</span></td>
-              <td>${nums}${caps || (nums ? "" : '<span class="lbl">—</span>')}</td>
+              <td><span class="badge" style="--kc:${kc}">${KIND_LABEL[m.kind] || m.kind}</span> ${tierBadge(cl.tier)}</td>
+              <td>${useCaseChips(cl.tags)}${nums}${caps || (nums ? "" : '<span class="lbl">—</span>')}</td>
             </tr>`;
           }).join("");
           sec.innerHTML =
@@ -1212,6 +1214,45 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         });
         return `${ISSUE_NEW}?${p.toString()}`;
       }
+      /* ── Model classification (derived, no invented data) ───────────
+         Two transparent axes computed from facts already in the catalog, so the
+         table lets you tell type-of-work and capability tier at a glance:
+          · useCase — from kind + capabilities + modalities (Reasoning/Coding/…)
+          · tier    — bucketed from the vendor's own US list price (a market proxy
+                      for capability, NOT a benchmark or a quality verdict). */
+      const TIER_BG = { Frontier: "#c2410c", High: "#ea580c", Mid: "#64748b", Light: "#0891b2" };
+      const TIER_HINT = "Tier bucketed from the vendor's US list price (input / 1M) — a market signal for capability, not a benchmark or quality score.";
+      function classify(m) {
+        const caps = m.capabilities || [];
+        const inMod = (m.modalities && m.modalities.input) || [];
+        const hay = (m.id + " " + (m.label || "")).toLowerCase();
+        const tags = [];
+        switch (m.kind) {
+          case "EMBEDDING": tags.push("Embeddings"); break;
+          case "RERANK": tags.push("Reranking"); break;
+          case "IMAGE": tags.push("Image gen"); break;
+          case "SPEECH": tags.push("Speech"); break;
+          case "TRANSCRIPTION": tags.push("Transcription"); break;
+          case "VIDEO": tags.push("Video"); break;
+          case "MODERATION": tags.push("Moderation"); break;
+          default: // CHAT / UNKNOWN
+            if (caps.includes("reasoning")) tags.push("Reasoning");
+            if (/cod(e|er|ing)/.test(hay)) tags.push("Coding");
+            if (inMod.includes("image") || caps.includes("vision")) tags.push("Multimodal");
+            if (!tags.length) tags.push("Chat");
+        }
+        let tier = null;
+        const inp = m.pricing && m.pricing.inputPer1M;
+        if (inp != null) tier = inp >= 5 ? "Frontier" : inp >= 1 ? "High" : inp >= 0.2 ? "Mid" : "Light";
+        return { tags, tier };
+      }
+      function tierBadge(tier) {
+        return tier ? `<span class="chip" style="background:${TIER_BG[tier]};color:#fff;border-color:transparent" title="${TIER_HINT}">${tier}</span>` : "";
+      }
+      function useCaseChips(tags) {
+        return tags.map((t) => `<span class="chip">${t}</span>`).join("");
+      }
+
       /* ── Indicative pricing (Block F / T32) ─────────────
          An optional US *list* price, flagged indicative (not authoritative — verify
          with the vendor). Formatted per 1M tokens; the caveat travels with every
@@ -1246,8 +1287,11 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         const add = (dt, dd) => { if (dd || dd === 0) rows.push(`<dt>${dt}</dt><dd>${dd}</dd>`); };
         const chips = (xs) => xs.map((x) => `<span class="chip">${x}</span>`).join(" ");
         const kc = KIND_COLOR[m.kind] || KIND_COLOR.UNKNOWN;
+        const cl = classify(m);
         add("Vendor", `${vendorLabel(m.vendor)} <span class="lbl">${m.vendor}</span>`);
         add("Kind", `<span class="badge" style="--kc:${kc}">${KIND_LABEL[m.kind] || m.kind}</span>`);
+        add("Use case", useCaseChips(cl.tags));
+        if (cl.tier) add('Tier <span class="lbl">by list price</span>', `${tierBadge(cl.tier)} <span class="lbl">${TIER_HINT}</span>`);
         if (m.contextWindow) add("Context window", `<span class="mono">${m.contextWindow.toLocaleString("en-US")}</span> tokens <span class="lbl">(${fmtTokens(m.contextWindow)})</span>`);
         if (m.maxOutputTokens) add("Max output", `<span class="mono">${m.maxOutputTokens.toLocaleString("en-US")}</span> tokens <span class="lbl">(${fmtTokens(m.maxOutputTokens)})</span>`);
         if (m.embeddingDimensions) add("Embedding dims", `<span class="mono">${m.embeddingDimensions}</span>`);
@@ -1338,6 +1382,8 @@ curl -s https://openviglet.github.io/model-catalog/<span class="tk">endpoints.js
         const spec = [
           ["Vendor", ({ m }) => vendorLabel(m.vendor)],
           ["Kind", ({ m }) => `<span class="badge" style="--kc:${KIND_COLOR[m.kind] || KIND_COLOR.UNKNOWN}">${KIND_LABEL[m.kind] || m.kind}</span>`],
+          ["Use case", ({ m }) => useCaseChips(classify(m).tags)],
+          ["Tier", ({ m }) => tierBadge(classify(m).tier)],
           ["Context window", ({ m }) => tokens(m.contextWindow)],
           ["Max output", ({ m }) => tokens(m.maxOutputTokens)],
           ["Embedding dims", ({ m }) => m.embeddingDimensions ? `<span class="mono">${m.embeddingDimensions}</span>` : ""],

@@ -1,7 +1,7 @@
-# Last task number — `T37` · next block letter — `I`
+# Last task number — `T40` · next block letter — `J`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T38`; after assigning it, bump the number above and the log line below.
+> `T41`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,9 @@
 
 ## Log (most recent first)
 
+- **T40 CREATED** (💭, Block I §I3 — cited intelligence/benchmark index (Artificial Analysis/LMArena) as a pricing-style field: indicative+source+lastVerified, never invented; needs a data source/licensing story) — 2026-07-22.
+- **T39 CREATED** (📋, Block I §I2 — factual fields openWeights (open vs proprietary) + parameters (disclosed only), provenance-gated, feeds page classification) — 2026-07-22.
+- **T38 SHIPPED** (Block I §I1 — at-a-glance classification on the page: client-side classify() → use-case tags (kind/capabilities/modalities) + price-bucketed tier (Frontier/High/Mid/Light, market proxy not benchmark); tier badge by Kind + use-case chips in row/drawer/compare + legend; derived-only, no schema/canonical change, no invented verdict) — 2026-07-22.
 - **T37 CREATED** (📋, Block H §H3 — onboard aggregators OpenRouter + Vercel as vendors, curated cap so re-served models don't balloon the catalog; deps T35) — 2026-07-22.
 - **T36 CREATED** (📋, Block H §H2 — onboard Groq/Together/Fireworks/Cerebras/Qwen/Azure via LiteLLM adapter map + curated anchoring ids from cached snapshot → models + indicative per-token prices; deps T35) — 2026-07-22.
 - **T37 SHIPPED** (Block H §H3 — onboard aggregators OpenRouter + Vercel via litellm adapter map (openrouter, vercel_ai_gateway) + CURATED CAP of 6 real ids each in overrides.json (not full pass-through lists); offline --apply 12 added/0 removed, LiteLLM-priced; 22 vendors/240 models; providers.json 18/18 linked. **Block H shipped in full.**) — 2026-07-22.

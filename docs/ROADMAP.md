@@ -57,6 +57,15 @@
 
 - **T34** 📋 **More static landing pages + sitemap** — extend `scripts/emit.mjs` (the T26 page generator) with per-capability / per-modality / per-kind static landing pages and a `sitemap.xml` (+ `robots.txt`) so segmented content is individually indexable by search engines and assistants. Zero-dep, derived-at-emit, no framework. deps: — (T26 shipped) → §G1
 
+## Block I — Model classification & discovery
+
+> Help a reader tell what a model is *for* and roughly how capable it is. The derived
+> page classification (T38) shipped; the next tasks add the *factual* inputs that make
+> a stronger, non-opinionated capability signal possible. Design rationale → §I.
+
+- **T39** 📋 **Factual capability attributes — `openWeights` + `parameters`** — add two optional, provenance-gated `ModelEntry` fields: `openWeights` (boolean — open-weight/downloadable vs proprietary-API-only) and `parameters` (integer total params, only when publicly disclosed — absent for closed frontier models). Curated/anchored, never guessed; feeds the page classification (open-weight badge, size). deps: — → §I2
+- **T40** 💭 **Cited intelligence / benchmark index** — an optional `benchmarks` object (e.g. an Artificial Analysis Intelligence Index or LMArena Elo) treated exactly like `pricing`: `indicative` + `source` + `lastVerified`, never invented. This is the *honest* "how capable" signal (a cited third-party number, not our verdict). Exploratory: needs a data source + verification/licensing story before it's more than an idea. deps: — → §I3
+
 > The endpoint intentionally stays on its public GitHub Pages URL
 > (`openviglet.github.io/model-catalog`) — an unbranded, community-owned home signals
 > it is a public resource, not a brand asset.
