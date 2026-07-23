@@ -11,29 +11,5 @@
 > by Block F). Consumer artifacts stay *derived* from the canonical file at emit time, so
 > they can never drift from the source of truth.
 
-## §G — Static-site expansion & citability
-
-The catalog's **cite/reference** job is served by static, crawlable, JS-free pages emitted
-from the canonical JSON — the durable counterpart to the interactive Explore SPA (§L). The
-scalable path is to **extend the zero-dep `emit.mjs` generator**, not adopt a framework:
-Next.js was weighed and rejected because it would break the foundational zero-dependency
-bet to solve a problem the emit path already solves (generating static files from a JSON is
-a loop, not a framework need). The seam with §L is deliberate and load-bearing: the SPA owns
-*interactivity* (filter / sort / compare over the live dataset); these pages own *citability*
-(one model, one segment — linkable, indexable, provenance-first). The drawer is the bridge —
-a preview that always links out to the durable per-model page.
-
-### §G2 — T58 · First-class per-model page
-Today a model's depth lives only in the transient SPA drawer and a minimal, differently-styled
-emitted table — there is no durable, well-laid-out, citable page, which is the thing a reference
-site most needs. Promote the emitted page to a first-class, scannable reference: a header
-(vendor / kind / use-case tags / tier / open-weights), an **at-a-glance stat strip** (context,
-max output, price, one headline benchmark, throughput — only tiles that carry data),
-populated-only sections (pricing / benchmarks incl. per-domain scores / performance / identity /
-capabilities, each with its cited caveat + `source` + `lastVerified`), an **always-visible
-provenance block** (the trust anchor on a citable page), and derived **related models** (same
-vendor + kind neighbours, tier above/below — a loop at emit, zero-dep). Style it with the SPA's
-design **tokens** so hub → page → drawer read as one system (today the static page is a jarring
-separate mini-stylesheet). Sparse-aware by *omitting* empty sections (a low-data model looks
-intentional, not broken) — unlike the drawer/compare, which show "—" for alignment. The drawer
-stays as the in-context preview and gains an "Open full page ↗" link. Evolves T26.
+> _No unshipped sections — the backlog is currently clear. When a new task needs
+> design rationale, add its section here (see [ROADMAP.md](ROADMAP.md) for status)._

@@ -43,6 +43,14 @@
 > surfaced across every artifact, and the separate consumer-plans dataset (plans.json)
 > (see [CHANGELOG.md](CHANGELOG.md) → Block F).
 >
+> **Block G — Static-site expansion & indexing** shipped in full — per-segment leaderboard
+> hubs (per kind / capability / modality / price tier, each a ranked table cross-linked to
+> per-model pages + Explore deep-links), `sitemap.xml` + `robots.txt` (T34), and the
+> first-class per-model page — SPA-token-styled header + stat tiles + populated-only cited
+> sections + provenance + related models, with an "↗ Full page" link from the drawer (T58).
+> Extends the zero-dep `emit.mjs` generator; Next.js was rejected (see
+> [CHANGELOG.md](CHANGELOG.md) → Block G).
+>
 > **Block H — Provider coverage & pricing sources** shipped in full — the provider
 > pricing-source registry (providers.json) and onboarding 8 new provider vendors
 > (Groq, Together, Fireworks, Cerebras, Qwen, Azure + the OpenRouter/Vercel gateways
@@ -105,16 +113,6 @@
 > became a **responsive card grid**, each card showing all of a model's recorded
 > fields, with sorting moved to an explicit field + direction control and the filter
 > rail collapsed by default (T68) (see [CHANGELOG.md](CHANGELOG.md) → Block O).
-
-## Block G — Static-site expansion & indexing
-
-> The SPA is already complemented by per-model/per-vendor static pages (T26); extend
-> that **zero-dep** emit path rather than adopting a framework. Next.js was considered
-> and **rejected** — it would break the foundational zero-dependency bet to solve a
-> problem `emit.mjs` already solves. Design rationale → §G. T34 shipped (see
-> [CHANGELOG.md](CHANGELOG.md) → Block G).
-
-- **T58** 📋 **First-class per-model page** — promote the emitted per-model page (T26) from a bare table into a scannable reference styled to the SPA design tokens: header + at-a-glance stat tiles + populated-only cited sections + always-on provenance + derived related models; omit empty sections (not "—"); the drawer gains an "Open full page ↗" link. Unifies the SPA↔static visual system. deps: — (T26 shipped) → §G2
 
 ## Non-goals
 

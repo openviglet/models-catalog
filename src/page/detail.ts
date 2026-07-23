@@ -6,7 +6,7 @@ import { KIND_COLOR, KIND_LABEL, TIER_HINT, KINDS } from "./constants.js";
 import {
   vendorLabel, vendorColor, initials, vendorGlyph, tierBadge, useCaseChips,
   weightsLabel, fmtParams, fmtTokens, priceCell, benchmarkCell, performanceCell,
-  costPerCapability, correctionUrl,
+  costPerCapability, correctionUrl, modelPageUrl,
 } from "./format.js";
 import { render } from "./table.js";
 import { writeCurrentState, buildFilters, buildGroupBy } from "./controls.js";
@@ -93,6 +93,7 @@ export function renderDetail(m: ModelEntry) {
       <button type="button" class="mini-btn" data-copy-id>⧉ Copy id</button>
       <button type="button" class="mini-btn" data-copy-json>{ } Copy JSON</button>
       <button type="button" class="mini-btn" data-pin-drawer aria-pressed="${cmpOn}">${cmpOn ? "✓ Comparing" : "⇄ Compare"}</button>
+      <a class="mini-btn" href="${modelPageUrl(m)}" target="_blank" rel="noopener" title="Open the full, citable page for this model">↗ Full page</a>
       <a class="mini-btn" href="${correctionUrl(m)}" target="_blank" rel="noopener" title="Propose a correction to this model">✎ Correct</a>
     </div>
     <dl class="dl">${rows.join("")}</dl>

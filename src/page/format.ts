@@ -78,6 +78,15 @@ export function correctionUrl(m: ModelEntry) {
   });
   return `${ISSUE_NEW}?${p.toString()}`;
 }
+// Relative URL of a model's first-class static page (T58), emitted by
+// scripts/emit.mjs under models/<vendor>/<slug>.html. The slug rule mirrors
+// emit's slugFor (id → safe lower-case file name); collision suffixes (rare,
+// per-vendor) aren't reproduced here — the base slug resolves in practice. The
+// page is served from the same origin as the SPA, so a relative link suffices.
+export function modelPageUrl(m: ModelEntry) {
+  const slug = m.id.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") || "model";
+  return `models/${m.vendor}/${slug}.html`;
+}
 export function fmtParams(n?: number | null) {
   if (n == null) return "";
   if (n >= 1e9) return `${n % 1e9 === 0 ? n / 1e9 : (n / 1e9).toFixed(1)}B`;

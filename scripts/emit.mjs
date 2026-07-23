@@ -597,6 +597,29 @@ const catalogNdjson = flat.map((e) => JSON.stringify(e)).join("\n") + "\n";
 // facts are derived from the same flattened entries, so they match the artifact.
 const htmlEsc = xmlEsc; // the same entity escaping is safe for HTML text + attributes
 const comma = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const plural = (n) => (n === 1 ? "" : "s");
+const cap1 = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+// Price→tier bucketing — the same market proxy for capability (NOT a benchmark)
+// the page/SDK classify() derives. Inlined here to keep emit's zero-import stance;
+// shared by the per-segment hubs (T34) and the first-class per-model page (T58).
+const tierOf = (e) => {
+  const inp = e.pricing && e.pricing.inputPer1M;
+  if (inp == null) return null;
+  return inp >= 5 ? "Frontier" : inp >= 1 ? "High" : inp >= 0.2 ? "Mid" : "Light";
+};
+const TIER_ORDER = ["Frontier", "High", "Mid", "Light"];
+const TIER_HINT = {
+  Frontier: "indicative US list ≥ $5 / 1M input tokens",
+  High: "$1–5 / 1M input tokens",
+  Mid: "$0.20–1 / 1M input tokens",
+  Light: "< $0.20 / 1M input tokens",
+};
+// Rank models for a hub/related list: strongest cited intelligence first, then
+// widest context, then label — deterministic + diff-friendly, nulls always last.
+const hubRank = (a, b) =>
+  (intelIndex(b) ?? -1) - (intelIndex(a) ?? -1) ||
+  (b.contextWindow ?? -1) - (a.contextWindow ?? -1) ||
+  a.label.localeCompare(b.label);
 const humanCtx = (n) => {
   if (n == null) return null;
   if (n >= 1e6) return `${n % 1e6 === 0 ? n / 1e6 : (n / 1e6).toFixed(1)}M`;
@@ -715,13 +738,102 @@ const pageHtml = (title, desc, canonical, inner) => `<!doctype html>
 <link rel="canonical" href="${htmlEsc(canonical)}">
 <meta property="og:title" content="${htmlEsc(title)}">
 <meta property="og:description" content="${htmlEsc(desc)}">
-<style>body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;max-width:48rem;margin:2rem auto;padding:0 1.2rem;color:#1a1512;background:#fff}code{font-family:ui-monospace,Menlo,Consolas,monospace;background:#f5f2ef;padding:.1em .35em;border-radius:.3em;word-break:break-all}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{text-align:left;padding:.4rem .6rem;border-bottom:1px solid #ececec;vertical-align:top}th{color:#7a6f66;font-weight:600;white-space:nowrap}a{color:#c2410c}h1{line-height:1.2}.crumbs{color:#7a6f66;font-size:.9rem}@media(prefers-color-scheme:dark){body{background:#100c0a;color:#f3ece7}code{background:#1b1512}th,td{border-color:#2a201a}a{color:#fb923c}}</style>
+<style>
+:root{--bg:#fbfaf9;--card:#fff;--text:#1a1512;--muted:#7a6f66;--border:#ececec;--border-strong:#e0dcd7;--brand:#ea580c;--brand-3:#c2410c;--brand-ink:#9a3412;--wash:#fff4ec;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#100c0a;--card:#1b1512;--text:#f3ece7;--muted:#a8988c;--border:#2a201a;--border-strong:#35291f;--brand:#fb923c;--brand-3:#fdba74;--brand-ink:#fdba74;--wash:#26170d;color-scheme:dark}}
+*{box-sizing:border-box}
+body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;max-width:52rem;margin:0 auto;padding:2.4rem 1.2rem 4rem;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--card);border:1px solid var(--border);padding:.08em .35em;border-radius:.35em;word-break:break-all;font-size:.9em}
+a{color:var(--brand-3);text-decoration:none}a:hover{text-decoration:underline}
+h1{line-height:1.15;font-size:1.9rem;margin:.2rem 0 .3rem;letter-spacing:-.02em}
+h2{font-size:1.05rem;margin:0 0 .8rem;letter-spacing:-.01em}
+.crumbs{color:var(--muted);font-size:.86rem}
+.mid{color:var(--muted);font-size:.95rem;margin:.15rem 0 .9rem}
+.lead{font-size:1.05rem;margin:.2rem 0 0}
+.mtags{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0 0}
+.badge,.chip,.tier{display:inline-flex;align-items:center;gap:.3rem;border-radius:999px;font-size:.74rem;font-weight:700;padding:.2rem .62rem;white-space:nowrap}
+.badge{background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand-3);border:1px solid color-mix(in srgb,var(--brand) 30%,transparent)}
+.chip{background:var(--card);border:1px solid var(--border-strong);color:var(--muted);font-weight:600}
+.tier{background:var(--wash);color:var(--brand-ink);border:1px solid color-mix(in srgb,var(--brand) 25%,transparent)}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:.7rem;margin:1.6rem 0 0}
+.tile{background:var(--card);border:1px solid var(--border);border-radius:.8rem;padding:.8rem .9rem}
+.tv{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:1.2rem;line-height:1.1}
+.tl{display:block;margin-top:.3rem;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.sec{margin:1.6rem 0 0;padding:1.15rem 1.3rem;background:var(--card);border:1px solid var(--border);border-radius:1rem}
+.dl{display:grid;grid-template-columns:max-content 1fr;gap:.5rem 1.2rem;margin:0}
+.dl dt{color:var(--muted);font-size:.82rem;font-weight:600}
+.dl dd{margin:0;font-size:.92rem}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.caveat{color:var(--muted);font-size:.8rem;margin:.85rem 0 0;font-style:italic}
+.src{display:inline-block;margin:0 .3rem .3rem 0;padding:.12rem .5rem;border-radius:.4rem;font-size:.74rem;font-weight:600;background:var(--card);border:1px solid var(--border-strong)}
+.prov{background:var(--wash);border:1px solid color-mix(in srgb,var(--brand) 22%,transparent);border-radius:1rem;padding:1.05rem 1.3rem;margin:1.6rem 0 0}
+.prov h2{color:var(--brand-ink)}
+.rel{display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:.7rem;margin:0}
+.rel-card{display:block;background:var(--bg);border:1px solid var(--border);border-radius:.7rem;padding:.7rem .8rem}
+.rel-card:hover{border-color:var(--brand);text-decoration:none}
+.rel-nm{font-weight:700;font-size:.9rem;color:var(--text)}
+.rel-sub{color:var(--muted);font-size:.76rem;margin-top:.15rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0}
+th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-weight:600;white-space:nowrap}
+.pagelinks{margin:1.7rem 0 0;color:var(--muted);font-size:.9rem}
+</style>
 </head>
 <body>
 ${inner}
 </body>
 </html>
 `;
+
+// Use-case tags for the page header — the same derivation as the page/SDK
+// classify() (inlined; open-weights is surfaced as its own header chip).
+const CODING_RE = /cod(e|er|ing)/;
+const useCaseTags = (e) => {
+  const caps = e.capabilities || [];
+  const hay = `${e.id || ""} ${e.label || ""}`.toLowerCase();
+  const tags = [];
+  switch (e.kind) {
+    case "EMBEDDING": tags.push("Embeddings"); break;
+    case "RERANK": tags.push("Reranking"); break;
+    case "IMAGE": tags.push("Image gen"); break;
+    case "SPEECH": tags.push("Speech"); break;
+    case "TRANSCRIPTION": tags.push("Transcription"); break;
+    case "VIDEO": tags.push("Video"); break;
+    case "MODERATION": tags.push("Moderation"); break;
+    default: // CHAT / UNKNOWN
+      if (caps.includes("reasoning")) tags.push("Reasoning");
+      if (CODING_RE.test(hay)) tags.push("Coding");
+      if (inMods(e).includes("image") || caps.includes("vision")) tags.push("Multimodal");
+      if (!tags.length) tags.push("Chat");
+  }
+  return tags;
+};
+// Derived "related models" for a per-model page (T58): same vendor + same kind
+// neighbours first, then — if fewer than four — same-kind models in the same
+// price tier from other vendors, ranked by the shared hubRank. A loop at emit,
+// zero-dep. Capped at six.
+const relatedOf = (e) => {
+  const pool = flat.filter((x) => x !== e && x.vendor === e.vendor && x.kind === e.kind);
+  if (pool.length < 4) {
+    const t = tierOf(e);
+    for (const x of flat) {
+      if (x === e || pool.includes(x)) continue;
+      if (x.kind === e.kind && (t == null || tierOf(x) === t)) pool.push(x);
+    }
+  }
+  return pool.sort(hubRank).slice(0, 6);
+};
+// At-a-glance stat tiles — only the ones this model actually carries (T58).
+const statTiles = (e) => {
+  const t = [];
+  if (e.contextWindow != null) t.push([humanCtx(e.contextWindow), "Context"]);
+  if (e.maxOutputTokens != null) t.push([humanCtx(e.maxOutputTokens), "Max output"]);
+  if (e.embeddingDimensions != null) t.push([comma(e.embeddingDimensions), "Embed dims"]);
+  if (e.pricing && e.pricing.inputPer1M != null) t.push([money(e.pricing.inputPer1M), "$ / 1M in"]);
+  if (intelIndex(e) != null) t.push([String(intelIndex(e)), "Intelligence"]);
+  if (throughput(e) != null) t.push([String(throughput(e)), "tok / s"]);
+  return t;
+};
 
 const modelMd = (e) => {
   const table = ["| Field | Value |", "| --- | --- |", ...factRows(e).map(([k, v]) => `| ${k} | ${v} |`)].join("\n");
@@ -736,14 +848,97 @@ ${table}
 *Part of the [Model Catalog](${SOURCE_URL}/) — [${e.vendor} models](${vendorUrl(e.vendor)}) · [Vendor JSON](${SOURCE_URL}/by-vendor/${e.vendor}.json) · [HTML](${modelHtmlUrl(e)})*
 `;
 };
+// First-class per-model page (T58): a scannable, citable reference styled to the
+// SPA's design tokens — header (vendor / kind / use-case tags / tier / weights),
+// an at-a-glance stat strip, populated-only cited sections (each with its caveat +
+// source + lastVerified), an always-visible provenance block and derived related
+// models. Sparse-aware by *omitting* empty sections (a low-data model reads as
+// intentional, not broken) — unlike the drawer/compare, which show "—" for
+// alignment. Derived at emit from the same flat entry, so it can't drift.
+const dl = (rows) => {
+  const kept = rows.filter(([, v]) => v != null && v !== "");
+  return kept.length ? `<dl class="dl">${kept.map(([k, v]) => `<dt>${htmlEsc(k)}</dt><dd>${v}</dd>`).join("")}</dl>` : "";
+};
+const citedFoot = (label, src, lastVerified) =>
+  `<p class="caveat">${label}${src ? ` Source: ${htmlEsc(src)}.` : ""}${lastVerified ? ` Last verified ${htmlEsc(lastVerified)}.` : ""}</p>`;
+const section = (title, body) => (body ? `<section class="sec"><h2>${htmlEsc(title)}</h2>${body}</section>` : "");
+const chipRow = (xs) => xs.map((x) => `<span class="chip">${htmlEsc(x)}</span>`).join(" ");
+
 const modelHtml = (e) => {
-  const table = `<table><tbody>${factRows(e).map(([k, v]) => `<tr><th>${htmlEsc(k)}</th><td>${htmlEsc(v)}</td></tr>`).join("")}</tbody></table>`;
+  const p = e.pricing;
+  const b = e.benchmarks;
+  const perf = e.performance;
+  const wl = weightsLabel(e);
+
+  const header = `<div class="mtags">
+    <span class="badge">${htmlEsc(e.kind)}</span>
+    ${tierOf(e) ? `<span class="tier">${htmlEsc(tierOf(e))} tier</span>` : ""}
+    ${useCaseTags(e).map((t) => `<span class="chip">${htmlEsc(t)}</span>`).join("")}
+    ${wl ? `<span class="chip">${htmlEsc(wl)}</span>` : ""}
+  </div>`;
+
+  const tiles = statTiles(e);
+  const strip = tiles.length
+    ? `<div class="strip">${tiles.map(([v, l]) => `<div class="tile"><span class="tv">${htmlEsc(v)}</span><span class="tl">${htmlEsc(l)}</span></div>`).join("")}</div>`
+    : "";
+
+  const pricing = section("Pricing", p ? dl([
+    ["Input", p.inputPer1M != null ? `<span class="mono">${htmlEsc(money(p.inputPer1M))}</span> / 1M tokens` : null],
+    ["Output", p.outputPer1M != null ? `<span class="mono">${htmlEsc(money(p.outputPer1M))}</span> / 1M tokens` : null],
+    ["Currency", p.currency || null],
+    ["Note", p.note ? htmlEsc(p.note) : null],
+  ]) + citedFoot("Indicative US list price — a reference only, verify with the vendor.", p.source, p.lastVerified) : "");
+
+  const benchmarks = section("Benchmarks", b ? dl([
+    ["Intelligence index", b.intelligenceIndex != null ? `<span class="mono">${b.intelligenceIndex}</span>` : null],
+    ["Arena Elo", b.arenaElo != null ? `<span class="mono">${b.arenaElo}</span>` : null],
+    ...Object.entries(b.scores || {}).map(([domain, s]) => [cap1(domain), s && s.value != null ? `<span class="mono">${s.value}</span>` : null]),
+  ]) + citedFoot("Cited from a public third-party leaderboard — a reference, verify at the source.", b.source, b.lastVerified) : "");
+
+  const performance = section("Performance", perf ? dl([
+    ["Throughput", perf.throughputTps != null ? `<span class="mono">${perf.throughputTps}</span> tokens/s` : null],
+    ["Latency (TTFT)", perf.latencyTtftSec != null ? `<span class="mono">${perf.latencyTtftSec}</span> s` : null],
+  ]) + citedFoot("Cited speed metrics — a reference, verify at the source.", perf.source, perf.lastVerified) : "");
+
+  const specs = section("Specifications", dl([
+    ["Context window", e.contextWindow != null ? `<span class="mono">${comma(e.contextWindow)}</span> tokens <span class="crumbs">(${humanCtx(e.contextWindow)})</span>` : null],
+    ["Max output", e.maxOutputTokens != null ? `<span class="mono">${comma(e.maxOutputTokens)}</span> tokens` : null],
+    ["Embedding dimensions", e.embeddingDimensions != null ? `<span class="mono">${comma(e.embeddingDimensions)}</span>` : null],
+    ["Weights", wl],
+    ["Parameters", e.parameters != null ? `<span class="mono">${htmlEsc(humanParams(e.parameters))}</span>` : null],
+    ["Input modalities", inMods(e).length ? chipRow(inMods(e)) : null],
+    ["Output modalities", outMods(e).length ? chipRow(outMods(e)) : null],
+    ["Knowledge cutoff", e.knowledgeCutoff || null],
+    ["Release date", e.releaseDate || null],
+    ["Status", e.status || (e.deprecated ? "DEPRECATED" : null)],
+    ["Aliases", (e.aliases || []).length ? chipRow(e.aliases) : null],
+  ]));
+
+  const capabilities = section("Capabilities", (e.capabilities || []).length ? chipRow(e.capabilities) : "");
+
+  const srcs = (e.sources || []).map((s) => `<span class="src">${htmlEsc(s)}</span>`).join("");
+  const prov = `<section class="prov"><h2>Provenance</h2>
+    <div style="margin-bottom:.4rem">${srcs || '<span class="crumbs">No sources recorded</span>'}</div>
+    <div class="crumbs">Last verified: ${htmlEsc(e.lastVerified || "unknown")}</div></section>`;
+
+  const rel = relatedOf(e);
+  const related = rel.length ? `<section class="sec"><h2>Related models</h2><div class="rel">${rel.map((r) =>
+    `<a class="rel-card" href="${htmlEsc(modelHtmlUrl(r))}"><span class="rel-nm">${htmlEsc(r.label)}</span><div class="rel-sub"><code>${htmlEsc(r.id)}</code></div><div class="rel-sub">${htmlEsc(r.vendor)} · ${htmlEsc(r.kind)}${r.contextWindow != null ? ` · ${humanCtx(r.contextWindow)} ctx` : ""}</div></a>`).join("")}</div></section>` : "";
+
   const inner = `<p class="crumbs"><a href="${SOURCE_URL}/">Model Catalog</a> › <a href="${htmlEsc(vendorUrl(e.vendor))}">${htmlEsc(e.vendor)}</a></p>
 <h1>${htmlEsc(e.label)}</h1>
-<p><code>${htmlEsc(e.id)}</code> — ${htmlEsc(e.vendor)} · ${htmlEsc(e.kind)}</p>
-<p>${htmlEsc(proseText(e))}</p>
-${table}
-<p><a href="${htmlEsc(modelMdUrl(e))}">Markdown</a> · <a href="${SOURCE_URL}/by-vendor/${e.vendor}.json">Vendor JSON</a> · <a href="${SOURCE_URL}/catalog.json">Full catalog</a></p>`;
+<p class="mid"><code>${htmlEsc(e.id)}</code></p>
+${header}
+<p class="lead">${htmlEsc(proseText(e))}</p>
+${strip}
+${pricing}
+${benchmarks}
+${performance}
+${specs}
+${capabilities}
+${prov}
+${related}
+<p class="pagelinks"><a href="${htmlEsc(modelMdUrl(e))}">Markdown</a> · <a href="${SOURCE_URL}/by-vendor/${e.vendor}.json">Vendor JSON</a> · <a href="${SOURCE_URL}/catalog.json">Full catalog</a> · <a href="${htmlEsc(vendorUrl(e.vendor))}">All ${htmlEsc(e.vendor)} models</a></p>`;
   return pageHtml(`${e.label} · ${e.vendor} — Model Catalog`, proseText(e), modelHtmlUrl(e), inner);
 };
 
@@ -789,34 +984,12 @@ const modelsIndexHtml = () => {
 // Derived at emit from the same flat entries, so a hub can never disagree with
 // the catalog it summarises.
 const HUB_TOP = 12;
-// Same price→tier bucketing as the page/SDK classify() (a market proxy for
-// capability, NOT a benchmark). Inlined to keep emit's zero-import stance.
-const tierOf = (e) => {
-  const inp = e.pricing && e.pricing.inputPer1M;
-  if (inp == null) return null;
-  return inp >= 5 ? "Frontier" : inp >= 1 ? "High" : inp >= 0.2 ? "Mid" : "Light";
-};
-const TIER_ORDER = ["Frontier", "High", "Mid", "Light"];
-const TIER_HINT = {
-  Frontier: "indicative US list ≥ $5 / 1M input tokens",
-  High: "$1–5 / 1M input tokens",
-  Mid: "$0.20–1 / 1M input tokens",
-  Light: "< $0.20 / 1M input tokens",
-};
-// Rank within a hub: strongest cited intelligence first, then widest context,
-// then label — deterministic + diff-friendly, nulls always last.
-const hubRank = (a, b) =>
-  (intelIndex(b) ?? -1) - (intelIndex(a) ?? -1) ||
-  (b.contextWindow ?? -1) - (a.contextWindow ?? -1) ||
-  a.label.localeCompare(b.label);
 // Segment keys can carry chars unsafe in a file name (capabilities/modalities);
 // slug them the same way model ids are slugged, so links and files always agree.
 const hubSlug = (key) => String(key).toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") || "x";
 const hubHtmlUrl = (group, key) => `${SOURCE_URL}/hubs/${group}/${hubSlug(key)}.html`;
 const hubMdUrl = (group, key) => `${SOURCE_URL}/hubs/${group}/${hubSlug(key)}.md`;
 const exploreUrl = (frag) => `${SOURCE_URL}/#${frag}`;
-const plural = (n) => (n === 1 ? "" : "s");
-const cap1 = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 // Every hub descriptor: { group, key, title, blurb, members (ranked), sliceUrl?, explore }.
 const hubDefs = [];
