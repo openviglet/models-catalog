@@ -139,7 +139,7 @@ export function buildSortControl() {
     closeSortMenu(); buildSortControl(); resetAndRender(); writeCurrentState();
   };
   const dir = byId("sort-dir");
-  dir.disabled = !state.sortKey;
+  dir.disabled = false; // direction applies to every sort, incl. the default Vendor order (T69)
   dir.textContent = state.sortDir === 1 ? "↑ Asc" : "↓ Desc";
   dir.setAttribute("aria-label", state.sortDir === 1 ? "Sort ascending" : "Sort descending");
   dir.onclick = () => { state.sortDir = state.sortDir === 1 ? -1 : 1; buildSortControl(); resetAndRender(); writeCurrentState(); };

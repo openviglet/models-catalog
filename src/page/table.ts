@@ -222,9 +222,13 @@ export function globalSort(rows: ModelEntry[]) {
         if (va > vb) return state.sortDir;
       }
     }
+    // Vendor-then-id ordering. As the default view (no explicit key) it honours the
+    // direction toggle (A→Z / Z→A); as a tiebreak under an explicit sort it stays
+    // ascending so equal-value rows keep a stable order (T69).
+    const dir = state.sortKey ? 1 : state.sortDir;
     const av = vendorLabel(a.vendor).toLowerCase(), bv = vendorLabel(b.vendor).toLowerCase();
-    if (av !== bv) return av < bv ? -1 : 1;   // stable tiebreak: vendor, then id
-    return a.id.localeCompare(b.id);
+    if (av !== bv) return (av < bv ? -1 : 1) * dir;
+    return a.id.localeCompare(b.id) * dir;
   });
 }
 

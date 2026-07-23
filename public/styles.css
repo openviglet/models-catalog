@@ -713,6 +713,9 @@
         background: var(--card); border: 1px solid var(--border-strong); border-radius: .8rem;
         box-shadow: var(--shadow-hover); padding: .4rem; display: flex; flex-direction: column; gap: .1rem;
       }
+      /* The `hidden` attribute alone loses to the author `display:flex` above, so
+         the menu would never close — restore it explicitly (as .nav-menu does). */
+      .sort-menu[hidden] { display: none; }
       .sort-opt {
         text-align: left; padding: .4rem .6rem; border-radius: .5rem; font-size: .86rem; font-family: var(--sans);
         background: none; border: none; color: var(--text); cursor: pointer; white-space: nowrap;
