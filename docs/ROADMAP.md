@@ -111,9 +111,9 @@
 > The SPA is already complemented by per-model/per-vendor static pages (T26); extend
 > that **zero-dep** emit path rather than adopting a framework. Next.js was considered
 > and **rejected** — it would break the foundational zero-dependency bet to solve a
-> problem `emit.mjs` already solves. Design rationale → §G.
+> problem `emit.mjs` already solves. Design rationale → §G. T34 shipped (see
+> [CHANGELOG.md](CHANGELOG.md) → Block G).
 
-- **T34** 📋 **Per-segment hubs + sitemap** — evolve the T26 page generator in `scripts/emit.mjs` into real per-capability / per-modality / per-kind (+ per-tier) **hubs**: each a compact static leaderboard (top models pre-sorted, cross-linked to per-model pages) + prose intro + links to the JSON slice and to Explore pre-filtered — *not* a bare link list — plus `sitemap.xml` + `robots.txt`. Serves humans and crawlers; zero-dep, derived-at-emit, no framework. deps: — (T26 shipped) → §G1
 - **T58** 📋 **First-class per-model page** — promote the emitted per-model page (T26) from a bare table into a scannable reference styled to the SPA design tokens: header + at-a-glance stat tiles + populated-only cited sections + always-on provenance + derived related models; omit empty sections (not "—"); the drawer gains an "Open full page ↗" link. Unifies the SPA↔static visual system. deps: — (T26 shipped) → §G2
 
 ## Non-goals

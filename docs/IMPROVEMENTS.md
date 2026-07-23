@@ -23,16 +23,6 @@ a loop, not a framework need). The seam with §L is deliberate and load-bearing:
 (one model, one segment — linkable, indexable, provenance-first). The drawer is the bridge —
 a preview that always links out to the durable per-model page.
 
-### §G1 — T34 · Per-segment hubs + sitemap
-Reframed from "more landing pages" into real **per-segment hubs**: per-capability /
-per-modality / per-kind (and per-tier) pages that are each a compact **static leaderboard**
-(the top models in that segment, pre-sorted, cross-linked to per-model pages) + a short prose
-intro + links to the matching JSON slice and to Explore pre-filtered to that segment — *not*
-a bare link list. Plus `sitemap.xml` + `robots.txt` so every hub and per-model page is
-crawlable. Serves humans and assistants/crawlers at once; derived-at-emit, zero-dep, no
-framework. (This is the "reference/cite" backbone of the §L information architecture, no
-longer an SEO side-quest.)
-
 ### §G2 — T58 · First-class per-model page
 Today a model's depth lives only in the transient SPA drawer and a minimal, differently-styled
 emitted table — there is no durable, well-laid-out, citable page, which is the thing a reference

@@ -276,6 +276,9 @@ const endpoints = {
   badge: `${SOURCE_URL}/badge.json`,
   llms: `${SOURCE_URL}/llms.txt`,
   pages: `${SOURCE_URL}/models/`,
+  hubs: `${SOURCE_URL}/hubs/`,
+  sitemap: `${SOURCE_URL}/sitemap.xml`,
+  robots: `${SOURCE_URL}/robots.txt`,
   schema: `${SOURCE_URL}/catalog.schema.json`,
   ...(plansPublished ? { plans: `${SOURCE_URL}/plans.json`, plansSchema: `${SOURCE_URL}/plans.schema.json` } : {}),
   ...(providersPublished ? { providers: `${SOURCE_URL}/providers.json`, providersSchema: `${SOURCE_URL}/providers.schema.json` } : {}),
@@ -776,6 +779,154 @@ const modelsIndexHtml = () => {
   return pageHtml("Models by vendor — Model Catalog", `Browse ${flat.length} AI models across ${vendorNames.length} vendors — one indexable page per model with kind, context window, modalities and capabilities.`, `${SOURCE_URL}/models/`, inner);
 };
 
+// ── Per-segment hubs (T34) ────────────────────────────────────────────────
+// A crawlable, human-scannable landing page per segment — per kind, per
+// capability, per input/output modality and per price tier — each a compact
+// *leaderboard* (the segment's models pre-ranked, cross-linked to their
+// per-model pages) + a short prose intro + links out to the matching JSON slice
+// and to Explore pre-filtered to that segment. Deliberately not a bare link
+// list: the durable "reference/cite" counterpart to the interactive Explore SPA.
+// Derived at emit from the same flat entries, so a hub can never disagree with
+// the catalog it summarises.
+const HUB_TOP = 12;
+// Same price→tier bucketing as the page/SDK classify() (a market proxy for
+// capability, NOT a benchmark). Inlined to keep emit's zero-import stance.
+const tierOf = (e) => {
+  const inp = e.pricing && e.pricing.inputPer1M;
+  if (inp == null) return null;
+  return inp >= 5 ? "Frontier" : inp >= 1 ? "High" : inp >= 0.2 ? "Mid" : "Light";
+};
+const TIER_ORDER = ["Frontier", "High", "Mid", "Light"];
+const TIER_HINT = {
+  Frontier: "indicative US list ≥ $5 / 1M input tokens",
+  High: "$1–5 / 1M input tokens",
+  Mid: "$0.20–1 / 1M input tokens",
+  Light: "< $0.20 / 1M input tokens",
+};
+// Rank within a hub: strongest cited intelligence first, then widest context,
+// then label — deterministic + diff-friendly, nulls always last.
+const hubRank = (a, b) =>
+  (intelIndex(b) ?? -1) - (intelIndex(a) ?? -1) ||
+  (b.contextWindow ?? -1) - (a.contextWindow ?? -1) ||
+  a.label.localeCompare(b.label);
+// Segment keys can carry chars unsafe in a file name (capabilities/modalities);
+// slug them the same way model ids are slugged, so links and files always agree.
+const hubSlug = (key) => String(key).toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "") || "x";
+const hubHtmlUrl = (group, key) => `${SOURCE_URL}/hubs/${group}/${hubSlug(key)}.html`;
+const hubMdUrl = (group, key) => `${SOURCE_URL}/hubs/${group}/${hubSlug(key)}.md`;
+const exploreUrl = (frag) => `${SOURCE_URL}/#${frag}`;
+const plural = (n) => (n === 1 ? "" : "s");
+const cap1 = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+// Every hub descriptor: { group, key, title, blurb, members (ranked), sliceUrl?, explore }.
+const hubDefs = [];
+for (const k of presentKinds) {
+  const members = flat.filter((e) => e.kind === k).sort(hubRank);
+  hubDefs.push({
+    group: "kind", key: k, title: `${k} models`,
+    blurb: `${members.length} ${k.toLowerCase()} model${plural(members.length)} in the Model Catalog, ranked by cited intelligence then context window.`,
+    members, sliceUrl: `${SOURCE_URL}/by-kind/${k}.json`, explore: exploreUrl(`kind=${k}`),
+  });
+}
+for (const c of presentCaps) {
+  const members = flat.filter((e) => (e.capabilities || []).includes(c)).sort(hubRank);
+  hubDefs.push({
+    group: "capability", key: c, title: `${cap1(c)} models`,
+    blurb: `${members.length} model${plural(members.length)} with the ${c} capability, across ${new Set(members.map((e) => e.vendor)).size} vendor${plural(new Set(members.map((e) => e.vendor)).size)}.`,
+    members, sliceUrl: `${SOURCE_URL}/by-capability/${c}.json`, explore: exploreUrl(`cap=${encodeURIComponent(c)}`),
+  });
+}
+for (const mo of presentModalities) {
+  const members = flat.filter((e) => modalitiesOf(e).includes(mo)).sort(hubRank);
+  hubDefs.push({
+    group: "modality", key: mo, title: `${cap1(mo)} models`,
+    blurb: `${members.length} model${plural(members.length)} that handle ${mo} as an input or output modality.`,
+    members, sliceUrl: `${SOURCE_URL}/by-modality/${mo}.json`, explore: exploreUrl(`in=${encodeURIComponent(mo)}`),
+  });
+}
+for (const t of TIER_ORDER) {
+  const members = flat.filter((e) => tierOf(e) === t).sort(hubRank);
+  if (!members.length) continue;
+  hubDefs.push({
+    group: "tier", key: t, title: `${t}-tier models`,
+    blurb: `${members.length} ${t.toLowerCase()}-tier model${plural(members.length)} (${TIER_HINT[t]}) — a market proxy for capability, not a benchmark. Verify prices with the vendor.`,
+    members, sliceUrl: null, explore: exploreUrl(`tier=${t}`),
+  });
+}
+
+const hubCaveat = "Prices are indicative US list (verify with the vendor); intelligence is a cited third-party index (verify at the source).";
+const hubMd = (h) => {
+  const rows = h.members.slice(0, HUB_TOP).map((e, i) =>
+    `| ${i + 1} | [${e.label}](${modelMdUrl(e)}) | \`${e.id}\` | ${e.kind} | ${e.contextWindow != null ? humanCtx(e.contextWindow) : "—"} | ${e.pricing && e.pricing.inputPer1M != null ? money(e.pricing.inputPer1M) : "—"} | ${intelIndex(e) != null ? intelIndex(e) : "—"} |`).join("\n");
+  const links = [
+    `[Explore pre-filtered ↗](${h.explore})`,
+    ...(h.sliceUrl ? [`[JSON slice](${h.sliceUrl})`] : []),
+    `[All segments](${SOURCE_URL}/hubs/)`,
+    `[Catalog home](${SOURCE_URL}/)`,
+  ].join(" · ");
+  const more = h.members.length > HUB_TOP ? `Showing the top ${HUB_TOP} of ${h.members.length}. ` : "";
+  return `# ${h.title}
+
+> ${h.blurb}
+
+| # | Model | id | Kind | Context | $ / 1M in | Intelligence |
+| --- | --- | --- | --- | --- | --- | --- |
+${rows}
+
+*${more}${hubCaveat}*
+
+${links}
+`;
+};
+const hubHtml = (h) => {
+  const rows = h.members.slice(0, HUB_TOP).map((e, i) =>
+    `<tr><td>${i + 1}</td><td><a href="${htmlEsc(modelHtmlUrl(e))}">${htmlEsc(e.label)}</a></td><td><code>${htmlEsc(e.id)}</code></td><td>${htmlEsc(e.kind)}</td><td>${e.contextWindow != null ? comma(e.contextWindow) : "—"}</td><td>${e.pricing && e.pricing.inputPer1M != null ? htmlEsc(money(e.pricing.inputPer1M)) : "—"}</td><td>${intelIndex(e) != null ? intelIndex(e) : "—"}</td></tr>`).join("");
+  const links = [
+    `<a href="${htmlEsc(h.explore)}">Explore pre-filtered ↗</a>`,
+    ...(h.sliceUrl ? [`<a href="${htmlEsc(h.sliceUrl)}">JSON slice</a>`] : []),
+    `<a href="${SOURCE_URL}/hubs/">All segments</a>`,
+    `<a href="${SOURCE_URL}/catalog.json">Full catalog</a>`,
+  ].join(" · ");
+  const more = h.members.length > HUB_TOP ? `<p class="crumbs">Showing the top ${HUB_TOP} of ${h.members.length}.</p>` : "";
+  const inner = `<p class="crumbs"><a href="${SOURCE_URL}/">Model Catalog</a> › <a href="${SOURCE_URL}/hubs/">Segments</a> › ${htmlEsc(h.title)}</p>
+<h1>${htmlEsc(h.title)}</h1>
+<p>${htmlEsc(h.blurb)}</p>
+<table><thead><tr><th>#</th><th>Model</th><th>id</th><th>Kind</th><th>Context</th><th>$ / 1M in</th><th>Intelligence</th></tr></thead><tbody>${rows}</tbody></table>
+${more}
+<p class="crumbs">${htmlEsc(hubCaveat)}</p>
+<p>${links}</p>`;
+  return pageHtml(`${h.title} — Model Catalog`, h.blurb, hubHtmlUrl(h.group, h.key), inner);
+};
+const HUB_GROUPS = [["kind", "By kind"], ["capability", "By capability"], ["modality", "By modality"], ["tier", "By price tier"]];
+const hubsIndexMd = () => {
+  const sections = HUB_GROUPS.map(([g, gl]) => {
+    const items = hubDefs.filter((h) => h.group === g)
+      .map((h) => `- [${h.title}](${hubMdUrl(h.group, h.key)}): ${h.members.length} model${plural(h.members.length)}`).join("\n");
+    return items ? `## ${gl}\n${items}` : "";
+  }).filter(Boolean).join("\n\n");
+  return `# Model Catalog — segments
+
+> Leaderboard hubs per kind, capability, modality and price tier — each a ranked, cross-linked view into the ${flat.length}-model catalog.
+
+${sections}
+
+*[Models by vendor](${SOURCE_URL}/models/) · [Catalog home](${SOURCE_URL}/) · [Full catalog JSON](${SOURCE_URL}/catalog.json)*
+`;
+};
+const hubsIndexHtml = () => {
+  const sections = HUB_GROUPS.map(([g, gl]) => {
+    const items = hubDefs.filter((h) => h.group === g)
+      .map((h) => `<li><a href="${htmlEsc(hubHtmlUrl(h.group, h.key))}">${htmlEsc(h.title)}</a> <span class="crumbs">${h.members.length}</span></li>`).join("");
+    return items ? `<h2>${htmlEsc(gl)}</h2><ul>${items}</ul>` : "";
+  }).join("");
+  const inner = `<p class="crumbs"><a href="${SOURCE_URL}/">Model Catalog</a> › Segments</p>
+<h1>Model Catalog — segments</h1>
+<p>Leaderboard pages per kind, capability, modality and price tier — each a ranked, cross-linked view into the ${flat.length}-model catalog.</p>
+${sections}
+<p><a href="${SOURCE_URL}/models/">Models by vendor</a> · <a href="${SOURCE_URL}/llms.txt">llms.txt</a> · <a href="${SOURCE_URL}/catalog.json">Full catalog JSON</a></p>`;
+  return pageHtml("Segments — Model Catalog", `Browse the Model Catalog by kind, capability, modality and price tier — a ranked leaderboard hub per segment.`, `${SOURCE_URL}/hubs/`, inner);
+};
+
 const llmsTxt = `# Model Catalog
 
 > A vendor-neutral, kind-aware catalog of ${flat.length} LLM / embedding / rerank / media models across ${vendorNames.length} vendors. Free, unauthenticated, versioned JSON — which model ids exist per vendor and, for each, its kind, context window, modalities, capabilities and an optional indicative US list price (a reference only — verify with the vendor).
@@ -790,6 +941,10 @@ const llmsTxt = `# Model Catalog
 - [Pricing sources](${SOURCE_URL}/providers.json): official vendor pricing pages to verify the catalog's indicative prices against` : ""}
 - [JSON Schema](${SOURCE_URL}/catalog.schema.json): the envelope + entry contract
 - [Discovery manifest](${SOURCE_URL}/endpoints.json): every published path as an absolute URL
+
+## Segments
+- [All segments](${SOURCE_URL}/hubs/): ranked leaderboard hubs by kind, capability, modality and price tier
+${hubDefs.map((h) => `- [${h.title}](${hubMdUrl(h.group, h.key)}): ${h.members.length} model${plural(h.members.length)}`).join("\n")}
 
 ## Vendors
 ${vendorNames.map((v) => `- [${v}](${vendorUrl(v)}): ${vendors[v].length} model${vendors[v].length === 1 ? "" : "s"}`).join("\n")}
@@ -813,6 +968,36 @@ for (const v of vendorNames) {
     geoPages.push([`models/${v}/${slug}.html`, modelHtml(e)]);
   }
 }
+// Per-segment hubs (T34) — one leaderboard page per kind / capability / modality
+// / tier + a segment index, each as Markdown (quotable) + HTML (crawlable).
+geoPages.push(["hubs/index.md", hubsIndexMd()]);
+geoPages.push(["hubs/index.html", hubsIndexHtml()]);
+for (const h of hubDefs) {
+  geoPages.push([`hubs/${h.group}/${hubSlug(h.key)}.md`, hubMd(h)]);
+  geoPages.push([`hubs/${h.group}/${hubSlug(h.key)}.html`, hubHtml(h)]);
+}
+
+// sitemap.xml + robots.txt (T34): make every hub + per-model/vendor page
+// discoverable to crawlers. Regenerated each run (never stale). lastmod derives
+// from `lastUpdated` (no wall-clock read) so the file stays deterministic.
+const sitemapUrls = [
+  `${SOURCE_URL}/`,
+  `${SOURCE_URL}/models/`,
+  `${SOURCE_URL}/hubs/`,
+  ...hubDefs.map((h) => hubHtmlUrl(h.group, h.key)),
+  ...vendorNames.map((v) => vendorUrl(v)),
+  ...flat.map((e) => modelHtmlUrl(e)),
+];
+const sitemapXml = `<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapUrls.map((u) => `  <url><loc>${xmlEsc(u)}</loc><lastmod>${root.lastUpdated}</lastmod></url>`).join("\n")}
+</urlset>
+`;
+const robotsTxt = `User-agent: *
+Allow: /
+
+Sitemap: ${SOURCE_URL}/sitemap.xml
+`;
 
 mkdirSync(OUT_DIR, { recursive: true });
 // Rewrite the slice dirs from scratch so a removed kind/vendor leaves no stale file.
@@ -822,6 +1007,9 @@ for (const dir of ["by-kind", "by-vendor", "by-capability", "by-modality"]) {
 }
 // Rewrite the GEO page tree from scratch so a removed vendor/model leaves no stale page.
 rmSync(resolve(OUT_DIR, "models"), { recursive: true, force: true });
+// Same for the per-segment hub tree (T34) — a removed kind/capability/modality/tier
+// leaves no stale hub behind.
+rmSync(resolve(OUT_DIR, "hubs"), { recursive: true, force: true });
 // Self-hosted copy of the JS SDK (T50): the browsable page consumes it as a static
 // ESM module (no build, no CDN, still zero-dep), making the site the real-world
 // acceptance test for the client. Copied verbatim from clients/js so page + published
@@ -887,6 +1075,8 @@ for (const [rel, content] of geoPages) {
   mkdirSync(dirname(abs), { recursive: true });
   writeFileSync(abs, content, "utf8");
 }
+writeFileSync(resolve(OUT_DIR, "sitemap.xml"), sitemapXml, "utf8"); // crawlable index (T34)
+writeFileSync(resolve(OUT_DIR, "robots.txt"), robotsTxt, "utf8"); // (T34)
 write("endpoints.json", endpoints); // discovery manifest
 
 console.log(
@@ -895,7 +1085,8 @@ console.log(
     `${presentCaps.length} by-capability + ${presentModalities.length} by-modality slices + endpoints.json ` +
     `(${Object.keys(vendors).length} vendors, ${count} models) to ${OUT_DIR}`,
 );
-console.log(`emit-model-catalog: GEO pages — llms.txt + ${geoPages.length - 2} vendor/model pages under models/`);
+console.log(`emit-model-catalog: GEO pages — llms.txt + vendor/model pages under models/ + ${hubDefs.length} segment hubs under hubs/ (T34)`);
+console.log(`emit-model-catalog: sitemap.xml — ${sitemapUrls.length} URLs + robots.txt (T34)`);
 console.log("emit-model-catalog: sdk/model-catalog-client.js — self-hosted JS SDK for the page (T50)");
 if (droppedCsvCols.length) console.log(`emit-model-catalog: catalog.csv dropped ${droppedCsvCols.length} always-empty column(s): ${droppedCsvCols.join(", ")} (T53)`);
 console.log(`emit-model-catalog: leaderboards.json — ${leaderboards.leaderboards.length} boards (${leaderboards.leaderboards.map((b) => `${b.id}:${b.population}/${b.total}`).join(", ")}) (T54)`);
