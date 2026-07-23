@@ -18,6 +18,8 @@
 
 ## Log (most recent first)
 
+- **T73 SHIPPED** (Block P §P3 — explicit data licence + no-accuracy warranty: chose **CC-BY 4.0** for the catalog data [reuse w/ attribution, nudges citation/backlinks per GEO thesis; over CC0], stated separately from Apache-2.0 code; new root `LICENSE-DATA`, README License split code/data + no-warranty line, api.md "Licence & warranty" section, both footers gained "code Apache-2.0 · data CC-BY 4.0" + as-is/verify line [new `SOURCE_URL_REPO` const], decision recorded STRATEGY §III; doc/site-only zero-dep, emit re-verified) — 2026-07-23.
+
 - **T72 SHIPPED** (Block P §P2 — trademark & non-affiliation notice: nominative-use disclaimer in the index.html footer [full-width `.foot-legal`] + the shared emit.mjs `pageHtml` template [new `<footer class="tm">`] so every emitted per-model/vendor/hub/segment page carries it too [previously footerless]; HTML/CSS-only zero-dep, reinforces vendor-neutral, emit re-verified) — 2026-07-23.
 
 - **T71 SHIPPED** (Block P §P1 — neutral wording "cheapest"→"Lowest price" on user-facing labels only [per-kind leaderboard label, Browse preset, Ask example + qa-eval cheapest-embedding question, Ask placeholder]; JSON board ids `cheapest-*` kept verbatim as the published API contract [SDKs+tests+qa-eval depend on them, label≠id]; cosmetic, typecheck+41 tests green. **New Block P begins in CHANGELOG.**) — 2026-07-23.

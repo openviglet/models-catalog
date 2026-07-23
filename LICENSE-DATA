@@ -1,0 +1,41 @@
+Model Catalog — data licence
+=============================
+
+This file licenses the **catalog data** — the JSON compilation published under
+`catalog/` and emitted to `public/` (model-catalog.json and every derived
+artifact: index.json, by-*/…, stats.json, coverage.json, leaderboards.json,
+plans.json, providers.json, catalog.csv/ndjson, the llms.txt / models pages,
+etc.).
+
+It is distinct from the repository's **code**, which is licensed separately
+under Apache-2.0 (see `LICENSE`). The individual facts in the catalog (a model's
+context window, modality, id) are not themselves copyrightable; this licence
+covers the curated *compilation* of them.
+
+Licence: CC-BY 4.0
+------------------
+
+The catalog data is licensed under the Creative Commons Attribution 4.0
+International licence (CC-BY-4.0).
+
+    https://creativecommons.org/licenses/by/4.0/
+
+You are free to share and adapt it for any purpose, including commercially,
+provided you give appropriate credit. Suggested attribution:
+
+    Data from the Viglet Model Catalog (https://openviglet.github.io/model-catalog),
+    licensed CC-BY 4.0.
+
+No warranty — verify at the source
+----------------------------------
+
+The catalog data is provided **"as is"**, without warranty of any kind. Figures
+are compiled from vendor documentation and cited third-party sources and are
+**indicative, not authoritative**: they may be incomplete, out of date, or
+wrong. Pricing in particular is an indicative US list reference only — always
+verify against the vendor before relying on any value. Each entry carries its
+`sources` and `lastVerified` so a consumer can check the provenance.
+
+Third-party marks: all product names, logos and brands are the property of their
+respective owners. Viglet is an independent project and is not affiliated with,
+endorsed by, or sponsored by any vendor listed in this catalog.

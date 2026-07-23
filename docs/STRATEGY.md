@@ -79,3 +79,20 @@ while gaining a conversational front door. Answers cite `id`s that resolve to
 per-model pages; nothing is invented (the provenance-first rule holds end to end).
 Tracked as **Block M** in [ROADMAP.md](ROADMAP.md); the backend counterpart is
 `openviglet/turing` Block BF.
+
+## §III The data licence — CC-BY, not CC0 (decided 2026-07-23)
+
+**The decision.** The catalog *data* (the JSON compilation) is licensed **CC-BY
+4.0**, stated explicitly and separately from the Apache-2.0 *code*. The open
+choice was CC0 (public-domain, zero obligation) vs CC-BY (reuse with attribution).
+
+**Why CC-BY.** The compilation's value is the curation and provenance discipline,
+not the individual facts (which aren't copyrightable). CC-BY keeps reuse
+frictionless — including commercial — while the attribution requirement nudges
+backlinks and citation credit, which compounds the GEO/discoverability thesis
+(§I): a reference that gets *named* when it is reused is a reference that gets
+cited. CC0 would maximise raw reuse but forgoes that credit loop, and for a
+"community-owned reference" visible credit is the point. Paired with an explicit
+data **"as is / accuracy not warranted"** line (Apache's warranty clause covers
+software, not the figures), surfaced on the site footer, README, `LICENSE-DATA`
+and the api.md contract. Tracked as **Block P** (§P3) in [ROADMAP.md](ROADMAP.md).

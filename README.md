@@ -88,4 +88,10 @@ and inline HTML/CSS/JS. There is nothing to `npm install`. Requires Node ≥ 20.
 
 ## License
 
-[Apache-2.0](LICENSE).
+- **Code** — [Apache-2.0](LICENSE) (the pipeline, emit step, page and SDKs).
+- **Catalog data** — [CC-BY 4.0](LICENSE-DATA) (the JSON compilation and every
+  derived artifact): reuse freely with attribution to the Viglet Model Catalog.
+
+The data is provided **as is**; accuracy is not warranted. Figures are indicative
+and cited — verify against the vendor before relying on any value (see each
+entry's `sources` / `lastVerified`).

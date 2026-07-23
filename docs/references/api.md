@@ -391,6 +391,21 @@ as its model-picker catalog. The live per-vendor `/v1/models` listing path and
 Turing's metadata-first kind classification are unchanged — the public catalog only
 provides the static reference.
 
+## Licence & warranty
+
+- **Catalog data** (this JSON compilation and every artifact above) is licensed
+  **[CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/)** — reuse freely,
+  including commercially, with attribution to the *Viglet Model Catalog*
+  (see [`LICENSE-DATA`](../../LICENSE-DATA)). This is **distinct from the code**,
+  which is Apache-2.0.
+- **No accuracy warranty.** The data is provided **as is**. Figures are compiled
+  from vendor docs and cited third-party sources and are **indicative, not
+  authoritative** — pricing especially is an indicative US list reference. Verify
+  against the vendor before relying on any value; every entry carries `sources` +
+  `lastVerified` for that purpose.
+- **Third-party marks** belong to their respective owners; Viglet is independent
+  and not affiliated with or endorsed by any vendor listed.
+
 ## Relationship to other artifacts
 
 - **Source of truth:** `catalog/model-catalog.json` in this repo; this doc is its

@@ -32,6 +32,7 @@ const OUT_DIR = resolve(REPO_ROOT, "public");
 // stays on this public host (a community-owned home, not a brand asset); the
 // CATALOG_SOURCE_URL env only exists so an alternate deployment can override it.
 const SOURCE_URL = process.env.CATALOG_SOURCE_URL || "https://openviglet.github.io/model-catalog";
+const SOURCE_URL_REPO = process.env.CATALOG_REPO_URL || "https://github.com/openviglet/model-catalog";
 
 const KINDS = new Set([
   "CHAT", "EMBEDDING", "RERANK", "IMAGE",
@@ -782,7 +783,7 @@ th{color:var(--muted);font-weight:600;white-space:nowrap}
 </head>
 <body>
 ${inner}
-<footer class="tm">All product names, logos and brands are the property of their respective owners. Viglet is an independent project and is not affiliated with, endorsed by, or sponsored by any vendor listed in this catalog; vendor names are used here for identification (nominative-use) only. · By <a href="https://www.viglet.org">Viglet</a> · code Apache-2.0.</footer>
+<footer class="tm">Catalog data is provided as is; accuracy is not warranted — figures are indicative and cited, verify against the vendor. All product names, logos and brands are the property of their respective owners. Viglet is an independent project and is not affiliated with, endorsed by, or sponsored by any vendor listed in this catalog; vendor names are used here for identification (nominative-use) only. · By <a href="https://www.viglet.org">Viglet</a> · code <a href="${SOURCE_URL_REPO}/blob/main/LICENSE">Apache-2.0</a> · data <a href="${SOURCE_URL_REPO}/blob/main/LICENSE-DATA">CC-BY 4.0</a>.</footer>
 </body>
 </html>
 `;

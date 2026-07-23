@@ -21,19 +21,6 @@
 > the community-health files a "community-owned reference" is judged by. None of
 > these touch the schema or add a runtime dependency.
 
-### §P3 — Explicit data licence + no-accuracy warranty
-
-The footer's "Apache-2.0" licenses the **code**. The **data** (the JSON
-compilation) has no stated licence — and a consumer embedding the catalog needs
-to know its obligation before adopting it (this is likely the single biggest
-adoption blocker). Facts aren't copyrightable but a compilation can be, so the
-data licence must be stated explicitly and separately from the code: candidates
-are **CC0** (public-domain dedication, maximal reuse) or **CC-BY** (reuse with
-attribution — which also nudges backlinks). Pair it with a data "as-is / accuracy
-not warranted" line; Apache's warranty clause covers the software, not the
-figures. The licence choice is the open decision (a light STRATEGY touch), but
-the task itself is a concrete doc/site edit.
-
 ### §P4 — Ask-widget privacy note
 
 The "Ask the catalog" widget ships enabled (`data-ask-endpoint="default"`) and
