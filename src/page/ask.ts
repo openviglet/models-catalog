@@ -146,6 +146,11 @@ function renderThread(pending: boolean): void {
   answer.innerHTML =
     `<div class="ask-thread">${items.join("")}${spinner}</div>` +
     `<p class="ask-caveat lbl">Grounded on the catalog — figures are indicative / cited, verify at the source. Click a cited model to open its full record.</p>`;
+  // A prior answer can be very tall, so a new turn lands far below the fold — bring
+  // the latest question into view so the thread visibly advances (T63).
+  const turns = answer.querySelectorAll(".ask-turn.user");
+  const latest = turns[turns.length - 1];
+  if (latest) latest.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 async function ask(endpoint: string, locale: string, raw: string): Promise<void> {
