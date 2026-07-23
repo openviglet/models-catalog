@@ -276,6 +276,61 @@
       .chip.num { color: var(--brand-3); border-color: color-mix(in srgb, var(--brand) 25%, transparent);
         background: var(--brand-wash); font-family: var(--mono); font-weight: 500; }
 
+      /* ── Ask the catalog (T61) ───────────────────────── */
+      .ask-form { display: flex; gap: .7rem; max-width: 46rem; margin: 0 auto; align-items: stretch; }
+      .ask-input { flex: 1 1 auto; position: relative; }
+      .ask-input svg { position: absolute; left: .85rem; top: 50%; transform: translateY(-50%);
+        width: 1.05rem; height: 1.05rem; color: var(--muted); pointer-events: none; }
+      #ask-q {
+        width: 100%; padding: .8rem 1rem .8rem 2.5rem; font-size: .98rem; font-family: var(--sans);
+        border: 1px solid var(--border-strong); border-radius: .7rem; background: var(--card); color: var(--text);
+      }
+      #ask-q:focus { outline: none; border-color: var(--brand);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent); }
+      #ask-send { white-space: nowrap; flex: none; }
+      #ask-send:disabled { opacity: .6; cursor: progress; }
+      .ask-examples { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center;
+        justify-content: center; max-width: 46rem; margin: .9rem auto 0; }
+      .ask-ex-label { color: var(--muted); font-size: .82rem; font-weight: 600; }
+      .ask-ex {
+        padding: .35rem .7rem; font-size: .82rem; font-family: var(--sans);
+        border: 1px solid var(--border-strong); border-radius: 999px; background: var(--card);
+        color: var(--muted); cursor: pointer; transition: all .12s;
+      }
+      .ask-ex:hover { border-color: var(--brand); color: var(--text); }
+      .ask-answer {
+        max-width: 46rem; margin: 1.4rem auto 0; padding: 1.3rem 1.5rem;
+        background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
+        box-shadow: var(--shadow-card);
+      }
+      .ask-text { line-height: 1.7; }
+      .ask-text p { margin: 0 0 .8rem; }
+      .ask-text p:last-child { margin-bottom: 0; }
+      .ask-loading { display: flex; align-items: center; gap: .6rem; color: var(--muted); }
+      .ask-spin { width: 1rem; height: 1rem; border-radius: 999px; flex: none;
+        border: 2px solid color-mix(in srgb, var(--brand) 30%, transparent); border-top-color: var(--brand);
+        animation: ask-spin .7s linear infinite; }
+      @keyframes ask-spin { to { transform: rotate(360deg); } }
+      .ask-error { color: var(--text); }
+      .ask-cites { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+      .ask-cites-label { display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .06em;
+        color: var(--muted); font-weight: 700; margin-bottom: .55rem; }
+      .ask-cite-list { display: flex; flex-wrap: wrap; gap: .5rem; }
+      .ask-cite {
+        display: inline-flex; align-items: baseline; gap: .4rem; padding: .35rem .7rem;
+        border: 1px solid var(--border-strong); border-radius: .55rem; background: var(--bg-alt);
+        text-decoration: none; transition: all .12s;
+      }
+      .ask-cite:hover { border-color: var(--brand); background: var(--brand-wash); text-decoration: none; }
+      .ask-cite .mid { font-family: var(--mono); font-size: .84rem; font-weight: 500; color: var(--text); }
+      .ask-cite-plain { color: var(--muted); cursor: default; }
+      .ask-summary { margin: .2rem 0 .9rem; font-size: .82rem; font-style: italic; }
+      .ask-caveat { margin: 1rem 0 0; font-size: .8rem; }
+      @media (max-width: 560px) {
+        .ask-form { flex-direction: column; }
+        #ask-send { width: 100%; }
+      }
+
       /* ── Code / API ──────────────────────────────────── */
       .card {
         background: var(--card); border: 1px solid var(--border); border-radius: 1rem;

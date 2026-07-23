@@ -92,6 +92,36 @@
       </div>
     </header>
 
+    <!-- ── Ask the catalog (T61) ───────────────────────── -->
+    <!-- Optional orient surface: a chat box that POSTs a question to a configurable
+         structured-RAG backend and renders a grounded, cited answer. It stays
+         HIDDEN unless `data-ask-endpoint` is set (an empty value → self-contained
+         static site, no external call). The endpoint holds the API key — this page
+         never does. Set the attribute to your structured-RAG endpoint, or the literal
+         "default" to use the turing-demo.viglet.org catalog copilot. Enabled by the
+         page module (src/page/ask.ts); citation ids resolve to the T17 drawer.
+         Enabled with "default" → the turing-demo.viglet.org catalog copilot (which
+         already ingests this catalog's query-manifest.json/context.txt); clear the
+         attribute to disable and keep the site fully self-contained. -->
+    <section class="block" id="ask" hidden data-ask-endpoint="default">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="kicker">Ask</div>
+          <h2>Ask the catalog</h2>
+          <p>Ask in plain language and get a <strong>grounded</strong> answer with a <strong>cited</strong> deep-link to every model it names — one click from claim to evidence. The answer comes from a separate structured-RAG backend reading this catalog's data; nothing is invented. Prices &amp; benchmarks stay <strong>indicative / cited</strong> — verify at the source.</p>
+        </div>
+        <form class="ask-form" id="ask-form">
+          <div class="ask-input">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4" stroke-linecap="round"/></svg>
+            <input id="ask-q" type="text" placeholder="e.g. cheapest embedding model with a big context window" autocomplete="off" aria-label="Ask the catalog a question" />
+          </div>
+          <button type="submit" class="btn btn-primary" id="ask-send">Ask</button>
+        </form>
+        <div class="ask-examples" id="ask-examples" aria-label="Example questions"></div>
+        <div class="ask-answer" id="ask-answer" hidden aria-live="polite"></div>
+      </div>
+    </section>
+
     <!-- ── Why ─────────────────────────────────────────── -->
     <section class="block">
       <div class="wrap">

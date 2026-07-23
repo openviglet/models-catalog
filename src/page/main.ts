@@ -18,6 +18,7 @@ import {
   renderFrontier, renderLeaderboards, selectAnalyticsTab,
 } from "./panels.js";
 import { ModelCatalogClient } from "../sdk/model-catalog-client.js";
+import { initAsk } from "./ask.js";
 
 /* ── Theme toggle ──────────────────────────────── */
 /* data-theme is already set (pre-paint) by the classic script in <head>;
@@ -249,6 +250,12 @@ byId("clear-filters").onclick = clearFilters;
 byId("copy-view").onclick = () => {
   if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(() => toast("Link to this view copied ✓")).catch(() => {});
 };
+
+/* ── Ask the catalog (T61) ─────────────────────── */
+// Reveals + wires itself only when #ask[data-ask-endpoint] is set; otherwise a no-op
+// and the section stays hidden (self-contained). Runs independent of catalog load —
+// by the time a user asks, state.byKey is populated so citations deep-link.
+initAsk();
 
 /* ── Palette wiring (T19) ──────────────────────── */
 byId("palbtn").onclick = openPalette;
