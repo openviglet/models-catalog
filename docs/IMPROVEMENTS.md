@@ -21,15 +21,6 @@
 > the community-health files a "community-owned reference" is judged by. None of
 > these touch the schema or add a runtime dependency.
 
-### §P5 — Self-host web fonts
-
-`index.html` pulls Inter / Plus Jakarta Sans / JetBrains Mono from
-`fonts.googleapis.com` at runtime, which hands the visitor's IP to a third party
-on every load. Self-hosting the font files (still no *build* dependency — just
-committed `.woff2` + `@font-face`) squares the page with its own "self-contained,
-CORS-open, zero-auth" claim and erases the privacy footnote. Purely additive to
-`public/`; keep the same faces so the design is unchanged.
-
 ### §P6 — Project-health & governance files
 
 The repo has `LICENSE`, `README`, `CONTRIBUTING` and a mature propose-and-review

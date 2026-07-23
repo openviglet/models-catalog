@@ -18,6 +18,8 @@
 
 ## Log (most recent first)
 
+- **T75 SHIPPED** (Block P §P5 — self-host web fonts: dropped the runtime fonts.googleapis.com/gstatic.com requests [visitor-IP leak] by committing fonts under public/fonts/ + `@font-face` in styles.css; each family [Inter/Plus Jakarta Sans/JetBrains Mono] served by Google as ONE latin-subset variable woff2 covering its whole weight axis [per-weight URLs byte-identical], so 3 files not 9, weight ranges declared 400-700/600-800/400-500 font-display:swap; removed 2 preconnect + stylesheet links from index.html, same faces=design unchanged; SIL OFL 1.1 fonts + OFL.txt + README attribution [~106KB]; build green, fonts survive emit) — 2026-07-23.
+
 - **T74 SHIPPED** (Block P §P4 — Ask-widget privacy note: explicit disclosure under the input [`.ask-privacy` + lock glyph] that the question is POSTed to an external backend while the rest of the page stays local; `ask.ts` `setAskDestination()` fills the destination from the resolved endpoint [default named "Viglet Turing ES (turing-demo.viglet.org)", custom shown by host], and the note only shows when an endpoint is configured so a visible note always means it leaves the page; page-only zero-dep, typecheck+build green) — 2026-07-23.
 
 - **T73 SHIPPED** (Block P §P3 — explicit data licence + no-accuracy warranty: chose **CC-BY 4.0** for the catalog data [reuse w/ attribution, nudges citation/backlinks per GEO thesis; over CC0], stated separately from Apache-2.0 code; new root `LICENSE-DATA`, README License split code/data + no-warranty line, api.md "Licence & warranty" section, both footers gained "code Apache-2.0 · data CC-BY 4.0" + as-is/verify line [new `SOURCE_URL_REPO` const], decision recorded STRATEGY §III; doc/site-only zero-dep, emit re-verified) — 2026-07-23.

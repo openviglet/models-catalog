@@ -2,6 +2,22 @@
  * Extracted verbatim from the former inline <style> block in index.html.
  * Hand-authored source (committed); the page links it via <link>. */
 
+      /* Self-hosted fonts (T75) — no runtime request to a third-party font host.
+       * Each file is the Google Fonts latin subset of the family's variable font
+       * (one file per family covers its whole weight axis); see public/fonts/. */
+      @font-face {
+        font-family: "Inter"; font-style: normal; font-weight: 400 700;
+        font-display: swap; src: url("./fonts/inter-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 600 800;
+        font-display: swap; src: url("./fonts/plus-jakarta-sans-latin.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "JetBrains Mono"; font-style: normal; font-weight: 400 500;
+        font-display: swap; src: url("./fonts/jetbrains-mono-latin.woff2") format("woff2");
+      }
+
       :root {
         color-scheme: light;
         --bg: #fbfaf9;

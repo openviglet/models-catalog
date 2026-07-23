@@ -124,7 +124,6 @@
 > propose-and-review. The design rationale is in [IMPROVEMENTS.md](IMPROVEMENTS.md)
 > → §P.
 
-- 📋 **T75** — **Self-host web fonts.** Drop the runtime Google Fonts request (IP logging by a third party); self-hosting is coherent with the "self-contained / CORS-open / zero-auth" claim and removes a privacy footnote. deps — → §P5
 - 📋 **T76** — **Project-health & governance files.** Add `SECURITY.md` + `CODE_OF_CONDUCT.md` and a short governance/maintainer note (who maintains it, how decisions are made) — expected signals of maturity for a community-owned reference. deps — → §P6
 
 ## Non-goals
