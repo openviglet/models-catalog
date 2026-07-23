@@ -114,6 +114,23 @@
 > fields, with sorting moved to an explicit field + direction control and the filter
 > rail collapsed by default (T68) (see [CHANGELOG.md](CHANGELOG.md) → Block O).
 
+## Block P — Trust, compliance & project health
+
+> First active backlog after Blocks A–O shipped. Non-code hardening from an
+> outside review (legal/OSS-analyst lens): neutral wording, third-party-mark and
+> data-licence clarity, a privacy note for the one surface that leaves the page,
+> and the community-health files a "community-owned reference" is expected to
+> carry. All respect the guardrails — zero runtime dependency, no envelope break,
+> propose-and-review. The design rationale is in [IMPROVEMENTS.md](IMPROVEMENTS.md)
+> → §P.
+
+- 📋 **T71** — **Neutral wording: "cheapest" → "Lowest price".** Retone the user-facing labels (leaderboard/preset/Ask example/placeholder) to "Lowest price"; **keep the JSON board ids `cheapest-*` unchanged** — they are a published API contract (SDKs + tests + qa-eval depend on them). deps — → §P1
+- 📋 **T72** — **Trademark & non-affiliation notice.** Add a nominative-use disclaimer (vendor names/logos are their owners'; Viglet is independent, not affiliated with or endorsed by any listed vendor) — reinforces "vendor-neutral" legally. deps — → §P2
+- 💭 **T73** — **Explicit data licence + no-accuracy warranty.** State the *catalog data* licence (e.g. CC0 or CC-BY) as distinct from the Apache-2.0 *code*, plus a data "as-is / accuracy not warranted" line. Removes a real OSS-adoption blocker; the licence choice itself is the open decision. deps — → §P3
+- 📋 **T74** — **Ask-widget privacy note.** Disclose that a submitted question leaves the page to the external structured-RAG backend (`turing-demo.viglet.org`) — the widget ships enabled with `data-ask-endpoint="default"`. deps — → §P4
+- 📋 **T75** — **Self-host web fonts.** Drop the runtime Google Fonts request (IP logging by a third party); self-hosting is coherent with the "self-contained / CORS-open / zero-auth" claim and removes a privacy footnote. deps — → §P5
+- 📋 **T76** — **Project-health & governance files.** Add `SECURITY.md` + `CODE_OF_CONDUCT.md` and a short governance/maintainer note (who maintains it, how decisions are made) — expected signals of maturity for a community-owned reference. deps — → §P6
+
 ## Non-goals
 
 - **Pricing is bounded to an indicative US list price.** As of the STRATEGY §I reversal (Block F) the catalog carries an *optional* per-token US **list** price — flagged **indicative, not authoritative** (a reference only, verify with the vendor), provenance-gated and never invented. It is **not** a billing engine: no per-contract, per-region, negotiated or committed-use pricing.

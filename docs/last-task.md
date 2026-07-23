@@ -1,7 +1,7 @@
-# Last task number — `T70` · next block letter — `P`
+# Last task number — `T76` · next block letter — `Q`
 
 > **Single source of truth for the next free task number.** The next new task is
-> `T71`; after assigning it, bump the number above and the log line below.
+> `T77`; after assigning it, bump the number above and the log line below.
 >
 > T-numbers are **non-contiguous across blocks** — never infer the next number
 > from a block's header range or a `git log` scan. This counter is authoritative.
@@ -18,6 +18,7 @@
 
 ## Log (most recent first)
 
+- **T71-T76 CREATED** (📋/💭, Block P §P1-§P6 — Trust, compliance & project health, from an outside legal/OSS-analyst review; first backlog after A–O shipped: retone "cheapest"→"Lowest price" on labels only, keeping `cheapest-*` board ids as the API contract (T71 📋); trademark + non-affiliation notice reinforcing vendor-neutral (T72 📋); explicit data licence [CC0/CC-BY] vs Apache-2.0 code + data as-is/no-accuracy line (T73 💭, licence choice = open decision); Ask-widget privacy note — question POSTs to external turing-demo.viglet.org RAG (T74 📋); self-host web fonts to drop the runtime Google Fonts request, coherent w/ self-contained/CORS-open claim (T75 📋); project-health/governance files SECURITY.md + CODE_OF_CONDUCT.md + maintainer/governance note (T76 📋); all deps —, zero-dep/no-envelope-break) — 2026-07-23.
 - **T58 SHIPPED** (Block G §G2 — first-class per-model page: rebuilt shared pageHtml stylesheet on SPA design tokens [light+dark, all emitted pages inherit], rewrote modelHtml → header [kind/tier/use-case tags/weights] + at-a-glance statTiles + populated-only cited sections [Pricing/Benchmarks+scores/Performance/Specifications/Capabilities, each caveat+source+lastVerified] + always-on provenance + derived relatedOf [same vendor+kind, then same-kind same-tier, hubRank-capped 6]; SPARSE = omit empty sections [no "—"]; SPA drawer gained "↗ Full page" [modelPageUrl in format.ts, slug mirrors slugFor]; tierOf/hubRank/TIER_HINT hoisted to shared GEO helpers; typecheck+build:page+emit+41 tests green. **Block G shipped in full.**) — 2026-07-23.
 - **T34 SHIPPED** (Block G §G1 — per-segment hubs + sitemap/robots: evolved emit.mjs from bare vendor/model pages into 22 leaderboard hubs [8 kind / 4 capability / 6 modality / 4 tier] as md+html under public/hubs/<group>/<slug>, each a hubRank-sorted [intelligence→context→label] top-12 leaderboard cross-linked to per-model pages + prose blurb + JSON-slice & Explore-pre-filtered links [#kind/#cap/#in/#tier], + hubs/index.{md,html}; tierOf inlined [zero-import]; sitemap.xml [293 URLs, lastmod from lastUpdated] + robots.txt [allow-all + Sitemap:], hubs/ rmSync'd like models/; endpoints.json hubs/sitemap/robots + llms.txt ## Segments; derived-at-emit zero-dep, 41 tests green) — 2026-07-23.
 - **T70 SHIPPED** (Block M — sharpen query-manifest benchmark field DESCRIPTIONS so the vectorless RAG stops treating a math sub-score (93.4) as the intelligence index (23.8): intelligenceIndex flagged THE ranking metric + domain scores flagged NOT-the-index, +math/reasoning descriptions; data/schema unchanged, 41 tests green; pairs w/ Turing T799) — 2026-07-23.
