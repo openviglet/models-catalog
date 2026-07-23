@@ -394,7 +394,7 @@ const leaderboardDefs = [
   // Cheapest per kind — only for kinds that actually have priced models.
   ...presentKinds
     .filter((k) => flat.some((e) => e.kind === k && inputPrice(e) != null))
-    .map((k) => makeBoard(`cheapest-${k.toLowerCase()}`, `Cheapest ${k.toLowerCase()}`,
+    .map((k) => makeBoard(`cheapest-${k.toLowerCase()}`, `Lowest price ${k.toLowerCase()}`,
       "pricing.inputPer1M", "$ / 1M in", "asc", (e) => e.kind === k, inputPrice)),
   makeBoard("intelligence-per-dollar", "Best intelligence per $",
     "benchmarks.intelligenceIndex / pricing.inputPer1M", "index pts per $/1M in", "desc",

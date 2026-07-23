@@ -65,7 +65,7 @@ export const PRESETS: Array<{ label: string; params: Record<string, string> }> =
   { label: "Frontier reasoning", params: { tag: "Reasoning", tier: "Frontier" } },
   { label: "Open weights", params: { tag: "Open weights" } },
   { label: "Multimodal chat", params: { kind: "CHAT", tag: "Multimodal" } },
-  { label: "Cheapest chat", params: { kind: "CHAT", has: "price", sort: "price:1" } },
+  { label: "Lowest price chat", params: { kind: "CHAT", has: "price", sort: "price:1" } },
   { label: "Embeddings by dimension", params: { kind: "EMBEDDING", sort: "dims:-1" } },
   { label: "Fastest", params: { has: "speed", sort: "speed:-1" } },
 ];

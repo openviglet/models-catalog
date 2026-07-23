@@ -24,7 +24,7 @@ const DEFAULT_ASK_LOCALE = "en-US";
 
 /** Example prompts when qa-eval.jsonl (T62) isn't reachable (offline / not emitted). */
 const FALLBACK_EXAMPLES = [
-  "What is the cheapest embedding model?",
+  "Which embedding model has the lowest price?",
   "Which chat model has the largest context window?",
   "List open-weight chat models I can self-host.",
 ];

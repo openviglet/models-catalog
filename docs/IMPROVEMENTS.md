@@ -21,19 +21,6 @@
 > the community-health files a "community-owned reference" is judged by. None of
 > these touch the schema or add a runtime dependency.
 
-### §P1 — Neutral wording: "cheapest" → "Lowest price"
-
-`cheapest` carries a faint pejorative note in English ("cheap" ≈ low quality) —
-off-key for a product reference. The precise, neutral replacement is **"Lowest
-price"** (it describes what the board does: sort by price), *not* "Best value" —
-that phrase already belongs to the separate `intelligence-per-$` board, and *not*
-the vague adverbial "cost-wise". **Scope is cosmetic only:** retone the visible
-labels (the leaderboard/preset labels, the Ask example, the search placeholder).
-The JSON board **ids** (`cheapest-chat`, `cheapest-embedding`, …) stay verbatim —
-they are a published API contract consumed by all three SDKs and asserted in
-their tests + `qa-eval.jsonl`; renaming an id would be a breaking change to a
-catalog that markets itself as versioned and stable. Label ≠ id.
-
 ### §P2 — Trademark & non-affiliation notice
 
 The site names third-party marks throughout (OpenAI, Anthropic, Gemini, Mistral,
