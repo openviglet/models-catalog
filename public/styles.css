@@ -263,10 +263,12 @@
       td .lbl { color: var(--muted); font-size: .8rem; margin-top: .1rem; }
 
       /* ── Browse card grid (T68) ──────────────────────── */
-      /* Each model is a self-contained card; the grid fills the available width so
-         nothing is clipped by fixed column widths. */
-      /* stretch → every card in a row takes the row's tallest height (equal-height rows). */
-      .mcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 1rem; align-items: stretch; }
+      /* Each model is a self-contained card. Two per row by default (the rail is
+         collapsed, so the grid has the full width); stretch → equal-height rows. */
+      .mcard-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: stretch; }
+      /* Filters open → the rail eats ~15.5rem, so drop the cards to one per row. */
+      .browse-layout:not(.rail-collapsed) .mcard-grid { grid-template-columns: minmax(0, 1fr); }
+      @media (max-width: 640px) { .mcard-grid { grid-template-columns: minmax(0, 1fr); } }
       .vendor > .mcard-grid { padding: 1rem; }
       .mcard {
         display: flex; flex-direction: column; gap: .7rem; min-width: 0;
