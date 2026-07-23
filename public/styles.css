@@ -472,6 +472,7 @@
       .foot a { color: var(--muted); }
       .foot a:hover { color: var(--brand-3); }
       .foot .foot-links { display: flex; flex-wrap: wrap; gap: 1.1rem; }
+      .foot-legal { flex-basis: 100%; margin: .2rem 0 0; font-size: .78rem; line-height: 1.55; opacity: .8; }
 
       .status { text-align: center; color: var(--muted); font-size: .9rem; padding: 1rem; }
       /* ── Pager (T67) ─────────────────────────────────── */

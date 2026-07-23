@@ -21,15 +21,6 @@
 > the community-health files a "community-owned reference" is judged by. None of
 > these touch the schema or add a runtime dependency.
 
-### §P2 — Trademark & non-affiliation notice
-
-The site names third-party marks throughout (OpenAI, Anthropic, Gemini, Mistral,
-…) and model names, with no attribution line. A short nominative-use disclaimer —
-"all product names, logos and brands are property of their respective owners;
-Viglet is independent and not affiliated with or endorsed by any vendor listed" —
-is standard for a comparison site and, usefully, *reinforces* the "vendor-neutral"
-positioning rather than undercutting it.
-
 ### §P3 — Explicit data licence + no-accuracy warranty
 
 The footer's "Apache-2.0" licenses the **code**. The **data** (the JSON

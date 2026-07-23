@@ -124,7 +124,6 @@
 > propose-and-review. The design rationale is in [IMPROVEMENTS.md](IMPROVEMENTS.md)
 > → §P.
 
-- 📋 **T72** — **Trademark & non-affiliation notice.** Add a nominative-use disclaimer (vendor names/logos are their owners'; Viglet is independent, not affiliated with or endorsed by any listed vendor) — reinforces "vendor-neutral" legally. deps — → §P2
 - 💭 **T73** — **Explicit data licence + no-accuracy warranty.** State the *catalog data* licence (e.g. CC0 or CC-BY) as distinct from the Apache-2.0 *code*, plus a data "as-is / accuracy not warranted" line. Removes a real OSS-adoption blocker; the licence choice itself is the open decision. deps — → §P3
 - 📋 **T74** — **Ask-widget privacy note.** Disclose that a submitted question leaves the page to the external structured-RAG backend (`turing-demo.viglet.org`) — the widget ships enabled with `data-ask-endpoint="default"`. deps — → §P4
 - 📋 **T75** — **Self-host web fonts.** Drop the runtime Google Fonts request (IP logging by a third party); self-hosting is coherent with the "self-contained / CORS-open / zero-auth" claim and removes a privacy footnote. deps — → §P5

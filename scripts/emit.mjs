@@ -777,10 +777,12 @@ table{border-collapse:collapse;width:100%;margin:1rem 0}
 th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--border);vertical-align:top}
 th{color:var(--muted);font-weight:600;white-space:nowrap}
 .pagelinks{margin:1.7rem 0 0;color:var(--muted);font-size:.9rem}
+.tm{margin:2.6rem 0 0;padding-top:1.2rem;border-top:1px solid var(--border);color:var(--muted);font-size:.78rem;line-height:1.55}
 </style>
 </head>
 <body>
 ${inner}
+<footer class="tm">All product names, logos and brands are the property of their respective owners. Viglet is an independent project and is not affiliated with, endorsed by, or sponsored by any vendor listed in this catalog; vendor names are used here for identification (nominative-use) only. · By <a href="https://www.viglet.org">Viglet</a> · code Apache-2.0.</footer>
 </body>
 </html>
 `;
