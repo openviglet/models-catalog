@@ -15,6 +15,13 @@ import { vendorLabel } from "./format.js";
 /** Default backend when `data-ask-endpoint="default"` — Turing ES's catalog copilot. */
 const DEFAULT_ASK_ENDPOINT = "https://turing-demo.viglet.org/api/sn/model-catalog/copilot";
 
+/** Locale sent with the question. It must match the backend SN **site-instance**
+ * locale (the catalog is ingested under en-US), NOT the visitor's browser language:
+ * retrieval is locale-scoped, so a mismatched locale (e.g. a pt-BR browser) returns
+ * zero hits and the copilot answers "no matching results" to every question. Override
+ * via `#ask[data-ask-locale]` if a backend indexes the catalog under another locale. */
+const DEFAULT_ASK_LOCALE = "en-US";
+
 /** Example prompts when qa-eval.jsonl (T62) isn't reachable (offline / not emitted). */
 const FALLBACK_EXAMPLES = [
   "What is the cheapest embedding model?",
@@ -47,18 +54,19 @@ export function initAsk(): void {
   const section = byId("ask");
   const endpoint = resolveEndpoint(section.dataset.askEndpoint);
   if (!endpoint) return; // no endpoint configured → self-contained, section stays hidden
+  const locale = (section.dataset.askLocale ?? "").trim() || DEFAULT_ASK_LOCALE;
   section.hidden = false;
   loadExamples();
   byId("ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
-    ask(endpoint, byId("ask-q").value);
+    ask(endpoint, locale, byId("ask-q").value);
   });
   byId("ask-examples").addEventListener("click", (e) => {
     const chip = elClosest(e, "[data-q]");
     if (!chip) return;
     const q = chip.dataset.q ?? "";
     byId("ask-q").value = q;
-    ask(endpoint, q);
+    ask(endpoint, locale, q);
   });
 }
 
@@ -92,7 +100,7 @@ function attr(s: string): string {
   return esc(s).replace(/"/g, "&quot;");
 }
 
-async function ask(endpoint: string, raw: string): Promise<void> {
+async function ask(endpoint: string, locale: string, raw: string): Promise<void> {
   const q = raw.trim();
   const answer = byId("ask-answer");
   if (!q) { byId("ask-q").focus(); return; }
@@ -103,12 +111,12 @@ async function ask(endpoint: string, raw: string): Promise<void> {
   answer.innerHTML = `<div class="ask-loading"><span class="ask-spin" aria-hidden="true"></span> Asking the catalog…</div>`;
   try {
     // The catalog-copilot contract (Turing TurSNCatalogCopilotAPI): a multi-turn
-    // conversation body — the widget is single-shot, so one user turn — plus an
-    // optional locale. No API key: the backend holds it.
+    // conversation body — the widget is single-shot, so one user turn — plus the
+    // site-instance locale (see DEFAULT_ASK_LOCALE). No API key: the backend holds it.
     const r = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify({ messages: [{ role: "user", content: q }], locale: navigator.language || "en" }),
+      body: JSON.stringify({ messages: [{ role: "user", content: q }], locale }),
     });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     answer.innerHTML = renderAnswer(await r.json());
