@@ -350,6 +350,9 @@
         color: var(--muted); cursor: pointer; transition: all .12s;
       }
       .ask-ex:hover { border-color: var(--brand); color: var(--text); }
+      .ask-privacy { display: flex; align-items: flex-start; gap: .4rem; max-width: 46rem;
+        margin: .55rem auto 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
+      .ask-privacy svg { flex: none; margin-top: .18rem; opacity: .8; }
       .ask-toolbar { display: flex; justify-content: flex-end; max-width: 46rem; margin: 1.2rem auto 0; }
       .ask-answer {
         max-width: 46rem; margin: .6rem auto 0; padding: 1.3rem 1.5rem;

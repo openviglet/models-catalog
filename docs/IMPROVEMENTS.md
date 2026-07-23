@@ -21,15 +21,6 @@
 > the community-health files a "community-owned reference" is judged by. None of
 > these touch the schema or add a runtime dependency.
 
-### §P4 — Ask-widget privacy note
-
-The "Ask the catalog" widget ships enabled (`data-ask-endpoint="default"`) and
-POSTs the visitor's question to an external structured-RAG backend
-(`turing-demo.viglet.org`). Everything else on the page is self-contained, so a
-visitor reasonably assumes nothing leaves the browser. A one-line disclosure at
-the input ("your question is sent to Viglet Turing ES to answer it") is the
-minimum transparency bar (and the honest one under GDPR-style expectations).
-
 ### §P5 — Self-host web fonts
 
 `index.html` pulls Inter / Plus Jakarta Sans / JetBrains Mono from

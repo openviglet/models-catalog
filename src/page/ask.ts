@@ -57,12 +57,27 @@ function resolveEndpoint(raw: string | undefined): string | null {
   return v === "default" ? DEFAULT_ASK_ENDPOINT : v;
 }
 
+/** Name the destination in the privacy note (T74) so the disclosure is accurate
+ * for whatever endpoint is configured — the default backend by name, otherwise
+ * the configured host. The widget only shows when an endpoint is set, so a
+ * visible note always means the question leaves the page. */
+function setAskDestination(endpoint: string): void {
+  const dest = byId("ask-dest");
+  if (!dest) return;
+  if (endpoint === DEFAULT_ASK_ENDPOINT) {
+    dest.textContent = "Viglet Turing ES (turing-demo.viglet.org)";
+  } else {
+    try { dest.textContent = new URL(endpoint).host; } catch { /* leave the generic wording */ }
+  }
+}
+
 export function initAsk(): void {
   const section = byId("ask");
   const endpoint = resolveEndpoint(section.dataset.askEndpoint);
   if (!endpoint) return; // no endpoint configured → self-contained, section stays hidden
   const locale = (section.dataset.askLocale ?? "").trim() || DEFAULT_ASK_LOCALE;
   section.hidden = false;
+  setAskDestination(endpoint); // name where the question goes (privacy note, T74)
   loadExamples();
   const qEl = byId("ask-q");
   autoGrow(); // size to one line at load (no stray scrollbar before first input)
