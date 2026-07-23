@@ -58,6 +58,7 @@ export function initAsk(): void {
   section.hidden = false;
   loadExamples();
   const qEl = byId("ask-q");
+  autoGrow(); // size to one line at load (no stray scrollbar before first input)
   qEl.addEventListener("input", autoGrow);
   // The box is a textarea, so Enter alone would insert a newline — submit on
   // Enter and reserve Shift+Enter for a deliberate line break.
@@ -78,11 +79,19 @@ export function initAsk(): void {
   });
 }
 
-/** Grow the question textarea to fit its content (capped by its CSS max-height). */
+/** Grow the question textarea to fit its content (capped by its CSS max-height).
+ * With border-box, height must include the border or the box is a couple px short
+ * and a scrollbar shows even when the text fits — so add the border, and only turn
+ * on the scrollbar once the content actually exceeds the max-height. */
 function autoGrow(): void {
   const el = byId("ask-q");
   el.style.height = "auto";
-  el.style.height = el.scrollHeight + "px";
+  const cs = getComputedStyle(el);
+  const border = Number.parseFloat(cs.borderTopWidth || "0") + Number.parseFloat(cs.borderBottomWidth || "0");
+  const max = Number.parseFloat(cs.maxHeight || "") || Infinity;
+  const target = el.scrollHeight + border;
+  el.style.height = Math.min(target, max) + "px";
+  el.style.overflowY = target > max ? "auto" : "hidden";
 }
 
 /** Seed the example-prompt chips from the published qa-eval.jsonl (T62). */

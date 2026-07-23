@@ -330,7 +330,7 @@
         display: block; width: 100%; padding: .8rem 1rem .8rem 2.5rem; font-size: .98rem;
         font-family: var(--sans); line-height: 1.5; border: 1px solid var(--border-strong);
         border-radius: .7rem; background: var(--card); color: var(--text);
-        resize: none; overflow-y: auto; max-height: 11rem;
+        resize: none; overflow-y: hidden; max-height: 11rem;
       }
       #ask-q:focus { outline: none; border-color: var(--brand);
         box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent); }
