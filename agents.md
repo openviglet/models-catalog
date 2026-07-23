@@ -30,13 +30,14 @@ workflow).
 - **`catalog/`** — `model-catalog.json` (single source of truth) + `model-catalog.schema.json` (Draft 2020-12).
 - **`pipeline/`** — the regeneration pipeline: `regen.mjs` orchestrator, `adapters/` (per-source), `lib/` (util/merge/validate), `overrides.json` (curated pins), `regen.test.mjs`. `sources/` (raw snapshot cache) and `out/` (proposed envelope + report) are gitignored.
 - **`scripts/emit.mjs`** — builds the public artifacts (`public/models/*`) from the canonical file.
-- **`public/`** — `index.html` browsable page (committed); `models/*` emitted (gitignored).
+- **`src/page/`** — the browsable page's **TypeScript** source (T65): `types`/`state`/`dom`/`constants`/`format`/`table`/`detail`/`panels`/`controls`/`main`. Compiled by `tsc` (`tsconfig.json`) to `public/app/*.js`. `src/sdk/model-catalog-client.d.ts` types the self-hosted SDK import.
+- **`public/`** — `index.html` (committed) links `styles.css` (committed source) and loads `app/main.js`; `app/*` (compiled page), `models/*` and the JSON artifacts are emitted (gitignored).
 - **`docs/`** — roadmap set + `references/`.
-- **`.github/workflows/publish.yml`** — emit → deploy to GitHub Pages (never regenerates upstream).
+- **`.github/workflows/publish.yml`** — `npm ci` → `build:page` (tsc) → emit → deploy to GitHub Pages (never regenerates upstream).
 
 ## Conventions
 
-- **Zero dependencies.** Node built-ins + global `fetch` only; inline HTML/CSS/JS in the page. Nothing to `npm install`. Node ≥ 20. Keep it this way.
+- **Zero *runtime* dependencies; one *build* dependency, page-only.** The pipeline (`pipeline/**`), `emit.mjs` and the SDKs (`clients/**`) use Node built-ins + global `fetch` only — nothing to `npm install`, keep it that way. **Exception (T65, a deliberate documented reversal of the page's zero-*build* stance):** the browsable page is authored in TypeScript under `src/page/` and compiled by `tsc` (dev dependency `typescript`, hence a `package-lock.json`) to `public/app/*.js`. The page therefore has a build step, but still ships **no runtime dependency** — plain ES-modules, self-contained, CORS-open static files. Node ≥ 20. Do not add dependencies beyond this.
 - **Propose, never auto-overwrite.** The canonical file is written only on `npm run regen -- --apply`. A plain run is read-only (writes a proposed envelope + diff report to `pipeline/out/`). CI may open a PR but never merges — a bad upstream fetch must never silently publish.
 - **Pricing = indicative US list only.** Per STRATEGY §I (reversed 2026-07-22, tracked as Block F), the catalog carries an *optional* per-token US **list** price — flagged **indicative, not authoritative** (a reference, verify with the vendor), sourced + `lastVerified`, never invented. Never per-contract/region/negotiated pricing; it is not a billing engine. Shipped by Block F: the `pricing` field (T30) and the LiteLLM adapter mapping its per-token USD costs into it (T31, per-1M, provenance-stamped); it enriches a blank price then holds stable (committed beats LiteLLM), and an `overrides.json` pin corrects a value.
 - **Additive schema, `version: 1`.** New `ModelEntry` fields are optional; consumers ignore unknowns. A breaking shape change bumps `version` and the pinned `catalog-vN.json` path.
@@ -49,9 +50,14 @@ workflow).
 npm run regen               # dry-run: fetch -> merge -> validate -> report
 npm run regen -- --apply    # write the canonical file
 npm run regen -- --offline  # replay cached snapshots (no network)
-npm run emit                # rebuild public artifacts from the canonical file
+npm run build:page          # compile the page TypeScript (src/page/) -> public/app/
+npm run typecheck           # type-check the page without emitting
+npm run emit                # rebuild public JSON artifacts from the canonical file
+npm run build               # build:page + emit (what CI runs before deploy)
 npm test                    # pipeline unit tests (node:test)
 ```
+
+> The page needs a one-time `npm install` (dev-only `typescript`); the pipeline/emit/SDKs do not.
 
 ## Relationship to Viglet Turing ES
 

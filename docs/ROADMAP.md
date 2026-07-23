@@ -79,6 +79,14 @@
 > shareable presets (T56), and mobile nav + card view + debounced render (T57)
 > (see [CHANGELOG.md](CHANGELOG.md) → Block L).
 
+> **Block N — Page as a typed module bundle** shipped in full — the ~2,650-line inline
+> `index.html` was extracted into small TypeScript ES-modules under `src/page/`
+> (compiled by `tsc` → gitignored `public/app/`), its CSS to committed
+> `public/styles.css`; the page now links the stylesheet and loads `./app/main.js`.
+> A **deliberate, documented reversal** of the page's zero-*build* stance — the page
+> gains one dev dependency (`typescript`) while the pipeline and SDKs stay strictly
+> zero-dependency (see [CHANGELOG.md](CHANGELOG.md) → Block N).
+
 ## Block G — Static-site expansion & indexing
 
 > The SPA is already complemented by per-model/per-vendor static pages (T26); extend

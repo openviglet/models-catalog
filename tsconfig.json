@@ -1,0 +1,36 @@
+{
+  // Page build only (T65). The pipeline (pipeline/**) and SDKs (clients/**) stay
+  // zero-dependency, plain .mjs/.js — this config governs the browsable page's
+  // TypeScript source under src/page/, emitted to public/app/ (gitignored, built
+  // in CI). Native ES modules: tsc leaves import specifiers untouched, so source
+  // imports MUST carry the runtime `.js` extension (e.g. "./format.js").
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "rootDir": "src/page",
+    "outDir": "public/app",
+    // The SDK's runtime specifier "../sdk/model-catalog-client.js" (relative to the
+    // emitted public/app/) resolves at compile time to src/sdk/model-catalog-client.d.ts
+    // — a declaration-only file (no emit), so it may sit outside rootDir. tsc leaves
+    // the import string untouched, so the browser still loads public/sdk/ at runtime.
+    "strict": true,
+    // The page owns the DOM it queries; getElementById/querySelector results are
+    // asserted non-null via the typed dom.ts helpers rather than guarded at every
+    // call site. Leaving strictNullChecks off keeps that ergonomic; the data model
+    // (types.ts) is fully, strictly typed — that is where types earn their keep.
+    "strictNullChecks": false,
+    // Migration baseline (T65): the DATA model (types.ts) is fully typed and drives
+    // inference across the page; noImplicitAny + strictNullChecks are deferred so the
+    // extracted DOM/callback code compiles without a guard/annotation at every site.
+    // Both are intended future tightening once the module split settles.
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "sourceMap": true
+  },
+  "include": ["src/page/**/*.ts"]
+}

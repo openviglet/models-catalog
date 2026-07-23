@@ -12,7 +12,12 @@ on:
     paths:
       - "catalog/**"
       - "public/**"
+      - "src/page/**"
+      - "src/sdk/**"
       - "scripts/emit.mjs"
+      - "tsconfig.json"
+      - "package.json"
+      - "package-lock.json"
       - ".github/workflows/publish.yml"
   workflow_dispatch:
 
@@ -36,7 +41,14 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 20
-      # Zero-dependency: no `npm ci` needed — just run the emit step.
+      # The browsable page is TypeScript (src/page/**, T65) compiled by tsc — the
+      # one build dependency. Install it, compile the page bundle to public/app/,
+      # then emit the JSON artifacts. The pipeline + SDKs remain zero-dependency;
+      # emit itself still uses only Node built-ins.
+      - name: Install build tooling (typescript)
+        run: npm ci
+      - name: Compile the page bundle (tsc → public/app/)
+        run: npm run build:page
       - name: Emit public artifacts
         run: node scripts/emit.mjs
       - uses: actions/configure-pages@v6

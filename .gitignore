@@ -22,6 +22,10 @@ public/plans.schema.json
 public/providers.json
 public/providers.schema.json
 public/llms.txt
+# Page bundle: TypeScript source lives in src/page/, compiled to public/app/
+# by `npm run build:page` (tsc) and in CI before deploy. Emitted → ignored.
+# (public/styles.css is hand-authored source and IS committed.)
+public/app/
 public/by-kind/
 public/by-vendor/
 public/by-capability/
