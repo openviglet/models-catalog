@@ -57,17 +57,32 @@ export function initAsk(): void {
   const locale = (section.dataset.askLocale ?? "").trim() || DEFAULT_ASK_LOCALE;
   section.hidden = false;
   loadExamples();
+  const qEl = byId("ask-q");
+  qEl.addEventListener("input", autoGrow);
+  // The box is a textarea, so Enter alone would insert a newline — submit on
+  // Enter and reserve Shift+Enter for a deliberate line break.
+  qEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(endpoint, locale, qEl.value); }
+  });
   byId("ask-form").addEventListener("submit", (e) => {
     e.preventDefault();
-    ask(endpoint, locale, byId("ask-q").value);
+    ask(endpoint, locale, qEl.value);
   });
   byId("ask-examples").addEventListener("click", (e) => {
     const chip = elClosest(e, "[data-q]");
     if (!chip) return;
     const q = chip.dataset.q ?? "";
-    byId("ask-q").value = q;
+    qEl.value = q;
+    autoGrow();
     ask(endpoint, locale, q);
   });
+}
+
+/** Grow the question textarea to fit its content (capped by its CSS max-height). */
+function autoGrow(): void {
+  const el = byId("ask-q");
+  el.style.height = "auto";
+  el.style.height = el.scrollHeight + "px";
 }
 
 /** Seed the example-prompt chips from the published qa-eval.jsonl (T62). */

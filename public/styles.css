@@ -319,13 +319,18 @@
         background: var(--brand-wash); font-family: var(--mono); font-weight: 500; }
 
       /* ── Ask the catalog (T61) ───────────────────────── */
-      .ask-form { display: flex; gap: .7rem; max-width: 46rem; margin: 0 auto; align-items: stretch; }
+      /* flex-end → the Ask button stays bottom-aligned as the textarea grows. */
+      .ask-form { display: flex; gap: .7rem; max-width: 46rem; margin: 0 auto; align-items: flex-end; }
       .ask-input { flex: 1 1 auto; position: relative; }
-      .ask-input svg { position: absolute; left: .85rem; top: 50%; transform: translateY(-50%);
+      .ask-input svg { position: absolute; left: .85rem; top: .95rem;
         width: 1.05rem; height: 1.05rem; color: var(--muted); pointer-events: none; }
+      /* Auto-growing question box (T63): a 1-row textarea; JS sets its height to the
+         content's scrollHeight on input. resize:none + hidden overflow keep it tidy. */
       #ask-q {
-        width: 100%; padding: .8rem 1rem .8rem 2.5rem; font-size: .98rem; font-family: var(--sans);
-        border: 1px solid var(--border-strong); border-radius: .7rem; background: var(--card); color: var(--text);
+        display: block; width: 100%; padding: .8rem 1rem .8rem 2.5rem; font-size: .98rem;
+        font-family: var(--sans); line-height: 1.5; border: 1px solid var(--border-strong);
+        border-radius: .7rem; background: var(--card); color: var(--text);
+        resize: none; overflow-y: auto; max-height: 11rem;
       }
       #ask-q:focus { outline: none; border-color: var(--brand);
         box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent); }
