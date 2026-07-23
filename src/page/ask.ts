@@ -198,8 +198,37 @@ function citeChip(c: Citation): string {
     : `<span class="ask-cite ask-cite-plain">${label}</span>`;
 }
 
-function paragraphs(text: string): string {
-  return esc(text).split(/\n{2,}/).map((p) => `<p>${p.replaceAll("\n", "<br>")}</p>`).join("");
+/* Minimal, safe Markdown → HTML for the LLM answer (T63). The text is UNTRUSTED
+ * (a model wrote it), so it is HTML-escaped FIRST; the inline rules then run on the
+ * escaped string and only ever emit a fixed, safe tag set. Links accept http(s)
+ * only (no `javascript:`); underscore emphasis is intentionally NOT supported so
+ * model ids like `text_embedding_3` aren't mangled — use backticks/`**` instead. */
+function mdInline(s: string): string {
+  return s
+    .replace(/`([^`]+)`/g, (_m, c: string) => `<code>${c}</code>`)
+    .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*([^*\n]+)\*/g, "<em>$1</em>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+}
+function renderMarkdown(raw: string): string {
+  const lines = esc(raw).split(/\r?\n/);
+  const out: string[] = [];
+  let para: string[] = [];
+  let list: string[] | null = null;
+  let listTag = "ul";
+  const flushPara = () => { if (para.length) { out.push(`<p>${para.map(mdInline).join("<br>")}</p>`); para = []; } };
+  const flushList = () => { if (list) { out.push(`<${listTag}>${list.map((li) => `<li>${mdInline(li)}</li>`).join("")}</${listTag}>`); list = null; } };
+  for (const ln of lines) {
+    const t = ln.trim();
+    if (!t) { flushPara(); flushList(); continue; }
+    const ul = /^[-*]\s+(.*)/.exec(t);
+    const ol = /^\d+\.\s+(.*)/.exec(t);
+    if (ul) { flushPara(); if (!list || listTag !== "ul") { flushList(); list = []; listTag = "ul"; } list.push(ul[1]); }
+    else if (ol) { flushPara(); if (!list || listTag !== "ol") { flushList(); list = []; listTag = "ol"; } list.push(ol[1]); }
+    else { flushList(); para.push(t); }
+  }
+  flushPara(); flushList();
+  return out.join("");
 }
 
 function renderAnswer(data: unknown): string {
@@ -210,7 +239,7 @@ function renderAnswer(data: unknown): string {
 
   let body: string;
   if (text) {
-    body = `<div class="ask-text">${paragraphs(text)}</div>`;
+    body = `<div class="ask-text">${renderMarkdown(text)}</div>`;
   } else if (rec.available === false) {
     // The copilot can't run (e.g. no default LLM configured) — surface its reason.
     body = `<div class="ask-error">The catalog copilot is unavailable${errMsg ? ` (${esc(errMsg)})` : ""}. Browse the catalog below or press <kbd>⌘K</kbd>.</div>`;

@@ -348,6 +348,15 @@
       .ask-text { line-height: 1.7; }
       .ask-text p { margin: 0 0 .8rem; }
       .ask-text p:last-child { margin-bottom: 0; }
+      /* Rendered Markdown in the answer (T63). */
+      .ask-text strong { font-weight: 700; color: var(--text); }
+      .ask-text em { font-style: italic; }
+      .ask-text code { font-family: var(--mono); font-size: .85em; background: var(--bg-alt);
+        border: 1px solid var(--border); border-radius: .35rem; padding: .05rem .3rem; }
+      .ask-text ul, .ask-text ol { margin: 0 0 .8rem; padding-left: 1.3rem; }
+      .ask-text ul:last-child, .ask-text ol:last-child { margin-bottom: 0; }
+      .ask-text li { margin: .15rem 0; }
+      .ask-text a { color: var(--brand-3); font-weight: 600; }
       .ask-loading { display: flex; align-items: center; gap: .6rem; color: var(--muted); }
       .ask-spin { width: 1rem; height: 1rem; border-radius: 999px; flex: none;
         border: 2px solid color-mix(in srgb, var(--brand) 30%, transparent); border-top-color: var(--brand);
